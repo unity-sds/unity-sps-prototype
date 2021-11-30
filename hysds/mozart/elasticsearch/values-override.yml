@@ -3,16 +3,16 @@
 antiAffinity: "soft"
 
 # Shrink default JVM heap.
-esJavaOpts: "-Xmx128m -Xms128m"
+esJavaOpts: "-Xmx512m -Xms512m"
 
 # Allocate smaller chunks of memory per pod.
 resources:
   requests:
-    cpu: "100m"
-    memory: "512M"
+    cpu: "1000m"
+    memory: "2Gi"
   limits:
     cpu: "1000m"
-    memory: "512M"
+    memory: "2Gi"
 
 # Request smaller persistent volumes.
 volumeClaimTemplate:
@@ -20,10 +20,13 @@ volumeClaimTemplate:
   storageClassName: "hostpath"
   resources:
     requests:
-      storage: 100M
+      storage: 5Gi
 
 # elasticsearch:
 masterService: "mozart-es"
+
+# because we're using 1 node the cluster health will be YELLOW instead of GREEN after data is ingested
+clusterHealthCheckParams: "wait_for_status=yellow&timeout=1s"
 
 replicas: 1
 
