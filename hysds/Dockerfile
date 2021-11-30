@@ -5,7 +5,6 @@ ARG VERSION="3.9.5"
 
 WORKDIR $HOME
 
-# RUN yum update -y && \
 RUN yum install gcc openssl-devel bzip2-devel libffi-devel openldap-devel readline-devel make wget git -y && \
   cd /tmp && \
   # installing python 3
@@ -32,12 +31,12 @@ RUN cd $HOME && \
   pip3 install --no-cache-dir -e hysds_commons/ && \
   pip3 install --no-cache-dir -e hysds/ && \
   yum clean all && \
-  rm -rf /var/cache/yum && \
+  rm -r /var/cache/* && \
   rm -r /tmp/*
 
-# # osaka/  # installs Werkzeug 2.0.1
-# # https://github.com/hysds/osaka/blob/develop/setup.py#L28
-# # https://github.com/spulec/moto/blob/master/setup.py#L39
+# osaka/  # installs Werkzeug 2.0.1
+# https://github.com/hysds/osaka/blob/develop/setup.py#L28
+# https://github.com/spulec/moto/blob/master/setup.py#L39
 
 WORKDIR $HOME
 CMD ["/bin/bash"]
