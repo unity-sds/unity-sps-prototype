@@ -75,7 +75,7 @@ kubectl.docker create configmap logstash-configs \
 ```
 
 ```bash
-$ kubectl.docker get cm
+$ kubectl get cm
 NAME               DATA   AGE
 celeryconfig       1      8m25s
 logstash-configs   6      5s
