@@ -88,6 +88,7 @@ mozart-settings    1      6m46s
 # downloading the helm charts from the repository
 helm repo add elastic https://helm.elastic.co
 
+# in the hysds/mozart/ directory
 # starting the cluster
 helm install mozart-es elastic/elasticsearch --version 7.9.3 -f elasticsearch/values-override.yml
 
@@ -98,9 +99,43 @@ helm uninstall mozart-es
 ```bash
 $ curl http://localhost:9200
 # {
-#   "name" : "elasticsearch-master-0",
-#   "cluster_name" : "elasticsearch",
-#   "cluster_uuid" : "zgdl-h2_TR68yOZwVWdUwA",
+#   "name" : "mozart-es-master-0",
+#   "cluster_name" : "mozart-es",
+#   "cluster_uuid" : "JrMWWXIWRvSsI-wjkx9MBg",
+#   "version" : {
+#     "number" : "7.9.3",
+#     "build_flavor" : "default",
+#     "build_type" : "docker",
+#     "build_hash" : "c4138e51121ef06a6404866cddc601906fe5c868",
+#     "build_date" : "2020-10-16T10:36:16.141335Z",
+#     "build_snapshot" : false,
+#     "lucene_version" : "8.6.2",
+#     "minimum_wire_compatibility_version" : "6.8.0",
+#     "minimum_index_compatibility_version" : "6.0.0-beta1"
+#   },
+#   "tagline" : "You Know, for Search"
+# }
+```
+
+#### Starting GRQ's Elasticsearch cluster
+```bash
+# downloading the helm charts from the repository
+helm repo add elastic https://helm.elastic.co
+
+# in the hysds/grq/ directory
+# starting the cluster
+helm install grq-es elastic/elasticsearch --version 7.9.3 -f elasticsearch/values-override.yml
+
+# tearing down the cluster
+helm uninstall grq-es
+```
+
+```bash
+$ curl http://localhost:9201
+# {
+#   "name" : "grq-es-master-0",
+#   "cluster_name" : "grq-es",
+#   "cluster_uuid" : "TWnGGEdKRJaWgkt6p3gtrA",
 #   "version" : {
 #     "number" : "7.9.3",
 #     "build_flavor" : "default",
