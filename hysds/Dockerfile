@@ -1,26 +1,21 @@
 FROM centos:7
 
 ARG HOME=/root
-ARG VERSION="3.9.5"
+# check https://repo.anaconda.com/miniconda/ for miniconda version
+ARG VERSION="py39_4.10.3"
 
 WORKDIR $HOME
 
-RUN yum install gcc openssl-devel bzip2-devel libffi-devel openldap-devel readline-devel make wget git -y && \
-  cd /tmp && \
-  # installing python 3
-  wget https://www.python.org/ftp/python/${VERSION}/Python-${VERSION}.tgz && \
-  tar xzf Python-${VERSION}.tgz && \
-  cd Python-${VERSION} && \
-  ./configure --enable-optimizations && \
-  make altinstall && \
-  ln -s /usr/local/bin/python${VERSION:0:3} /usr/local/bin/python3 && \
-  ln -s /usr/local/bin/pip${VERSION:0:3} /usr/local/bin/pip3 && \
-  pip3 install --no-cache-dir --upgrade pip && \
-  pip3 install --no-cache-dir gnureadline && \
-  rm -f /tmp/Python-${VERSION}.tgz && \
-  rm -rf /tmp/Python-${VERSION}
+ENV PATH="/root/miniconda3/bin:${PATH}"
+ARG PATH="/root/miniconda3/bin:${PATH}"
 
-# installing HySDS libraries
+RUN yum install gcc openssl-devel bzip2-devel libffi-devel openldap-devel readline-devel make wget git -y && \
+  yum clean all && \
+  wget https://repo.anaconda.com/miniconda/Miniconda3-${VERSION}-Linux-x86_64.sh && \
+  sh Miniconda3-${VERSION}-Linux-x86_64.sh -b && \
+  rm -f Miniconda3-${VERSION}-Linux-x86_64.sh && \
+  pip3 install --no-cache-dir --upgrade pip
+
 RUN cd $HOME && \
   git clone https://github.com/hysds/prov_es.git && \
   git clone https://github.com/hysds/osaka.git && \
@@ -31,12 +26,7 @@ RUN cd $HOME && \
   pip3 install --no-cache-dir -e hysds_commons/ && \
   pip3 install --no-cache-dir -e hysds/ && \
   yum clean all && \
-  rm -r /var/cache/* && \
-  rm -r /tmp/*
-
-# osaka/  # installs Werkzeug 2.0.1
-# https://github.com/hysds/osaka/blob/develop/setup.py#L28
-# https://github.com/spulec/moto/blob/master/setup.py#L39
+  rm -r /var/cache/*
 
 WORKDIR $HOME
 CMD ["/bin/bash"]
