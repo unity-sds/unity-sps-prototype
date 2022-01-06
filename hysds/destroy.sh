@@ -8,12 +8,13 @@ grq=0
 
 docstring() {
   cat << EOF
-Usage: 
+Usage:
+  Tear down the HySDS cluster in Kubernetes
   $0 [--docker] [--mozart] [--grq]
   Options:
     --docker : use if running Kubernetes on Docker for Desktop; kubectl vs kubectl.docker
-    --mozart : deploy mozart cluster
-    --grq : deploy GRQ cluster
+    mozart : deploy mozart cluster
+    grq : deploy GRQ cluster
 EOF
 }
 

@@ -167,29 +167,26 @@ $ curl http://localhost:9201
 ```bash
 # in the hysds/mozart/ directory
 kubectl apply -f rest_api/deployment.yml
-
-# if using Docker desktop
-kubectl.docker apply -f rest_api/deployment.yml
-```
-
-#### Starting the GRQ2 Rest API
-
-```bash
-# in the hysds/grq/ directory
-kubectl apply -f rest_api/deployment.yml
-
 # if using Docker desktop
 kubectl.docker apply -f rest_api/deployment.yml
 ```
 
 ![Mozart rest API](./img/mozart-rest-api.png)
 
+#### Starting the GRQ2 Rest API
+
+```bash
+# in the hysds/grq/ directory
+kubectl apply -f rest_api/deployment.yml
+# if using Docker desktop
+kubectl.docker apply -f rest_api/deployment.yml
+```
+
 #### Starting Redis
 
 ```bash
 # in the hysds/mozart/ directory
 kubectl apply -f redis/deployment.yml
-
 # if using Docker desktop
 kubectl.docker apply -f redis/deployment.yml
 ```
@@ -199,7 +196,6 @@ kubectl.docker apply -f redis/deployment.yml
 ```bash
 # in the hysds/moazrt/ directory
 kubectl apply -f logstash/deployment.yml
-
 # if using Docker desktop
 kubectl.docker apply -f logstash/deployment.yml
 ```
@@ -209,7 +205,6 @@ kubectl.docker apply -f logstash/deployment.yml
 ```bash
 # in the hysds/moazrt/ directory
 kubectl apply -f rabbitmq/deployment.yml
-
 # if using Docker desktop
 kubectl.docker apply -f rabbitmq/deployment.yml
 ```
@@ -221,7 +216,6 @@ kubectl.docker apply -f rabbitmq/deployment.yml
 ```bash
 # in the hysds/mozart/ directory
 kubectl apply -f celery/deployment.yml
-
 # if using Docker desktop
 kubectl.docker apply -f celery/deployment.yml
 ```
