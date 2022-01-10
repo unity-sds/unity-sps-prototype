@@ -10,10 +10,11 @@ docstring() {
   cat << EOF
 Usage:
   Deploys the HySDS cluster in Kubernetes (Elasticsearch, Rest API, RabbitMQ, Redis, etc.)
-  $0 [--docker] [--mozart] [--grq]
+  $0 [--docker] [mozart] [grq] [--all]
   Options:
     --docker : use if running Kubernetes on Docker for Desktop; kubectl vs kubectl.docker
-    mozart : deploy mozart cluster
+    --all : deploy both Mozart and GRQ cluster
+    mozart : deploy Mozart cluster
     grq : deploy GRQ cluster
 EOF
 }
@@ -24,14 +25,18 @@ while [ "$1" != "" ]; do
     docstring # run docstring function
     exit 0
     ;;
+  --docker)
+    command=kubectl.docker
+    ;;
+  -a | --all)
+    mozart=1
+    grq=1
+    ;;
   mozart)
     mozart=1
     ;;
   grq)
     grq=1
-    ;;
-  --docker)
-    command=kubectl.docker
     ;;
   *)
     # exit 1
@@ -41,11 +46,16 @@ while [ "$1" != "" ]; do
 done
 
 
+if (($grq==0 && $mozart==0)) ; then
+  echo "ERROR: Please specify [mozart|grq|--all] to deploy"
+  exit 1
+fi
+
 $command delete cm celeryconfig || true
 $command create cm celeryconfig --from-file ./celeryconfig.py
 
 
-if (($mozart==1)) || (($grq==0 && $mozart==0)) ; then
+if (($mozart==1)) ; then
   $command delete cm mozart-settings || true
   $command create cm mozart-settings --from-file ./mozart/rest_api/settings.cfg
 
@@ -59,7 +69,7 @@ if (($mozart==1)) || (($grq==0 && $mozart==0)) ; then
     --from-file=logstash-yml=./mozart/logstash/logstash.yml
   
   helm repo add elastic https://helm.elastic.co
-  helm install mozart-es elastic/elasticsearch --version 7.9.3 -f ./mozart/elasticsearch/values-override.yml
+  helm install --wait mozart-es elastic/elasticsearch --version 7.9.3 -f ./mozart/elasticsearch/values-override.yml
 
   $command apply -f ./mozart/rest_api/deployment.yml
   $command apply -f ./mozart/redis/deployment.yml
@@ -68,12 +78,12 @@ if (($mozart==1)) || (($grq==0 && $mozart==0)) ; then
   $command apply -f ./mozart/celery/deployment.yml
 fi
 
-if (($grq==1)) || (($grq==0 && $mozart==0)) ; then
+if (($grq==1)) ; then
   $command delete cm grq2-settings || true
   $command create cm grq2-settings --from-file ./grq/rest_api/settings.cfg
 
   helm repo add elastic https://helm.elastic.co
-  helm install grq-es elastic/elasticsearch --version 7.9.3 -f ./grq/elasticsearch/values-override.yml
+  helm install --wait grq-es elastic/elasticsearch --version 7.9.3 -f ./grq/elasticsearch/values-override.yml
 
   $command apply -f ./grq/rest_api/deployment.yml
 fi

@@ -10,9 +10,10 @@ docstring() {
   cat << EOF
 Usage:
   Tear down the HySDS cluster in Kubernetes
-  $0 [--docker] [--mozart] [--grq]
+  $0 [--docker] [mozart] [grq] [--all]
   Options:
     --docker : use if running Kubernetes on Docker for Desktop; kubectl vs kubectl.docker
+    --all : deploy both Mozart and GRQ cluster
     mozart : deploy mozart cluster
     grq : deploy GRQ cluster
 EOF
@@ -24,14 +25,18 @@ while [ "$1" != "" ]; do
     docstring # run docstring function
     exit 0
     ;;
+  --docker)
+    command=kubectl.docker
+    ;;
+  -a | --all)
+    mozart=1
+    grq=1
+    ;;
   mozart)
     mozart=1
     ;;
   grq)
     grq=1
-    ;;
-  --docker)
-    command=kubectl.docker
     ;;
   *)
     # exit 1
@@ -41,7 +46,12 @@ while [ "$1" != "" ]; do
 done
 
 
-if (($mozart==1)) || (($grq==0 && $mozart==0)) ; then
+if (($grq==0 && $mozart==0)) ; then
+  echo "ERROR: Please specify [mozart|grq|--all] to deploy"
+  exit 1
+fi
+
+if (($mozart==1)) ; then
   helm uninstall mozart-es || true
 
   $command delete cm mozart-settings || true
@@ -55,7 +65,7 @@ if (($mozart==1)) || (($grq==0 && $mozart==0)) ; then
   $command get pvc --no-headers=true | awk '/mozart-es/{print $1}' | xargs  kubectl delete pvc || true
 fi
 
-if (($grq==1)) || (($grq==0 && $mozart==0)) ; then
+if (($grq==1)) ; then
   helm uninstall grq-es || true
 
   $command delete cm grq2-settings || true

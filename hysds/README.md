@@ -182,6 +182,8 @@ kubectl apply -f rest_api/deployment.yml
 kubectl.docker apply -f rest_api/deployment.yml
 ```
 
+the grq2 rest API should now be running on `http://localhost:8878/api/v0.1/`
+
 #### Starting Redis
 
 ```bash
