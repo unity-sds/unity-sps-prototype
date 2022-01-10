@@ -1,0 +1,55 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: grq2
+  labels:
+    app: grq2
+spec:
+  ports:
+    - port: 8878
+  selector:
+    app: grq2
+  type: LoadBalancer
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: grq2
+  labels:
+    app: grq2
+spec:
+  # replicas: 2
+  selector:
+    matchLabels:
+      app: grq2
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: grq2
+    spec:
+      containers:
+        - name: grq2
+          image: hysds-grq2:unity-v0.0.1
+          # env:
+          #   - name: WORKERS
+          #     value: "4"
+          ports:
+            - containerPort: 8878
+              name: grq2
+          volumeMounts:
+            - name: grq2-settings
+              mountPath: /root/grq2/settings.cfg
+              subPath: settings.cfg
+            - name: celeryconfig
+              mountPath: /root/grq2/celeryconfig.py
+              subPath: celeryconfig.py
+      volumes:
+        - name: grq2-settings
+          configMap:
+            name: grq2-settings
+        - name: celeryconfig
+          configMap:
+            name: celeryconfig
