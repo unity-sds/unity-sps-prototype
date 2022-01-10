@@ -11,7 +11,7 @@ docker build . -t hysds-core:unity-v0.0.1 --progress plain
 #### Building the base docker image for the [Mozart](https://github.com/hysds/mozart) rest API
 
 ```bash
-# in the hysds/mozart/mozart_rest_api/
+# in the hysds/mozart/rest_api/
 docker build . -t hysds-mozart:unity-v0.0.1
 ```
 
@@ -46,10 +46,20 @@ kubectl.docker create configmap celeryconfig --from-file celeryconfig.py
 
 ```bash
 # in the hysds/ root directory
-kubectl create configmap mozart-settings --from-file ./mozart/mozart_rest_api/settings.cfg
+kubectl create configmap mozart-settings --from-file ./mozart/rest_api/settings.cfg
 
 # if using Docker desktop
-kubectl.docker create configmap mozart-settings --from-file ./mozart/mozart_rest_api/settings.cfg
+kubectl.docker create configmap mozart-settings --from-file ./mozart/rest_api/settings.cfg
+```
+
+#### Create the ConfigMap for Mozart Rest APIs `settings.cfg`
+
+```bash
+# in the hysds/ root directory
+kubectl create configmap grq2-settings --from-file ./grq/rest_api/settings.cfg
+
+# if using Docker desktop
+kubectl.docker create configmap grq2-settings --from-file ./grq/rest_api/settings.cfg
 ```
 
 #### Create ConfigMap for Logstash
@@ -118,6 +128,7 @@ $ curl http://localhost:9200
 ```
 
 #### Starting GRQ's Elasticsearch cluster
+
 ```bash
 # downloading the helm charts from the repository
 helm repo add elastic https://helm.elastic.co
@@ -155,20 +166,29 @@ $ curl http://localhost:9201
 
 ```bash
 # in the hysds/mozart/ directory
-kubectl apply -f mozart_rest_api/deployment.yml
-
+kubectl apply -f rest_api/deployment.yml
 # if using Docker desktop
-kubectl.docker apply -f mozart_rest_api/deployment.yml
+kubectl.docker apply -f rest_api/deployment.yml
 ```
 
 ![Mozart rest API](./img/mozart-rest-api.png)
+
+#### Starting the GRQ2 Rest API
+
+```bash
+# in the hysds/grq/ directory
+kubectl apply -f rest_api/deployment.yml
+# if using Docker desktop
+kubectl.docker apply -f rest_api/deployment.yml
+```
+
+the grq2 rest API should now be running on `http://localhost:8878/api/v0.1/`
 
 #### Starting Redis
 
 ```bash
 # in the hysds/mozart/ directory
 kubectl apply -f redis/deployment.yml
-
 # if using Docker desktop
 kubectl.docker apply -f redis/deployment.yml
 ```
@@ -178,7 +198,6 @@ kubectl.docker apply -f redis/deployment.yml
 ```bash
 # in the hysds/moazrt/ directory
 kubectl apply -f logstash/deployment.yml
-
 # if using Docker desktop
 kubectl.docker apply -f logstash/deployment.yml
 ```
@@ -188,7 +207,6 @@ kubectl.docker apply -f logstash/deployment.yml
 ```bash
 # in the hysds/moazrt/ directory
 kubectl apply -f rabbitmq/deployment.yml
-
 # if using Docker desktop
 kubectl.docker apply -f rabbitmq/deployment.yml
 ```
@@ -200,7 +218,6 @@ kubectl.docker apply -f rabbitmq/deployment.yml
 ```bash
 # in the hysds/mozart/ directory
 kubectl apply -f celery/deployment.yml
-
 # if using Docker desktop
 kubectl.docker apply -f celery/deployment.yml
 ```
