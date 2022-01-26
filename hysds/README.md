@@ -22,6 +22,12 @@ docker build . -t hysds-mozart:unity-v0.0.1
 docker build . -t celery-tasks:unity-v0.0.1
 ```
 
+#### Building the docker image for the factotum's job worker
+
+```bash
+docker build . -t factotum:unity-v0.0.1
+```
+
 ```bash
 $ docker images
 REPOSITORY           TAG                  IMAGE ID       CREATED              SIZE
@@ -29,8 +35,6 @@ hysds-mozart         unity-v0.0.1         dad6831f1b04   4 seconds ago        1.
 hysds-core           unity-v0.0.1         82a09dc4a50a   About a minute ago   997MB
 celery-tasks         unity-v0.0.1         a894468c7101   31 minutes ago       189MB
 ```
-
-# Running HySDS (Mozart) in K8
 
 #### Create the ConfigMap for `celeryconfig.py`
 
@@ -42,6 +46,8 @@ kubectl create configmap celeryconfig --from-file celeryconfig.py
 kubectl.docker create configmap celeryconfig --from-file celeryconfig.py
 ```
 
+# Mozart
+
 #### Create the ConfigMap for Mozart Rest APIs `settings.cfg`
 
 ```bash
@@ -50,16 +56,6 @@ kubectl create configmap mozart-settings --from-file ./mozart/rest_api/settings.
 
 # if using Docker desktop
 kubectl.docker create configmap mozart-settings --from-file ./mozart/rest_api/settings.cfg
-```
-
-#### Create the ConfigMap for Mozart Rest APIs `settings.cfg`
-
-```bash
-# in the hysds/ root directory
-kubectl create configmap grq2-settings --from-file ./grq/rest_api/settings.cfg
-
-# if using Docker desktop
-kubectl.docker create configmap grq2-settings --from-file ./grq/rest_api/settings.cfg
 ```
 
 #### Create ConfigMap for Logstash
@@ -112,41 +108,6 @@ $ curl http://localhost:9200
 #   "name" : "mozart-es-master-0",
 #   "cluster_name" : "mozart-es",
 #   "cluster_uuid" : "JrMWWXIWRvSsI-wjkx9MBg",
-#   "version" : {
-#     "number" : "7.9.3",
-#     "build_flavor" : "default",
-#     "build_type" : "docker",
-#     "build_hash" : "c4138e51121ef06a6404866cddc601906fe5c868",
-#     "build_date" : "2020-10-16T10:36:16.141335Z",
-#     "build_snapshot" : false,
-#     "lucene_version" : "8.6.2",
-#     "minimum_wire_compatibility_version" : "6.8.0",
-#     "minimum_index_compatibility_version" : "6.0.0-beta1"
-#   },
-#   "tagline" : "You Know, for Search"
-# }
-```
-
-#### Starting GRQ's Elasticsearch cluster
-
-```bash
-# downloading the helm charts from the repository
-helm repo add elastic https://helm.elastic.co
-
-# in the hysds/grq/ directory
-# starting the cluster
-helm install grq-es elastic/elasticsearch --version 7.9.3 -f elasticsearch/values-override.yml
-
-# tearing down the cluster
-helm uninstall grq-es
-```
-
-```bash
-$ curl http://localhost:9201
-# {
-#   "name" : "grq-es-master-0",
-#   "cluster_name" : "grq-es",
-#   "cluster_uuid" : "TWnGGEdKRJaWgkt6p3gtrA",
 #   "version" : {
 #     "number" : "7.9.3",
 #     "build_flavor" : "default",
@@ -275,40 +236,106 @@ health status index              uuid                   pri rep docs.count docs.
 yellow open   job_status-current QxnnmhokS5-Lw4t8GFxd-A   1   1         62            0     53.1kb         53.1kb
 ```
 
-#### All K8 resources
+# GRQ
+
+#### Starting GRQ's Elasticsearch cluster
+
+```bash
+# downloading the helm charts from the repository
+helm repo add elastic https://helm.elastic.co
+
+# in the hysds/grq/ directory
+# starting the cluster
+helm install grq-es elastic/elasticsearch --version 7.9.3 -f elasticsearch/values-override.yml
+
+# tearing down the cluster
+helm uninstall grq-es
+```
+
+```bash
+$ curl http://localhost:9201
+# {
+#   "name" : "grq-es-master-0",
+#   "cluster_name" : "grq-es",
+#   "cluster_uuid" : "TWnGGEdKRJaWgkt6p3gtrA",
+#   "version" : {
+#     "number" : "7.9.3",
+#     "build_flavor" : "default",
+#     "build_type" : "docker",
+#     "build_hash" : "c4138e51121ef06a6404866cddc601906fe5c868",
+#     "build_date" : "2020-10-16T10:36:16.141335Z",
+#     "build_snapshot" : false,
+#     "lucene_version" : "8.6.2",
+#     "minimum_wire_compatibility_version" : "6.8.0",
+#     "minimum_index_compatibility_version" : "6.0.0-beta1"
+#   },
+#   "tagline" : "You Know, for Search"
+# }
+```
+
+#### Create the ConfigMap for GRQ's Rest APIs `settings.cfg`
+
+```bash
+# in the hysds/ root directory
+kubectl create configmap grq2-settings --from-file ./grq/rest_api/settings.cfg
+
+# if using Docker desktop
+kubectl.docker create configmap grq2-settings --from-file ./grq/rest_api/settings.cfg
+```
+
+# Factotum
+
+```bash
+$ kubectl.docker create cm datasets --from-file datasets.json
+# configmap/datasets created
+
+$ kubectl.docker create cm supervisord-job-worker --from-file supervisord.conf
+# configmap/supervisord-job-worker created
+```
+
+# All K8 resources
 
 ```bash
 $ kubectl get all
 NAME                           READY   STATUS    RESTARTS   AGE
-pod/celery-tasks               1/1     Running   0          5m57s
-pod/elasticsearch-master-0     1/1     Running   0          74m
-pod/logstash-f6897dbb7-trfcs   1/1     Running   0          14m
-pod/mozart-56f7f5f4b7-kk6qf    1/1     Running   0          27m
-pod/rabbitmq-0                 1/1     Running   0          6m18s
-pod/redis-6f486db698-87858     1/1     Running   0          17m
+pod/celery-tasks               1/1     Running   0          77s
+pod/factotum-job-worker        1/1     Running   0          5s
+pod/grq-es-master-0            1/1     Running   0          74s
+pod/grq2-7b7b749665-8csm9      1/1     Running   0          5s
+pod/logstash-f6897dbb7-qxlkd   1/1     Running   0          77s
+pod/mozart-56f7f5f4b7-nngj9    1/1     Running   0          78s
+pod/mozart-es-master-0         1/1     Running   0          2m24s
+pod/rabbitmq-0                 1/1     Running   0          77s
+pod/redis-6f486db698-h72np     1/1     Running   0          77s
 
 NAME                         TYPE           CLUSTER-IP       EXTERNAL-IP   PORT(S)                         AGE
-service/kubernetes           ClusterIP      10.96.0.1        <none>        443/TCP                         24d
-service/mozart               LoadBalancer   10.107.138.240   localhost     8888:30726/TCP                  27m
-service/mozart-es            LoadBalancer   10.106.93.11     localhost     9200:30534/TCP,9300:30732/TCP   74m
-service/mozart-es-headless   ClusterIP      None             <none>        9200/TCP,9300/TCP               74m
-service/rabbitmq             NodePort       10.98.122.55     <none>        4369:30294/TCP,5672:32741/TCP   6m18s
-service/rabbitmq-mgmt        LoadBalancer   10.109.226.52    localhost     15672:31962/TCP                 6m18s
-service/redis                NodePort       10.108.5.17      <none>        6379:30914/TCP                  17m
+service/grq-es               LoadBalancer   10.107.74.255    localhost     9201:30068/TCP,9301:31307/TCP   74s
+service/grq-es-headless      ClusterIP      None             <none>        9201/TCP,9301/TCP               74s
+service/grq2                 LoadBalancer   10.111.253.126   localhost     8878:31290/TCP                  5s
+service/kubernetes           ClusterIP      10.96.0.1        <none>        443/TCP                         73m
+service/mozart               LoadBalancer   10.106.1.4       localhost     8888:30017/TCP                  78s
+service/mozart-es            LoadBalancer   10.98.13.197     localhost     9200:30578/TCP,9300:31764/TCP   2m24s
+service/mozart-es-headless   ClusterIP      None             <none>        9200/TCP,9300/TCP               2m24s
+service/rabbitmq             NodePort       10.107.111.4     <none>        4369:30444/TCP,5672:30950/TCP   77s
+service/rabbitmq-mgmt        LoadBalancer   10.106.84.161    localhost     15672:31520/TCP                 77s
+service/redis                NodePort       10.111.214.190   <none>        6379:31111/TCP                  77s
 
 NAME                       READY   UP-TO-DATE   AVAILABLE   AGE
-deployment.apps/logstash   1/1     1            1           14m
-deployment.apps/mozart     1/1     1            1           27m
-deployment.apps/redis      1/1     1            1           17m
+deployment.apps/grq2       1/1     1            1           5s
+deployment.apps/logstash   1/1     1            1           77s
+deployment.apps/mozart     1/1     1            1           78s
+deployment.apps/redis      1/1     1            1           77s
 
 NAME                                 DESIRED   CURRENT   READY   AGE
-replicaset.apps/logstash-f6897dbb7   1         1         1       14m
-replicaset.apps/mozart-56f7f5f4b7    1         1         1       27m
-replicaset.apps/redis-6f486db698     1         1         1       17m
+replicaset.apps/grq2-7b7b749665      1         1         1       5s
+replicaset.apps/logstash-f6897dbb7   1         1         1       77s
+replicaset.apps/mozart-56f7f5f4b7    1         1         1       78s
+replicaset.apps/redis-6f486db698     1         1         1       77s
 
-NAME                                    READY   AGE
-statefulset.apps/elasticsearch-master   1/1     74m
-statefulset.apps/rabbitmq               1/1     6m18s
+NAME                                READY   AGE
+statefulset.apps/grq-es-master      1/1     74s
+statefulset.apps/mozart-es-master   1/1     2m24s
+statefulset.apps/rabbitmq           1/1     77s
 ```
 
 ## Deleting K8 cluster
