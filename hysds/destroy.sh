@@ -13,9 +13,9 @@ Usage:
   $0 [--docker] [mozart] [grq] [--all]
   Options:
     --docker : use if running Kubernetes on Docker for Desktop; kubectl vs kubectl.docker
-    --all : deploy both Mozart and GRQ cluster
-    mozart : deploy mozart cluster
-    grq : deploy GRQ cluster
+    --all : destroy both Mozart and GRQ cluster
+    mozart : destroy mozart cluster
+    grq : destroy GRQ cluster
 EOF
 }
 
@@ -47,7 +47,7 @@ done
 
 
 if (($grq==0 && $mozart==0)) ; then
-  echo "ERROR: Please specify [mozart|grq|--all] to deploy"
+  echo "ERROR: Please specify [mozart|grq|--all] to destroy"
   exit 1
 fi
 
