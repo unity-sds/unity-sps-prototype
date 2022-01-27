@@ -1,4 +1,4 @@
-FROM hysds-core:unity-ol8-v0.0.1
+FROM hysds-core:unity-v0.0.1
 
 ARG CONTAINERD=containerd.io-1.4.9-3.1.el7.x86_64.rpm
 ARG DOCKERCLI=docker-ce-cli-18.09.0-3.el7.x86_64.rpm
