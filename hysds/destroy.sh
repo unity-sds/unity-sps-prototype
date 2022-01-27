@@ -17,6 +17,7 @@ Usage:
     --all : destroy both Mozart and GRQ cluster
     mozart : destroy mozart cluster
     grq : destroy GRQ cluster
+    factotum : destroy factotum
 EOF
 }
 
