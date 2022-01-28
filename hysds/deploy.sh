@@ -77,6 +77,26 @@ if (($mozart==1)) ; then
   helm repo add elastic https://helm.elastic.co
   helm install --wait mozart-es elastic/elasticsearch --version 7.9.3 -f ./mozart/elasticsearch/values-override.yml
 
+  mozart_es_template=$(curl -s https://raw.githubusercontent.com/hysds/mozart/develop/configs/es_template.json)
+  for idx in "containers" "job_specs" "hysds_io"
+  do
+    template=$(echo ${mozart_es_template} | sed "s/{{ index }}/${idx}/")
+    echo "writing template: ${idx}"
+    curl -s -X PUT -H 'Content-Type: application/json' "http://127.0.0.1:9200/_template/${idx}" -d "${template}" > /dev/null
+  done
+
+  hysds_io_mozart=$(curl -s https://raw.githubusercontent.com/hysds/mozart/develop/configs/hysds_ios.mapping)
+  curl -X PUT -H 'Content-Type: application/json' "http://localhost:9200/hysds_ios-mozart?pretty" -d "${hysds_io_mozart}"
+
+  user_rules_mozart=$(curl -s https://raw.githubusercontent.com/hysds/mozart/develop/configs/user_rules_job.mapping)
+  curl -X PUT -H 'Content-Type: application/json' "http://localhost:9200/user_rules-mozart?pretty" -d "${user_rules_mozart}"
+
+  hysds_io_grq=$(curl -s https://raw.githubusercontent.com/hysds/grq2/develop/config/hysds_ios.mapping)
+  curl -X PUT -H 'Content-Type: application/json' "http://localhost:9200/hysds_ios-grq?pretty" -d "${hysds_io_grq}"
+
+  user_rules_grq=$(curl -s https://raw.githubusercontent.com/hysds/grq2/develop/config/user_rules_dataset.mapping)
+  curl -X PUT -H 'Content-Type: application/json' "http://localhost:9200/user_rules-grq?pretty" -d "${user_rules_grq}"
+
   $command apply -f ./mozart/rest_api/deployment.yml
   $command apply -f ./mozart/redis/deployment.yml
   $command apply -f ./mozart/logstash/deployment.yml

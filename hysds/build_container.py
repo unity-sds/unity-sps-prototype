@@ -8,8 +8,8 @@ import jsonschema
 
 """
 TODO:
-    - build docker image
-    - validate hysds-ios and job_specs schema
+    - build docker image (X)
+    - validate hysds-ios and job_specs schema (X)
     - write specs to Elasticsearch
     - write container info to Elasticsearch
 """
@@ -34,7 +34,7 @@ def build_image(tag):
     ]
     process = subprocess.Popen(command, stdout=subprocess.PIPE)
 
-    for c in iter(lambda: process.stdout.read(1), b""):
+    for c in iter(lambda: process.stdout.read(1), b''):
         sys.stdout.buffer.write(c)
         print(c)
     return process.poll()
@@ -74,6 +74,18 @@ def validate_job_specs(path):
             jsonschema.validate(d, schema)
 
 
+def publish_hysds_io():
+    metadata = {
+        "job-specification": job_spec,
+        "job-version": version,
+        "resource": "hysds-io-specification"
+    }
+
+
+def publish_job_spec():
+    pass
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("-f", "--file-path")
@@ -83,12 +95,16 @@ if __name__ == "__main__":
     file_path = args.file_path or os.getcwd()
     tag = args.tag
 
-    pwd = os.getcwd()
-    os.chdir(file_path)
+    # build_image_status = build_image(tag)
+    # if build_image_status != 0:
+    #     raise RuntimeError("Failed to build docker image")
 
-    validate_hysds_ios(file_path)
-    validate_job_specs(file_path)
+    # pwd = os.getcwd()
+    # os.chdir(file_path)
+    #
+    # validate_hysds_ios(file_path)
+    # validate_job_specs(file_path)
 
-    build_image_status = build_image(tag)
-    if build_image_status != 0:
-        raise RuntimeError("Failed to build docker image")
+    version = tag.split(':')
+    version = version[-1] if len(version) > 1 else 'develop'
+    print(tag, version)
