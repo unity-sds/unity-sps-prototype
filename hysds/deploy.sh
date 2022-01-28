@@ -5,6 +5,7 @@ set -e
 command=kubectl
 mozart=0
 grq=0
+factotum=0
 
 docstring() {
   cat << EOF
@@ -16,6 +17,7 @@ Usage:
     --all : deploy both Mozart and GRQ cluster
     mozart : deploy Mozart cluster
     grq : deploy GRQ cluster
+    factotum : deploy factotum
 EOF
 }
 
@@ -31,12 +33,16 @@ while [ "$1" != "" ]; do
   -a | --all)
     mozart=1
     grq=1
+    factotum=1
     ;;
   mozart)
     mozart=1
     ;;
   grq)
     grq=1
+    ;;
+  factotum)
+    factotum=1
     ;;
   *)
     # exit 1
@@ -46,7 +52,7 @@ while [ "$1" != "" ]; do
 done
 
 
-if (($grq==0 && $mozart==0)) ; then
+if (($grq==0 && $mozart==0 && $factotum==0)) ; then
   echo "ERROR: Please specify [mozart|grq|--all] to deploy"
   exit 1
 fi
@@ -86,4 +92,14 @@ if (($grq==1)) ; then
   helm install --wait grq-es elastic/elasticsearch --version 7.9.3 -f ./grq/elasticsearch/values-override.yml
 
   $command apply -f ./grq/rest_api/deployment.yml
+fi
+
+if (($factotum==1)) ; then
+  $command delete cm datasets || true
+  $command create cm datasets --from-file ./factotum/datasets.json || true
+
+  $command delete cm supervisord-job-worker || true
+  $command create cm supervisord-job-worker --from-file ./factotum/supervisord.conf || true
+
+  $command apply -f ./factotum/deployment.yml
 fi

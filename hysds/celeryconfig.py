@@ -1,5 +1,5 @@
 broker_url = "amqp://guest:guest@rabbitmq:5672//"
-result_backend = "redis://:redis"
+result_backend = "redis://redis:6379"
 
 task_serializer = "msgpack"
 result_serializer = "msgpack"
@@ -99,7 +99,7 @@ PROCESS_EVENTS_TASKS_QUEUE = "process_events_tasks"
 METRICS_ES_URL = "http://{{ METRICS_ES_PVT_IP }}:9200"
 
 # REDIS_JOB_STATUS_URL = "redis://:{{ MOZART_REDIS_PASSWORD }}@{{ MOZART_REDIS_PVT_IP }}"
-REDIS_JOB_STATUS_URL = "redis://:redis"
+REDIS_JOB_STATUS_URL = "redis://:6379"
 REDIS_JOB_STATUS_KEY = "logstash"
 REDIS_JOB_INFO_URL = "redis://:{{ METRICS_REDIS_PASSWORD }}@{{ METRICS_REDIS_PVT_IP }}"
 REDIS_JOB_INFO_KEY = "logstash"
