@@ -33,9 +33,6 @@ spec:
       containers:
         - name: grq2
           image: hysds-grq2:unity-v0.0.1
-          # env:
-          #   - name: WORKERS
-          #     value: "4"
           ports:
             - containerPort: 8878
               name: grq2
