@@ -64,7 +64,6 @@ if (($mozart==1)) ; then
   $command delete -f ./mozart/redis/deployment.yml || true
   $command delete -f ./mozart/logstash/deployment.yml || true
   $command delete -f ./mozart/rabbitmq/deployment.yml || true
-  $command delete -f ./mozart/celery/deployment.yml || true
   $command delete cm mozart-settings || true
   $command delete cm logstash-configs || true
 

@@ -7,7 +7,6 @@ RUN wget -O /tmp/${CONTAINERD} https://download.docker.com/linux/centos/7/x86_64
   wget -O /tmp/${DOCKERCLI} https://download.docker.com/linux/centos/7/x86_64/stable/Packages/${DOCKERCLI} && \
   yum localinstall -y /tmp/${CONTAINERD} && \
   yum localinstall -y /tmp/${DOCKERCLI} && \
-  pip3 install --no-cache-dir supervisor && \
   yum clean all && \
   rm -rf /tmp/*
 

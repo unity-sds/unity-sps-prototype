@@ -23,9 +23,6 @@ docker build . -t hysds-core:unity-v0.0.1 ${ARGS}
 cd ${DIRNAME}/mozart/rest_api
 docker build . -t hysds-mozart:unity-v0.0.1 ${ARGS}
 
-cd ${DIRNAME}/mozart/celery
-docker build . -t celery-tasks:unity-v0.0.1 ${ARGS}
-
 cd ${DIRNAME}/grq/rest_api
 docker build . -t hysds-grq2:unity-v0.0.1 ${ARGS}
 

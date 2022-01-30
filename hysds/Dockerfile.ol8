@@ -15,7 +15,8 @@ RUN dnf update -y && \
   wget https://repo.anaconda.com/miniconda/Miniconda3-${VERSION}-Linux-x86_64.sh && \
   sh Miniconda3-${VERSION}-Linux-x86_64.sh -b && \
   rm -f Miniconda3-${VERSION}-Linux-x86_64.sh && \
-  pip3 install --no-cache-dir --upgrade pip
+  pip3 install --no-cache-dir --upgrade pip && \
+  pip3 install --no-cache-dir supervisor
 
 # installing HySDS libraries
 RUN cd $HOME && \

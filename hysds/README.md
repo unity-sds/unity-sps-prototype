@@ -15,13 +15,6 @@ docker build . -t hysds-core:unity-v0.0.1 --progress plain
 docker build . -t hysds-mozart:unity-v0.0.1
 ```
 
-#### Building the docker image for the simplified celery worker
-
-```bash
-# in the mozart/celery directory
-docker build . -t celery-tasks:unity-v0.0.1
-```
-
 #### Building the docker image for the factotum's job worker
 
 ```bash
@@ -31,9 +24,10 @@ docker build . -t factotum:unity-v0.0.1
 ```bash
 $ docker images
 REPOSITORY           TAG                  IMAGE ID       CREATED              SIZE
+factotum             unity-v0.0.1         40015f522a83   29 hours ago         1.2GB
 hysds-mozart         unity-v0.0.1         dad6831f1b04   4 seconds ago        1.1GB
 hysds-core           unity-v0.0.1         82a09dc4a50a   About a minute ago   997MB
-celery-tasks         unity-v0.0.1         a894468c7101   31 minutes ago       189MB
+hysds-grq2           unity-v0.0.1         820b04258cad   29 hours ago         1.1GB
 ```
 
 #### Create the ConfigMap for `celeryconfig.py`
@@ -172,70 +166,6 @@ kubectl apply -f rabbitmq/deployment.yml
 kubectl.docker apply -f rabbitmq/deployment.yml
 ```
 
-#### Running the Celery task to publish/consume data
-
-`celery` task to consume data
-
-```bash
-# in the hysds/mozart/ directory
-kubectl apply -f celery/deployment.yml
-# if using Docker desktop
-kubectl.docker apply -f celery/deployment.yml
-```
-
-python script to publish data
-
-```bash
-# in the hysds/mozart/ directory
-kubectl run --rm -i --tty celery-publisher \
-  --image celery-tasks:unity-v0.0.1 \
-  --restart=Never \
-  --image-pull-policy=Never -- python tasks/publish.py
-
-# if using Docker desktop
-kubectl.docker run --rm -i --tty celery-publisher \
-  --image celery-tasks:unity-v0.0.1 \
-  --restart=Never \
-  --image-pull-policy=Never -- python tasks/publish.py
-```
-
-`celery` task logs
-
-```
-tail -f celery_tasks.log
-
-Please specify a different user using the --uid option.
-
-User information: uid=0 euid=0 gid=0 egid=0
-
-  warnings.warn(SecurityWarning(ROOT_DISCOURAGED.format(
-[2021-11-05 19:50:26,325: INFO/MainProcess] Connected to amqp://guest:**@rabbitmq:5672//
-[2021-11-05 19:50:26,340: INFO/MainProcess] mingle: searching for neighbors
-[2021-11-05 19:50:27,374: INFO/MainProcess] mingle: all alone
-[2021-11-05 19:50:27,406: INFO/MainProcess] celery@celery-tasks ready.
-[2021-11-05 19:54:25,061: INFO/MainProcess] Task tasks.get_data[87771a5c-3f5f-4cdf-bace-67256c67004d] received
-/usr/local/lib/python3.8/site-packages/celery/platforms.py:834: SecurityWarning: You're running the worker with superuser privileges: this is
-absolutely not recommended!
-
-Please specify a different user using the --uid option.
-
-User information: uid=0 euid=0 gid=0 egid=0
-
-  warnings.warn(SecurityWarning(ROOT_DISCOURAGED.format(
-[2021-11-05 19:54:25,068: INFO/ForkPoolWorker-2] Task tasks.get_data[87771a5c-3f5f-4cdf-bace-67256c67004d] succeeded in 0.005493774999195011s: {'celery_hostname': '##############', 'type': '##########', 'payload_id': 'd1f1a5c9-fb43-46ca-911c-3aada4d800bb', 'resource': 'job', 'uuid': '3c5b2e98-93f9-4775-a872-641e281b98cf', 'dedup': True, '@version': '1', 'job_id': '##########', 'status': 'job-started', '@timestamp': '2021-11-05T19:54:24.897535'}
-[2021-11-05 19:54:25,327: INFO/MainProcess] Task tasks.get_data[4fd0b4d0-bbf0-435f-ad23-5eed19aa3d77] received
-[2021-11-05 19:54:25,329: INFO/ForkPoolWorker-2] Task tasks.get_data[4fd0b4d0-bbf0-435f-ad23-5eed19aa3d77] succeeded in 0.0011581799999476061s: {'celery_hostname': '##############', 'type': '##########', 'payload_id': 'f51f0a1d-fbc9-4cf2-a434-baa5a4f0b03f', 'resource': 'job', 'uuid': 'f9477534-99cb-4ece-a483-45ae32480be1', 'dedup': True, '@version': '1', 'job_id': '##########', 'status': 'job-queued', '@timestamp': '2021-11-05T19:54:25.324520'}
-...
-```
-
-Data ingested into Elasticsearch
-
-```bash
-$ curl http://localhost:9200/_cat/indices?v
-health status index              uuid                   pri rep docs.count docs.deleted store.size pri.store.size
-yellow open   job_status-current QxnnmhokS5-Lw4t8GFxd-A   1   1         62            0     53.1kb         53.1kb
-```
-
 # GRQ
 
 #### Starting GRQ's Elasticsearch cluster
@@ -298,7 +228,6 @@ $ kubectl.docker create cm supervisord-job-worker --from-file supervisord.conf
 ```bash
 $ kubectl get all
 NAME                           READY   STATUS    RESTARTS   AGE
-pod/celery-tasks               1/1     Running   0          77s
 pod/factotum-job-worker        1/1     Running   0          5s
 pod/grq-es-master-0            1/1     Running   0          74s
 pod/grq2-7b7b749665-8csm9      1/1     Running   0          5s
