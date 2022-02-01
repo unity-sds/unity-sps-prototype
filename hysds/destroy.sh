@@ -84,6 +84,7 @@ if (($factotum == 1)); then
 
   $command delete cm datasets || true
   $command delete cm supervisord-job-worker || true
+  $command delete cm supervisord-orchestrator || true
 fi
 
 if (($mozart == 1 && $factotum == 1 && $grq == 1)); then
