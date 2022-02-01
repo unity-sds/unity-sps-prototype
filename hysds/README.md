@@ -1,5 +1,10 @@
 # Containerizing HySDS components/services
 
+## Docker resource settings
+
+Make sure to set "Memory" to value >= 6.0GB
+![Docker resource settings](./img/docker_resource_settings.png)
+
 # Building the docker image(s)
 
 #### Building the base `hysds` docker image
@@ -85,12 +90,14 @@ mozart-settings    1      6m46s
 #### Starting Mozart's Elasticsearch cluster with [Helm](https://github.com/elastic/helm-charts/tree/master/elasticsearch)
 
 ```bash
+helm repo update
+
 # downloading the helm charts from the repository
 helm repo add elastic https://helm.elastic.co
 
 # in the hysds/mozart/ directory
 # starting the cluster
-helm install mozart-es elastic/elasticsearch --version 7.9.3 -f elasticsearch/values-override.yml
+helm install mozart-es elastic/elasticsearch --version 7.9.3 --timeout 200 -f elasticsearch/values-override.yml
 
 # tearing down the cluster
 helm uninstall mozart-es

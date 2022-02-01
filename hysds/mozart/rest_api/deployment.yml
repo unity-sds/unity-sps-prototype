@@ -46,6 +46,9 @@ spec:
             - name: celeryconfig
               mountPath: /root/mozart/celeryconfig.py
               subPath: celeryconfig.py
+            - name: netrc
+              mountPath: /root/.netrc
+              subPath: .netrc
       volumes:
         - name: mozart-settings
           configMap:
@@ -53,3 +56,6 @@ spec:
         - name: celeryconfig
           configMap:
             name: celeryconfig
+        - name: netrc
+          configMap:
+            name: netrc

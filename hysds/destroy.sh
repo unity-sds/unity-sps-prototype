@@ -8,7 +8,7 @@ grq=0
 factotum=0
 
 docstring() {
-  cat << EOF
+  cat <<EOF
 Usage:
   Tear down the HySDS cluster in Kubernetes
   $0 [--docker] [mozart] [grq] [--all]
@@ -51,13 +51,12 @@ while [ "$1" != "" ]; do
   shift # remove the current value for `$1` and use the next
 done
 
-
-if (($grq==0 && $mozart==0 && $factotum==0)) ; then
+if (($grq == 0 && $mozart == 0 && $factotum == 0)); then
   echo "ERROR: Please specify [mozart|grq|--all] to destroy"
   exit 1
 fi
 
-if (($mozart==1)) ; then
+if (($mozart == 1)); then
   helm uninstall mozart-es || true
 
   $command delete -f ./mozart/rest_api/deployment.yml || true
@@ -67,21 +66,27 @@ if (($mozart==1)) ; then
   $command delete cm mozart-settings || true
   $command delete cm logstash-configs || true
 
-  $command get pvc --no-headers=true | awk '/mozart-es/{print $1}' | xargs  kubectl delete pvc || true
+  $command get pvc --no-headers=true | awk '/mozart-es/{print $1}' | xargs kubectl delete pvc || true
 fi
 
-if (($grq==1)) ; then
+if (($grq == 1)); then
   helm uninstall grq-es || true
 
   $command delete cm grq2-settings || true
   $command delete -f ./grq/rest_api/deployment.yml || true
 
-  $command get pvc --no-headers=true | awk '/grq-es/{print $1}' | xargs  kubectl delete pvc || true
+  $command get pvc --no-headers=true | awk '/grq-es/{print $1}' | xargs kubectl delete pvc || true
 fi
 
-if (($factotum==1)) ; then
+if (($factotum == 1)); then
   $command delete -f ./factotum/deployment.yml || true
+  $command delete -f ./orchestrator/deployment.yml || true
 
   $command delete cm datasets || true
   $command delete cm supervisord-job-worker || true
+fi
+
+if (($mozart == 1 && $factotum == 1 && $grq == 1)); then
+  $command delete cm celeryconfig || true
+  $command delete cm netrc || true
 fi

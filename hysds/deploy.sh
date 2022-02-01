@@ -8,7 +8,7 @@ grq=0
 factotum=0
 
 docstring() {
-  cat << EOF
+  cat <<EOF
 Usage:
   Deploys the HySDS cluster in Kubernetes (Elasticsearch, Rest API, RabbitMQ, Redis, etc.)
   $0 [--docker] [mozart] [grq] [--all]
@@ -51,17 +51,20 @@ while [ "$1" != "" ]; do
   shift # remove the current value for `$1` and use the next
 done
 
-
-if (($grq==0 && $mozart==0 && $factotum==0)) ; then
+if (($grq == 0 && $mozart == 0 && $factotum == 0)); then
   echo "ERROR: Please specify [mozart|grq|--all] to deploy"
   exit 1
 fi
 
 $command delete cm celeryconfig || true
-$command create cm celeryconfig --from-file ./celeryconfig.py
+$command create cm celeryconfig --from-file ./configs/celeryconfig.py
 
+$command delete cm netrc || true
+$command create cm netrc --from-file ./configs/.netrc
 
-if (($mozart==1)) ; then
+helm repo update
+
+if (($mozart == 1)); then
   $command delete cm mozart-settings || true
   $command create cm mozart-settings --from-file ./mozart/rest_api/settings.cfg
 
@@ -73,16 +76,15 @@ if (($mozart==1)) ; then
     --from-file=task-status=./mozart/logstash/task_status.template.json \
     --from-file=logstash-conf=./mozart/logstash/logstash.conf \
     --from-file=logstash-yml=./mozart/logstash/logstash.yml
-  
+
   helm repo add elastic https://helm.elastic.co
-  helm install --wait mozart-es elastic/elasticsearch --version 7.9.3 -f ./mozart/elasticsearch/values-override.yml
+  helm install --wait --timeout 150s mozart-es elastic/elasticsearch --version 7.9.3 -f ./mozart/elasticsearch/values-override.yml
 
   mozart_es_template=$(curl -s https://raw.githubusercontent.com/hysds/mozart/develop/configs/es_template.json)
-  for idx in "containers" "job_specs" "hysds_io"
-  do
+  for idx in "containers" "job_specs" "hysds_io"; do
     template=$(echo ${mozart_es_template} | sed "s/{{ index }}/${idx}/")
     echo "writing template: ${idx}"
-    curl -s -X PUT -H 'Content-Type: application/json' 'http://127.0.0.1:9200/_template/${idx}' -d "${template}" > /dev/null
+    curl -s -X PUT -H 'Content-Type: application/json' 'http://127.0.0.1:9200/_template/${idx}' -d "${template}" >/dev/null
   done
 
   hysds_io_mozart=$(curl -s https://raw.githubusercontent.com/hysds/mozart/develop/configs/hysds_ios.mapping)
@@ -103,27 +105,31 @@ if (($mozart==1)) ; then
   $command apply -f ./mozart/rabbitmq/deployment.yml
 fi
 
-if (($grq==1)) ; then
+if (($grq == 1)); then
   $command delete cm grq2-settings || true
   $command create cm grq2-settings --from-file ./grq/rest_api/settings.cfg
 
   helm repo add elastic https://helm.elastic.co
-  helm install --wait grq-es elastic/elasticsearch --version 7.9.3 -f ./grq/elasticsearch/values-override.yml
-  
+  helm install --wait --timeout 150s grq-es elastic/elasticsearch --version 7.9.3 -f ./grq/elasticsearch/values-override.yml
+
   grq_es_template=$(curl -s https://raw.githubusercontent.com/hysds/grq2/develop/config/es_template.json)
   template=$(echo ${grq_es_template} | sed 's/{{ prefix }}/grq/;s/{{ alias }}/grq/')
   echo "writing template: grq"
-  curl -s -X PUT -H 'Content-Type: application/json' 'http://127.0.0.1:9201/_template/grq' -d "${template}" > /dev/null
+  curl -s -X PUT -H 'Content-Type: application/json' 'http://127.0.0.1:9201/_template/grq' -d "${template}" >/dev/null
 
   $command apply -f ./grq/rest_api/deployment.yml
 fi
 
-if (($factotum==1)) ; then
+if (($factotum == 1)); then
+  $command delete cm supervisord-orchestrator || true
+  $command create cm supervisord-orchestrator --from-file ./orchestrator/supervisord.conf
+
   $command delete cm datasets || true
-  $command create cm datasets --from-file ./factotum/datasets.json || true
+  $command create cm datasets --from-file ./factotum/datasets.json
 
   $command delete cm supervisord-job-worker || true
-  $command create cm supervisord-job-worker --from-file ./factotum/supervisord.conf || true
+  $command create cm supervisord-job-worker --from-file ./factotum/supervisord.conf
 
   $command apply -f ./factotum/deployment.yml
+  $command apply -f ./orchestrator/deployment.yml
 fi

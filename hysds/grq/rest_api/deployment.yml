@@ -43,6 +43,9 @@ spec:
             - name: celeryconfig
               mountPath: /root/grq2/celeryconfig.py
               subPath: celeryconfig.py
+            - name: netrc
+              mountPath: /root/.netrc
+              subPath: .netrc
       volumes:
         - name: grq2-settings
           configMap:
@@ -50,3 +53,6 @@ spec:
         - name: celeryconfig
           configMap:
             name: celeryconfig
+        - name: netrc
+          configMap:
+            name: netrc

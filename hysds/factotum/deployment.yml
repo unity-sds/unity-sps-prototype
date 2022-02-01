@@ -7,10 +7,10 @@ spec:
     - name: factotum-job-worker
       image: factotum:unity-v0.0.1
       command: ["supervisord", "--nodaemon"]
-      resources:
-        requests:
-          cpu: 500m
-          memory: 1Gi
+      # resources:
+      #   requests:
+      #     cpu: 500m
+      #     memory: 1Gi
       volumeMounts:
         - name: docker-sock
           mountPath: /var/run/docker.sock
