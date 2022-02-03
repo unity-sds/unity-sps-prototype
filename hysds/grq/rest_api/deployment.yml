@@ -38,13 +38,13 @@ spec:
               name: grq2
           volumeMounts:
             - name: grq2-settings
-              mountPath: /root/grq2/settings.cfg
+              mountPath: /home/ops/grq2/settings.cfg
               subPath: settings.cfg
             - name: celeryconfig
-              mountPath: /root/grq2/celeryconfig.py
+              mountPath: /home/ops/grq2/celeryconfig.py
               subPath: celeryconfig.py
             - name: netrc
-              mountPath: /root/.netrc
+              mountPath: /home/ops/.netrc
               subPath: .netrc
       volumes:
         - name: grq2-settings

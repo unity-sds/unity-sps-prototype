@@ -117,6 +117,11 @@ if (($grq == 1)); then
   echo "writing template: grq"
   curl -s -X PUT -H 'Content-Type: application/json' 'http://127.0.0.1:9201/_template/grq' -d "${template}" >/dev/null
 
+  ingest_pipeline=$(curl -s https://raw.githubusercontent.com/hysds/grq2/develop/config/ingest_pipeline.json)
+  curl -s -X PUT -H 'Content-Type: application/json' \
+    'http://127.0.0.1:9201/_ingest/pipeline/dataset_pipeline' -d "${ingest_pipeline}" >/dev/null
+  echo "writing ingest pipeline"
+
   $command apply -f ./grq/rest_api/deployment.yml
 fi
 

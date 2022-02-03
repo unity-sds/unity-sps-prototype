@@ -7,16 +7,12 @@ spec:
     - name: orchestrator
       image: hysds-core:unity-v0.0.1
       command: ["supervisord", "--nodaemon"]
-      # resources:
-      #   requests:
-      #     cpu: 500m
-      #     memory: 1Gi
       volumeMounts:
         - name: celeryconfig
-          mountPath: /root/hysds/celeryconfig.py
+          mountPath: /home/ops/hysds/celeryconfig.py
           subPath: celeryconfig.py
         - name: supervisord-orchestrator
-          mountPath: /root/supervisord.conf
+          mountPath: /home/ops/supervisord.conf
           subPath: supervisord.conf
   volumes:
     - name: celeryconfig

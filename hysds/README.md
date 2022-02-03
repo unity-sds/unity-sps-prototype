@@ -3,7 +3,10 @@
 ## Docker resource settings
 
 Make sure to set "Memory" to value >= 6.0GB
-![Docker resource settings](./img/docker_resource_settings.png)
+
+<p align="center">
+  <img src="./img/docker_resource_settings.png" alt="drawing" width="1000"/>
+</p>
 
 # Building the docker image(s)
 
@@ -133,7 +136,9 @@ kubectl apply -f rest_api/deployment.yml
 kubectl.docker apply -f rest_api/deployment.yml
 ```
 
-![Mozart rest API](./img/mozart-rest-api.png)
+<p align="center">
+  <img src="./img/mozart-rest-api.png" alt="drawing" width="1000"/>
+</p>
 
 #### Starting the GRQ2 Rest API
 

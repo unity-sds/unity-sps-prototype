@@ -45,8 +45,12 @@ def build_image(tag):
 
 
 def build_container_name(path, version="develop"):
+    if path.endswith('/'):
+        path = path[:-1]
+    print("path", path)
     container = path.split('/')[-1]
     container = 'container-%s:%s' % (container, version.lower())
+    print("container", container)
     return container
 
 
@@ -194,6 +198,9 @@ if __name__ == "__main__":
     file_path = args.file_path or os.getcwd()
     image = args.image
     dry_run = args.dry_run
+
+    if not image.startswith("container-"):
+        image = "container-%s" % image
 
     pwd = os.getcwd()
     os.chdir(file_path)

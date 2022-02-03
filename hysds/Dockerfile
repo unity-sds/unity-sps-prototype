@@ -1,26 +1,25 @@
 FROM centos:7
 
-ARG HOME=/root
+RUN useradd -ms /bin/bash ops && \
+  yum install gcc openssl-devel bzip2-devel libffi-devel openldap-devel readline-devel make wget git -y && \
+  yum clean all
+
+USER ops
+WORKDIR /home/ops
+
 # check https://repo.anaconda.com/miniconda/ for miniconda version
 ARG VERSION="py39_4.10.3"
+ENV PATH="/home/ops/miniconda3/bin:${PATH}"
+ARG PATH="/home/ops/miniconda3/bin:${PATH}"
 
-WORKDIR $HOME
-
-ENV PATH="/root/miniconda3/bin:${PATH}"
-ARG PATH="/root/miniconda3/bin:${PATH}"
-
-RUN yum install gcc openssl-devel bzip2-devel libffi-devel openldap-devel readline-devel make wget git -y && \
-  yum clean all && \
-  wget https://repo.anaconda.com/miniconda/Miniconda3-${VERSION}-Linux-x86_64.sh && \
+RUN wget https://repo.anaconda.com/miniconda/Miniconda3-${VERSION}-Linux-x86_64.sh && \
   sh Miniconda3-${VERSION}-Linux-x86_64.sh -b && \
   rm -f Miniconda3-${VERSION}-Linux-x86_64.sh && \
   pip3 install --no-cache-dir --upgrade pip && \
   pip3 install --no-cache-dir supervisor && \
-  pip3 cache purge && \
-  yum clean all
+  pip3 cache purge
 
-RUN cd $HOME && \
-  git clone https://github.com/hysds/prov_es.git && \
+RUN git clone https://github.com/hysds/prov_es.git && \
   git clone https://github.com/hysds/osaka.git && \
   git clone https://github.com/hysds/hysds_commons.git && \
   git clone https://github.com/hysds/hysds.git && \
@@ -30,5 +29,4 @@ RUN cd $HOME && \
   pip3 install --no-cache-dir -e hysds/ && \
   pip3 cache purge
 
-WORKDIR $HOME
 CMD ["/bin/bash"]

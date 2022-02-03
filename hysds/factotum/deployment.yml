@@ -7,26 +7,27 @@ spec:
     - name: factotum-job-worker
       image: factotum:unity-v0.0.1
       command: ["supervisord", "--nodaemon"]
-      # resources:
-      #   requests:
-      #     cpu: 500m
-      #     memory: 1Gi
       volumeMounts:
+        # - name: docker-sock
+        #   mountPath: /var/run/docker.sock
         - name: docker-sock
-          mountPath: /var/run/docker.sock
+          mountPath: /var/run
         - name: celeryconfig
-          mountPath: /root/hysds/celeryconfig.py
+          mountPath: /home/ops/hysds/celeryconfig.py
           subPath: celeryconfig.py
         - name: datasets
-          mountPath: /root/datasets.json
+          mountPath: /home/ops/datasets.json
           subPath: datasets.json
         - name: supervisord-job-worker
-          mountPath: /root/supervisord.conf
+          mountPath: /home/ops/supervisord.conf
           subPath: supervisord.conf
   volumes:
+    # - name: docker-sock
+    #   hostPath:
+    #     path: /var/run/docker.sock
     - name: docker-sock
       hostPath:
-        path: /var/run/docker.sock
+        path: /var/run
     - name: celeryconfig
       configMap:
         name: celeryconfig
