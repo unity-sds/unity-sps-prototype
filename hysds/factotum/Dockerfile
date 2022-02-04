@@ -12,10 +12,6 @@ RUN wget -O /tmp/${CONTAINERD} https://download.docker.com/linux/centos/7/x86_64
   yum clean all && \
   rm -rf /tmp/*
 
-RUN mkdir -p /data && \
-  chown ops /data
-  # usermod -aG docker ops
-
 USER ops
 WORKDIR /home/ops
 
