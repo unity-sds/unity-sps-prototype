@@ -9,15 +9,12 @@ spec:
       command: ["/bin/sh", "-c"]
       args:
         - chmod 777 /var/run/docker.sock;
-          chown -R 1000:1000 /opt/data;
-          # chmod -R 777 /tmp;
+          chown -R 1000:1000 /private/tmp/data;
       volumeMounts:
         - name: docker-sock
           mountPath: /var/run/docker.sock
-        # - name: work-pv-storage
-        #   mountPath: /tmp
         - name: data-work
-          mountPath: /opt/data
+          mountPath: /private/tmp/data
 
   containers:
     - name: factotum-job-worker
@@ -35,10 +32,8 @@ spec:
         - name: supervisord-job-worker
           mountPath: /home/ops/supervisord.conf
           subPath: supervisord.conf
-        # - name: work-pv-storage
-        #   mountPath: "/tmp"
         - name: data-work
-          mountPath: /opt/data
+          mountPath: /private/tmp/data
 
   volumes:
     - name: docker-sock
@@ -53,10 +48,6 @@ spec:
     - name: supervisord-job-worker
       configMap:
         name: supervisord-job-worker
-    # - name: work-pv-storage
-    #   persistentVolumeClaim:
-    #     claimName: work-pv-claim
     - name: data-work
       hostPath:
-        # path: /tmp
-        path: /opt/data
+        path: /private/tmp/data

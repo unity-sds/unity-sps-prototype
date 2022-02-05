@@ -126,11 +126,12 @@ if (($grq == 1)); then
 fi
 
 if (($factotum == 1)); then
+  mkdir -p /private/tmp/data || true
   $command delete cm supervisord-orchestrator || true
   $command create cm supervisord-orchestrator --from-file ./orchestrator/supervisord.conf
 
   $command delete cm datasets || true
-  $command create cm datasets --from-file ./factotum/datasets.json
+  $command create cm datasets --from-file ./configs/datasets.json
 
   $command delete cm supervisord-job-worker || true
   $command create cm supervisord-job-worker --from-file ./factotum/supervisord.conf
