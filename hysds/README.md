@@ -54,13 +54,14 @@ $ ./deploy.sh --help
 $ ./deploy.sh --all
 ```
 
-# All resources
+# HySDS Resources
 
-- Mozart's rest API: `http://localhost:8888`
-- GRQ's rest API: `http://localhost:8878/api/v0.1/doc/`
+- [Mozart's rest API](https://github.com/hysds/mozart): `http://localhost:8888`
+- [GRQ's rest API](https://github.com/hysds/grq2): `http://localhost:8878/api/v0.1/doc/`
 - Elasticsearch
   - Mozart: `http://localhost:9200`
   - GRQ: `http://localhost:9201`
+- [HySDS UI](https://github.com/hysds/hysds_ui): `http://localhost:3000`
 
 ```bash
 $ kubectl get all
@@ -126,6 +127,27 @@ create a bucket called `datasets` once you're logged in
 <p align="center">
   <img src="./img/minio.png" alt="drawing" width="1000"/>
 </p>
+
+# Building PGE
+
+use the `build_container.py` python script to build your PGE and publish the job metadata
+
+```bash
+$ python build_container.py --help
+# usage: build_container.py [-h] [-f FILE_PATH] -i IMAGE [--dry-run]
+
+# optional arguments:
+#   -h, --help            show this help message and exit
+#   -f FILE_PATH, --file-path FILE_PATH
+#   -i IMAGE, --image IMAGE
+#   --dry-run
+```
+
+example:
+
+```bash
+$ python build_container.py -i <pge_name>:<tag> -f ~/path/to/project
+```
 
 # Tear down HySDS cluster
 
