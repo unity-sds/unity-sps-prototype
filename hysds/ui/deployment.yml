@@ -1,0 +1,34 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: hysds-ui
+spec:
+  ports:
+    - port: 3000
+      targetPort: 80
+      protocol: TCP
+      nodePort: 31000
+  selector:
+    app: hysds-ui
+  type: LoadBalancer
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hysds-ui
+spec:
+  selector:
+    matchLabels:
+      app: hysds-ui
+  template:
+    metadata:
+      labels:
+        app: hysds-ui
+    spec:
+      containers:
+        - name: hysds-ui
+          image: hysds-ui:unity-v0.0.1
+          ports:
+            - containerPort: 80
+      restartPolicy: Always

@@ -29,4 +29,7 @@ docker build . -t hysds-grq2:unity-v0.0.1 ${ARGS}
 cd ${DIRNAME}/factotum
 docker build . -t factotum:unity-v0.0.1 ${ARGS}
 
+cd ${DIRNAME}/ui
+docker build . -t hysds-ui:unity-v0.0.1 ${ARGS}
+
 cd $(pwd)

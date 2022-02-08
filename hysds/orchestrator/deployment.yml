@@ -3,6 +3,15 @@ kind: Pod
 metadata:
   name: orchestrator
 spec:
+  initContainers:
+    - name: changeume-ownership
+      image: busybox
+      command: ["/bin/sh", "-c"]
+      args:
+          - chown -R 1000:1000 /private/tmp/data
+      volumeMounts:
+        - name: data-work
+          mountPath: /private/tmp/data
   containers:
     - name: orchestrator
       image: hysds-core:unity-v0.0.1
@@ -14,6 +23,11 @@ spec:
         - name: supervisord-orchestrator
           mountPath: /home/ops/supervisord.conf
           subPath: supervisord.conf
+        - name: aws-credentials
+          mountPath: /home/ops/.aws/credentials
+          subPath: aws-credentials
+        - name: data-work
+          mountPath: /private/tmp/data
   volumes:
     - name: celeryconfig
       configMap:
@@ -21,3 +35,9 @@ spec:
     - name: supervisord-orchestrator
       configMap:
         name: supervisord-orchestrator
+    - name: aws-credentials
+      configMap:
+        name: aws-credentials
+    - name: data-work
+      hostPath:
+        path: /private/tmp/data

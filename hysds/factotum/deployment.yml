@@ -4,7 +4,7 @@ metadata:
   name: factotum-job-worker
 spec:
   initContainers:
-    - name: change-volume-ownership
+    - name: changeume-ownership
       image: busybox
       command: ["/bin/sh", "-c"]
       args:
@@ -32,6 +32,9 @@ spec:
         - name: supervisord-job-worker
           mountPath: /home/ops/supervisord.conf
           subPath: supervisord.conf
+        - name: aws-credentials
+          mountPath: /home/ops/.aws/credentials
+          subPath: aws-credentials
         - name: data-work
           mountPath: /private/tmp/data
 
@@ -48,6 +51,9 @@ spec:
     - name: supervisord-job-worker
       configMap:
         name: supervisord-job-worker
+    - name: aws-credentials
+      configMap:
+        name: aws-credentials
     - name: data-work
       hostPath:
         path: /private/tmp/data

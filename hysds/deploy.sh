@@ -14,7 +14,7 @@ Usage:
   $0 [--docker] [mozart] [grq] [--all]
   Options:
     --docker : use if running Kubernetes on Docker for Desktop; kubectl vs kubectl.docker
-    --all : deploy both Mozart and GRQ cluster
+    --all : deploy all HySDS resources (Mozart + GRQ + factotum)
     mozart : deploy Mozart cluster
     grq : deploy GRQ cluster
     factotum : deploy factotum
@@ -62,6 +62,10 @@ $command create cm celeryconfig --from-file ./configs/celeryconfig.py
 $command delete cm netrc || true
 $command create cm netrc --from-file ./configs/.netrc
 
+$command delete cm aws-credentials || true
+$command create cm aws-credentials --from-file ./configs/aws-credentials
+
+helm repo add elastic https://helm.elastic.co
 helm repo update
 
 if (($mozart == 1)); then
@@ -103,6 +107,7 @@ if (($mozart == 1)); then
   $command apply -f ./mozart/redis/deployment.yml
   $command apply -f ./mozart/logstash/deployment.yml
   $command apply -f ./mozart/rabbitmq/deployment.yml
+  $command apply -f ./ui/deployment.yml
 fi
 
 if (($grq == 1)); then
@@ -126,7 +131,10 @@ if (($grq == 1)); then
 fi
 
 if (($factotum == 1)); then
-  mkdir -p /private/tmp/data || true
+  mkdir -p /private/tmp/buckets/datasets || true
+  $command apply -f ./minio/volume.yml
+  sleep 7
+
   $command delete cm supervisord-orchestrator || true
   $command create cm supervisord-orchestrator --from-file ./orchestrator/supervisord.conf
 
@@ -138,4 +146,6 @@ if (($factotum == 1)); then
 
   $command apply -f ./factotum/deployment.yml
   $command apply -f ./orchestrator/deployment.yml
+
+  $command apply -f ./minio/deployment.yml
 fi

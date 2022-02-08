@@ -5,11 +5,11 @@ metadata:
   labels:
     app: grq2
 spec:
+  type: LoadBalancer
   ports:
     - port: 8878
   selector:
     app: grq2
-  type: LoadBalancer
 
 ---
 apiVersion: apps/v1

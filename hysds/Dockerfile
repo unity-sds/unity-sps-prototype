@@ -20,7 +20,7 @@ RUN wget https://repo.anaconda.com/miniconda/Miniconda3-${VERSION}-Linux-x86_64.
   pip3 cache purge
 
 RUN git clone https://github.com/hysds/prov_es.git && \
-  git clone https://github.com/hysds/osaka.git && \
+  git clone -b unity_demo https://github.com/hysds/osaka.git && \
   git clone https://github.com/hysds/hysds_commons.git && \
   git clone https://github.com/hysds/hysds.git && \
   pip3 install --no-cache-dir -e prov_es/ && \
