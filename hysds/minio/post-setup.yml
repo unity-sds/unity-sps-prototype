@@ -16,7 +16,6 @@ spec:
           while [ $(curl -sw '%{http_code}' "http://minio:9001" -o /dev/null) -ne 200 ]; do
             sleep 5;
           done
-  containers:
     - name: minio-setup
       image: minio/mc
       env:
@@ -29,3 +28,30 @@ spec:
         - mc alias set s3 http://minio:9000 ${MINIO_ACCESS_KEY} ${MINIO_SECRET_KEY};
           mc mb s3/datasets;
           mc policy set public s3/datasets;
+  containers:
+    - name: publish-aoi
+      image: hysds-core:unity-v0.0.1
+      command: ["/bin/sh", "-c"]
+      args:
+        - cd /home/ops/hysds/test/examples;
+          /home/ops/hysds/scripts/ingest_dataset.py AOI_sacramento_valley /home/ops/datasets.json;
+      volumeMounts:
+        - name: celeryconfig
+          mountPath: /home/ops/hysds/celeryconfig.py
+          subPath: celeryconfig.py
+        - name: aws-credentials
+          mountPath: /home/ops/.aws/credentials
+          subPath: aws-credentials
+        - name: datasets
+          mountPath: /home/ops/datasets.json
+          subPath: datasets.json
+  volumes:
+    - name: celeryconfig
+      configMap:
+        name: celeryconfig
+    - name: aws-credentials
+      configMap:
+        name: aws-credentials
+    - name: datasets
+      configMap:
+        name: datasets

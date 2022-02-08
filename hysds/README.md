@@ -60,6 +60,9 @@ $ ./deploy.sh --all
   - Mozart: `http://localhost:9200`
   - GRQ: `http://localhost:9201`
 - [HySDS UI](https://github.com/hysds/hysds_ui): `http://localhost:3000`
+- [Minio](https://min.io/) Server (local s3) - `http://localhost:9000` and `http://localhost:9001`
+
+<img src="./img/hysds-ui-tosca.png" alt="drawing" width="1000"/>
 
 ```bash
 $ kubectl get all
