@@ -133,7 +133,7 @@ fi
 if (($factotum == 1)); then
   mkdir -p /private/tmp/buckets/datasets || true
   $command apply -f ./minio/volume.yml
-  sleep 7
+  sleep 5
 
   $command delete cm supervisord-orchestrator || true
   $command create cm supervisord-orchestrator --from-file ./orchestrator/supervisord.conf
@@ -148,4 +148,5 @@ if (($factotum == 1)); then
   $command apply -f ./orchestrator/deployment.yml
 
   $command apply -f ./minio/deployment.yml
+  $command apply -f ./minio/post-setup.yml
 fi

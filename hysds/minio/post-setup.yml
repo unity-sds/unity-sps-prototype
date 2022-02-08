@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mc
+spec:
+  restartPolicy: Never
+  initContainers:
+    - name: ping-minio-server
+      image: k8s.gcr.io/busybox
+      command: ["/bin/sh", "-c"]
+      args:
+        - /bin/sh
+        - -c
+        - >
+          set -x;
+          while [ $(curl -sw '%{http_code}' "http://minio:9001" -o /dev/null) -ne 200 ]; do
+            sleep 5;
+          done
+  containers:
+    - name: minio-setup
+      image: minio/mc
+      env:
+        - name: MINIO_ACCESS_KEY
+          value: hysds
+        - name: MINIO_SECRET_KEY
+          value: password
+      command: ["/bin/sh", "-c"]
+      args:
+        - mc alias set s3 http://minio:9000 ${MINIO_ACCESS_KEY} ${MINIO_SECRET_KEY};
+          mc mb s3/datasets;
+          mc policy set public s3/datasets;

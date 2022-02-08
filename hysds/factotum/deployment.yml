@@ -5,7 +5,7 @@ metadata:
 spec:
   initContainers:
     - name: changeume-ownership
-      image: busybox
+      image: k8s.gcr.io/busybox
       command: ["/bin/sh", "-c"]
       args:
         - chmod 777 /var/run/docker.sock;

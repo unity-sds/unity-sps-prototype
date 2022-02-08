@@ -11,9 +11,7 @@
 
 > :warning: **Make sure to set "Memory" to value >= 6.0GB**
 
-<p align="center">
-  <img src="./img/docker_resource_settings.png" alt="drawing" width="1000"/>
-</p>
+<img src="./img/docker_resource_settings.png" alt="drawing" width="1000"/>
 
 # Building the docker image(s)
 
@@ -122,11 +120,9 @@ the minio console can be accessed with `http://localhost:9001`:
 - user: `hysds`
 - password: `password`
 
-create a bucket called `datasets` once you're logged in
+a bucket called `datasets` will be created when provisioning
 
-<p align="center">
-  <img src="./img/minio.png" alt="drawing" width="1000"/>
-</p>
+<img src="./img/minio.png" alt="drawing" width="1000"/>
 
 # Building PGE
 
