@@ -127,7 +127,7 @@ a bucket called `datasets` will be created when provisioning
 
 <img src="./img/minio.png" alt="drawing" width="1000"/>
 
-# Building PGE
+# Building PGEs
 
 use the `build_container.py` python script to build your PGE and publish the job metadata
 
@@ -140,12 +140,13 @@ $ python build_container.py --help
 #   -f FILE_PATH, --file-path FILE_PATH
 #   -i IMAGE, --image IMAGE
 #   --dry-run
+
+$ python build_container.py -i <pge_name>:<tag> -f ~/path/to/project
 ```
 
 example:
-
 ```bash
-$ python build_container.py -i <pge_name>:<tag> -f ~/path/to/project
+python python build_container.py -i hello_world:develop -f pge/hello_world
 ```
 
 # Tear down HySDS cluster

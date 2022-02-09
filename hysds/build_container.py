@@ -6,16 +6,9 @@ import subprocess
 import requests
 import jsonschema
 
-"""
-TODO:
-    - build docker image (X)
-    - validate hysds-ios and job_specs schema (X)
-    - write specs to Elasticsearch
-    - write container info to Elasticsearch
-"""
 
-MOZART_REST_API = "http://localhost:8888/api/v0.1"
-GRQ_REST_API = "http://localhost:8878/api/v0.1"
+__MOZART_REST_API = "http://localhost:8888/api/v0.1"
+__GRQ_REST_API = "http://localhost:8878/api/v0.1"
 
 
 def build_image(tag):
@@ -24,6 +17,9 @@ def build_image(tag):
     :param tag: str; example, hello_world:develop
     :return: int; return status of docker build command
     """
+    if ':' not in tag:
+        tag = '%s:develop' % tag
+
     command = [
         "docker",
         "build",
@@ -126,7 +122,7 @@ def publish_container(path, repository, version="develop", dry_run=False):
     }
     print("container: ", json.dumps(metadata, indent=2))
     if dry_run is False:
-        add_container_endpoint = os.path.join(MOZART_REST_API, "container/add")
+        add_container_endpoint = os.path.join(__MOZART_REST_API, "container/add")
         r = requests.post(add_container_endpoint, data=metadata, verify=False)
         print(r.text)
         r.raise_for_status()
@@ -152,7 +148,7 @@ def publish_job_spec(path, version="develop", dry_run=False):
             metadata = {**metadata, **job_spec}
             print("job_specs: ", json.dumps(metadata, indent=2))
             if dry_run is False:
-                endpoint = os.path.join(MOZART_REST_API, "job_spec/add")
+                endpoint = os.path.join(__MOZART_REST_API, "job_spec/add")
                 r = requests.post(endpoint, data={"spec": json.dumps(metadata)}, verify=False)
                 print(r.text)
                 r.raise_for_status()
@@ -179,9 +175,9 @@ def publish_hysds_io(path, version="develop", dry_run=False):
             print("hysds-ios: ", json.dumps(metadata, indent=2))
             if dry_run is False:
                 if metadata.get("component", "tosca") in ("mozart", "figaro"):
-                    api_endpoint = os.path.join(MOZART_REST_API, "hysds_io/add")
+                    api_endpoint = os.path.join(__MOZART_REST_API, "hysds_io/add")
                 else:
-                    api_endpoint = os.path.join(GRQ_REST_API, "hysds_io/add")
+                    api_endpoint = os.path.join(__GRQ_REST_API, "hysds_io/add")
                 data = {"spec": json.dumps(metadata)}
                 r = requests.post(api_endpoint, data=data, verify=False)
                 print(r.text)
@@ -195,9 +191,11 @@ if __name__ == "__main__":
     parser.add_argument("--dry-run", action='store_true', default=False)
 
     args = parser.parse_args()
-    file_path = args.file_path or os.getcwd()
+    file_path = os.path.abspath(args.file_path) or os.getcwd()
     image = args.image
     dry_run = args.dry_run
+
+    print("Building from %s..." % file_path)
 
     if not image.startswith("container-"):
         image = "container-%s" % image
