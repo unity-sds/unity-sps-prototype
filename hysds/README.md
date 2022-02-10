@@ -150,10 +150,15 @@ example:
 python build_container.py -i hello_world:develop -f pge/hello_world
 ```
 
-navigate to Tosca's "on demand" page
-<img src="./img/on-demand-jobs.png" alt="drawing" width="1000"/>
+##### navigate to Tosca's "on demand" page
 
-<img src="./img/hello_world-job.png" alt="drawing" width="1000"/>
+<div>
+  <img src="./img/on-demand-jobs.png" alt="drawing" width="1000"/>
+</div>
+</br>
+<div>
+  <img src="./img/hello_world-job.png" alt="drawing" width="1000"/>
+</div>
 
 # Tear down HySDS cluster
 
