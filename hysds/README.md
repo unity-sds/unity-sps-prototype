@@ -20,7 +20,7 @@
 use the `build_imges.sh` script to build all necessary docker images at once
 
 ```bash
-$ ./build_images --progress plain
+$ ./build_images.sh [--progress plain|--no-cache]
 ```
 
 ```bash
@@ -145,9 +145,15 @@ $ python build_container.py -i <pge_name>:<tag> -f ~/path/to/project
 ```
 
 example:
+
 ```bash
-python python build_container.py -i hello_world:develop -f pge/hello_world
+python build_container.py -i hello_world:develop -f pge/hello_world
 ```
+
+navigate to Tosca's "on demand" page
+<img src="./img/on-demand-jobs.png" alt="drawing" width="1000"/>
+
+<img src="./img/hello_world-job.png" alt="drawing" width="1000"/>
 
 # Tear down HySDS cluster
 
