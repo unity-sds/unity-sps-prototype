@@ -9,7 +9,6 @@ spec:
   ports:
     - name: cluster-rpc
       port: 15672
-      protocol: TCP
       targetPort: 15672
 
 ---
@@ -30,6 +29,9 @@ spec:
       port: 5672
       protocol: TCP
       targetPort: 5672
+    - name: cluster-rpc
+      port: 15672
+      targetPort: 15672
 
 ---
 apiVersion: apps/v1

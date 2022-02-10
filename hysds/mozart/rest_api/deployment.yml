@@ -41,11 +41,14 @@ spec:
               name: mozart
           volumeMounts:
             - name: mozart-settings
-              mountPath: /root/mozart/settings.cfg
+              mountPath: /home/ops/mozart/settings.cfg
               subPath: settings.cfg
             - name: celeryconfig
-              mountPath: /root/mozart/celeryconfig.py
+              mountPath: /home/ops/mozart/celeryconfig.py
               subPath: celeryconfig.py
+            - name: netrc
+              mountPath: /home/ops/.netrc
+              subPath: .netrc
       volumes:
         - name: mozart-settings
           configMap:
@@ -53,3 +56,6 @@ spec:
         - name: celeryconfig
           configMap:
             name: celeryconfig
+        - name: netrc
+          configMap:
+            name: netrc

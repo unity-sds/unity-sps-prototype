@@ -1,67 +1,185 @@
-# Containerizing HySDS components/services
+# Pre-requisites
+
+- [Docker](https://www.docker.com/products/docker-desktop)
+- [Kubernetes](https://kubernetes.io/)
+  - enable kubernetes in [Docker for Desktop](https://docs.docker.com/desktop/kubernetes/#enable-kubernetes) or use [Minikube](https://minikube.sigs.k8s.io/docs/start/)
+- `kubectl` - kubernetes command line tool
+- [Helm](https://helm.sh/docs/intro/install/)
+  - `brew install helm` if on Mac
+
+# Docker resource settings
+
+> :warning: **Make sure to set "Memory" to value >= 6.0GB**
+
+<img src="./img/docker_resource_settings.png" alt="drawing" width="1000"/>
 
 # Building the docker image(s)
 
 #### Building the base `hysds` docker image
 
-```bash
-docker build . -t hysds-core:unity-v0.0.1 --progress plain
-```
-
-#### Building the base docker image for the [Mozart](https://github.com/hysds/mozart) rest API
+use the `build_imges.sh` script to build all necessary docker images at once
 
 ```bash
-# in the hysds/mozart/rest_api/
-docker build . -t hysds-mozart:unity-v0.0.1
-```
-
-#### Building the docker image for the simplified celery worker
-
-```bash
-# in the mozart/celery directory
-docker build . -t celery-tasks:unity-v0.0.1
-```
-
-#### Building the docker image for the factotum's job worker
-
-```bash
-docker build . -t factotum:unity-v0.0.1
+$ ./build_images.sh [--progress plain|--no-cache]
 ```
 
 ```bash
 $ docker images
-REPOSITORY           TAG                  IMAGE ID       CREATED              SIZE
-hysds-mozart         unity-v0.0.1         dad6831f1b04   4 seconds ago        1.1GB
-hysds-core           unity-v0.0.1         82a09dc4a50a   About a minute ago   997MB
-celery-tasks         unity-v0.0.1         a894468c7101   31 minutes ago       189MB
+REPOSITORY          TAG                  IMAGE ID       CREATED         SIZE
+hysds-ui            unity-v0.0.1         08d98f617351   3 hours ago     19.3MB
+factotum            unity-v0.0.1         cd9eff273a89   3 hours ago     1.17GB
+hysds-grq2          unity-v0.0.1         c89d99d41e3b   3 hours ago     1.08GB
+hysds-mozart        unity-v0.0.1         515d0bf75e50   3 hours ago     1.04GB
+hysds-core          unity-v0.0.1         e1ab6d70f58e   3 hours ago     934MB
 ```
 
-#### Create the ConfigMap for `celeryconfig.py`
+# Deploying cluster on local
+
+use the `deploy.sh` script to deploy all resources at once
 
 ```bash
-# in the hysds/ root directory
+$ ./deploy.sh --help
+# Usage:
+#   Deploys the HySDS cluster in Kubernetes (Elasticsearch, Rest API, RabbitMQ, Redis, etc.)
+#   ./deploy.sh [--docker] [mozart] [grq] [--all]
+#   Options:
+#     --docker : use if running Kubernetes on Docker for Desktop; kubectl vs kubectl.docker
+#     --all : deploy all HySDS resources (Mozart + GRQ + factotum)
+#     mozart : deploy Mozart cluster
+#     grq : deploy GRQ cluster
+#     factotum : deploy factotum
+
+$ ./deploy.sh --all
+```
+
+# HySDS Resources
+
+- [Mozart's rest API](https://github.com/hysds/mozart): `http://localhost:8888`
+- [GRQ's rest API](https://github.com/hysds/grq2): `http://localhost:8878/api/v0.1/doc/`
+- Elasticsearch
+  - Mozart: `http://localhost:9200`
+  - GRQ: `http://localhost:9201`
+- [HySDS UI](https://github.com/hysds/hysds_ui): `http://localhost:3000`
+- [Minio](https://min.io/) Server (local s3) - `http://localhost:9000` and `http://localhost:9001`
+
+<img src="./img/hysds-ui-tosca.png" alt="drawing" width="1000"/>
+
+```bash
+$ kubectl get all
+NAME                            READY   STATUS    RESTARTS   AGE
+pod/factotum-job-worker         1/1     Running   0          17s
+pod/grq-es-master-0             1/1     Running   0          78s
+pod/grq2-cbc7bdf6f-d48rh        1/1     Running   0          25s
+pod/hysds-ui-6c5d969498-2rb5x   1/1     Running   0          80s
+pod/logstash-f6897dbb7-7gvcq    1/1     Running   0          81s
+pod/minio-66b9cc99c8-5994s      1/1     Running   0          17s
+pod/mozart-cd9ffc587-2jmqd      1/1     Running   0          81s
+pod/mozart-es-master-0          1/1     Running   0          2m16s
+pod/orchestrator                1/1     Running   0          17s
+pod/rabbitmq-0                  1/1     Running   0          81s
+pod/redis-6f486db698-dgdxs      1/1     Running   0          81s
+
+NAME                         TYPE           CLUSTER-IP       EXTERNAL-IP   PORT(S)                                         AGE
+service/grq-es               LoadBalancer   10.103.109.169   localhost     9201:30893/TCP,9301:30751/TCP                   78s
+service/grq-es-headless      ClusterIP      None             <none>        9201/TCP,9301/TCP                               78s
+service/grq2                 LoadBalancer   10.102.241.22    localhost     8878:31168/TCP                                  25s
+service/hysds-ui             LoadBalancer   10.107.130.186   localhost     3000:31000/TCP                                  80s
+service/kubernetes           ClusterIP      10.96.0.1        <none>        443/TCP                                         2d
+service/minio                LoadBalancer   10.103.14.173    localhost     9000:31060/TCP,9001:31146/TCP                   17s
+service/mozart               LoadBalancer   10.100.99.150    localhost     8888:31662/TCP                                  81s
+service/mozart-es            LoadBalancer   10.109.84.170    localhost     9200:31162/TCP,9300:31303/TCP                   2m16s
+service/mozart-es-headless   ClusterIP      None             <none>        9200/TCP,9300/TCP                               2m16s
+service/rabbitmq             NodePort       10.99.164.99     <none>        4369:31559/TCP,5672:32013/TCP,15672:32059/TCP   81s
+service/rabbitmq-mgmt        LoadBalancer   10.107.140.108   localhost     15672:32114/TCP                                 81s
+service/redis                NodePort       10.105.36.23     <none>        6379:32016/TCP                                  81s
+
+NAME                       READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/grq2       1/1     1            1           26s
+deployment.apps/hysds-ui   1/1     1            1           81s
+deployment.apps/logstash   1/1     1            1           82s
+deployment.apps/minio      1/1     1            1           18s
+deployment.apps/mozart     1/1     1            1           82s
+deployment.apps/redis      1/1     1            1           82s
+
+$ kubectl get pv
+NAME                                       CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM                                         STORAGECLASS   REASON   AGE
+pvc-3b445f22-5d10-4429-b4b6-44b1f702ef5c   5Gi        RWO            Delete           Bound    default/grq-es-master-grq-es-master-0         hostpath                4m29s
+pvc-53487dc6-11d7-4427-a907-8ee369247bc6   20Gi       RWO            Delete           Bound    default/minio-pv-claim                        hostpath                3m36s
+pvc-74f3d22d-272d-4de1-86ae-882c64926deb   5Gi        RWO            Delete           Bound    default/mozart-es-master-mozart-es-master-0   hostpath                5m27s
+
+$ kubectl get pvc
+NAME                                  STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   AGE
+grq-es-master-grq-es-master-0         Bound    pvc-3b445f22-5d10-4429-b4b6-44b1f702ef5c   5Gi        RWO            hostpath       4m30s
+minio-pv-claim                        Bound    pvc-53487dc6-11d7-4427-a907-8ee369247bc6   20Gi       RWO            hostpath       3m37s
+mozart-es-master-mozart-es-master-0   Bound    pvc-74f3d22d-272d-4de1-86ae-882c64926deb   5Gi        RWO            hostpath       5m28s
+```
+
+# HySDS Bucket(s)
+
+[minio](https://min.io/) is used as an alternative to s3 as an object store
+
+the minio console can be accessed with `http://localhost:9001`:
+
+- user: `hysds`
+- password: `password`
+
+a bucket called `datasets` will be created when provisioning
+
+<img src="./img/minio.png" alt="drawing" width="1000"/>
+
+# Building PGEs
+
+use the `build_container.py` python script to build your PGE and publish the job metadata
+
+```bash
+$ python build_container.py --help
+# usage: build_container.py [-h] [-f FILE_PATH] -i IMAGE [--dry-run]
+
+# optional arguments:
+#   -h, --help            show this help message and exit
+#   -f FILE_PATH, --file-path FILE_PATH
+#   -i IMAGE, --image IMAGE
+#   --dry-run
+
+$ python build_container.py -i <pge_name>:<tag> -f ~/path/to/project
+```
+
+example:
+
+```bash
+python build_container.py -i hello_world:develop -f pge/hello_world
+```
+
+navigate to Tosca's "on demand" page
+<img src="./img/on-demand-jobs.png" alt="drawing" width="1000"/>
+
+<img src="./img/hello_world-job.png" alt="drawing" width="1000"/>
+
+# Tear down HySDS cluster
+
+use the `destroy.sh` script to tear down your HySDS cluster
+
+```bash
+$ ./destroy.sh --help
+# Usage:
+#   Tear down the HySDS cluster in Kubernetes
+#   ./destroy.sh [--docker] [mozart] [grq] [--all]
+#   Options:
+#     --docker : use if running Kubernetes on Docker for Desktop; kubectl vs kubectl.docker
+#     --all : destroy all HySDS resources (Mozart + GRQ + factotum)
+#     mozart : destroy mozart cluster
+#     grq : destroy GRQ cluster
+#     factotum : destroy factotum
+
+$ ./destroy.sh --all
+```
+
+# Commands used:
+
+```bash
+# create configMap(s)
 kubectl create configmap celeryconfig --from-file celeryconfig.py
-
-# if using Docker desktop
-kubectl.docker create configmap celeryconfig --from-file celeryconfig.py
-```
-
-# Mozart
-
-#### Create the ConfigMap for Mozart Rest APIs `settings.cfg`
-
-```bash
-# in the hysds/ root directory
 kubectl create configmap mozart-settings --from-file ./mozart/rest_api/settings.cfg
-
-# if using Docker desktop
-kubectl.docker create configmap mozart-settings --from-file ./mozart/rest_api/settings.cfg
-```
-
-#### Create ConfigMap for Logstash
-
-```bash
-# in the hysds/mozart/ directory
 kubectl create configmap logstash-configs \
   --from-file=job-status=logstash/job_status.template.json \
   --from-file=event-status=logstash/event_status.template.json \
@@ -70,285 +188,39 @@ kubectl create configmap logstash-configs \
   --from-file=logstash-conf=logstash/logstash.conf \
   --from-file=logstash-yml=logstash/logstash.yml
 
-# if using Docker desktop
-kubectl.docker create configmap logstash-configs \
-  --from-file=job-status=logstash/job_status.template.json \
-  --from-file=event-status=logstash/event_status.template.json \
-  --from-file=worker-status=logstash/worker_status.template.json \
-  --from-file=task-status=logstash/task_status.template.json \
-  --from-file=logstash-conf=logstash/logstash.conf \
-  --from-file=logstash-yml=logstash/logstash.yml
-```
-
-```bash
-$ kubectl get cm
-NAME               DATA   AGE
-celeryconfig       1      8m25s
-logstash-configs   6      5s
-mozart-settings    1      6m46s
-```
-
-#### Starting Mozart's Elasticsearch cluster with [Helm](https://github.com/elastic/helm-charts/tree/master/elasticsearch)
-
-```bash
-# downloading the helm charts from the repository
+# helm commands
 helm repo add elastic https://helm.elastic.co
+helm repo update
 
-# in the hysds/mozart/ directory
-# starting the cluster
-helm install mozart-es elastic/elasticsearch --version 7.9.3 -f elasticsearch/values-override.yml
+# start mozart's ES
+helm install mozart-es elastic/elasticsearch --version 7.9.3 --timeout 150 -f elasticsearch/values-override.yml
 
-# tearing down the cluster
-helm uninstall mozart-es
-```
+kubectl apply -f ./mozart/rest_api/deployment.yml
+kubectl apply -f ./grq/rest_api/deployment.yml
+kubectl apply -f ./mozart/redis/deployment.yml
+kubectl apply -f ./mozart/logstash/deployment.yml
+kubectl apply -f ./mozart/rabbitmq/deployment.yml
+kubectl apply -f ./ui/deployment.yml
+kubectl apply -f ./factotum/deployment.yml
+kubectl apply -f ./orchestrator/deployment.yml
 
-```bash
-$ curl http://localhost:9200
-# {
-#   "name" : "mozart-es-master-0",
-#   "cluster_name" : "mozart-es",
-#   "cluster_uuid" : "JrMWWXIWRvSsI-wjkx9MBg",
-#   "version" : {
-#     "number" : "7.9.3",
-#     "build_flavor" : "default",
-#     "build_type" : "docker",
-#     "build_hash" : "c4138e51121ef06a6404866cddc601906fe5c868",
-#     "build_date" : "2020-10-16T10:36:16.141335Z",
-#     "build_snapshot" : false,
-#     "lucene_version" : "8.6.2",
-#     "minimum_wire_compatibility_version" : "6.8.0",
-#     "minimum_index_compatibility_version" : "6.0.0-beta1"
-#   },
-#   "tagline" : "You Know, for Search"
-# }
-```
-
-#### Starting the Mozart Rest API
-
-```bash
-# in the hysds/mozart/ directory
-kubectl apply -f rest_api/deployment.yml
-# if using Docker desktop
-kubectl.docker apply -f rest_api/deployment.yml
-```
-
-![Mozart rest API](./img/mozart-rest-api.png)
-
-#### Starting the GRQ2 Rest API
-
-```bash
-# in the hysds/grq/ directory
-kubectl apply -f rest_api/deployment.yml
-# if using Docker desktop
-kubectl.docker apply -f rest_api/deployment.yml
-```
-
-the grq2 rest API should now be running on `http://localhost:8878/api/v0.1/`
-
-#### Starting Redis
-
-```bash
-# in the hysds/mozart/ directory
-kubectl apply -f redis/deployment.yml
-# if using Docker desktop
-kubectl.docker apply -f redis/deployment.yml
-```
-
-#### Starting Logstash
-
-```bash
-# in the hysds/moazrt/ directory
-kubectl apply -f logstash/deployment.yml
-# if using Docker desktop
-kubectl.docker apply -f logstash/deployment.yml
-```
-
-#### Starting RabbitMQ
-
-```bash
-# in the hysds/moazrt/ directory
-kubectl apply -f rabbitmq/deployment.yml
-# if using Docker desktop
-kubectl.docker apply -f rabbitmq/deployment.yml
-```
-
-#### Running the Celery task to publish/consume data
-
-`celery` task to consume data
-
-```bash
-# in the hysds/mozart/ directory
-kubectl apply -f celery/deployment.yml
-# if using Docker desktop
-kubectl.docker apply -f celery/deployment.yml
-```
-
-python script to publish data
-
-```bash
-# in the hysds/mozart/ directory
-kubectl run --rm -i --tty celery-publisher \
-  --image celery-tasks:unity-v0.0.1 \
-  --restart=Never \
-  --image-pull-policy=Never -- python tasks/publish.py
-
-# if using Docker desktop
-kubectl.docker run --rm -i --tty celery-publisher \
-  --image celery-tasks:unity-v0.0.1 \
-  --restart=Never \
-  --image-pull-policy=Never -- python tasks/publish.py
-```
-
-`celery` task logs
-
-```
-tail -f celery_tasks.log
-
-Please specify a different user using the --uid option.
-
-User information: uid=0 euid=0 gid=0 egid=0
-
-  warnings.warn(SecurityWarning(ROOT_DISCOURAGED.format(
-[2021-11-05 19:50:26,325: INFO/MainProcess] Connected to amqp://guest:**@rabbitmq:5672//
-[2021-11-05 19:50:26,340: INFO/MainProcess] mingle: searching for neighbors
-[2021-11-05 19:50:27,374: INFO/MainProcess] mingle: all alone
-[2021-11-05 19:50:27,406: INFO/MainProcess] celery@celery-tasks ready.
-[2021-11-05 19:54:25,061: INFO/MainProcess] Task tasks.get_data[87771a5c-3f5f-4cdf-bace-67256c67004d] received
-/usr/local/lib/python3.8/site-packages/celery/platforms.py:834: SecurityWarning: You're running the worker with superuser privileges: this is
-absolutely not recommended!
-
-Please specify a different user using the --uid option.
-
-User information: uid=0 euid=0 gid=0 egid=0
-
-  warnings.warn(SecurityWarning(ROOT_DISCOURAGED.format(
-[2021-11-05 19:54:25,068: INFO/ForkPoolWorker-2] Task tasks.get_data[87771a5c-3f5f-4cdf-bace-67256c67004d] succeeded in 0.005493774999195011s: {'celery_hostname': '##############', 'type': '##########', 'payload_id': 'd1f1a5c9-fb43-46ca-911c-3aada4d800bb', 'resource': 'job', 'uuid': '3c5b2e98-93f9-4775-a872-641e281b98cf', 'dedup': True, '@version': '1', 'job_id': '##########', 'status': 'job-started', '@timestamp': '2021-11-05T19:54:24.897535'}
-[2021-11-05 19:54:25,327: INFO/MainProcess] Task tasks.get_data[4fd0b4d0-bbf0-435f-ad23-5eed19aa3d77] received
-[2021-11-05 19:54:25,329: INFO/ForkPoolWorker-2] Task tasks.get_data[4fd0b4d0-bbf0-435f-ad23-5eed19aa3d77] succeeded in 0.0011581799999476061s: {'celery_hostname': '##############', 'type': '##########', 'payload_id': 'f51f0a1d-fbc9-4cf2-a434-baa5a4f0b03f', 'resource': 'job', 'uuid': 'f9477534-99cb-4ece-a483-45ae32480be1', 'dedup': True, '@version': '1', 'job_id': '##########', 'status': 'job-queued', '@timestamp': '2021-11-05T19:54:25.324520'}
-...
-```
-
-Data ingested into Elasticsearch
-
-```bash
-$ curl http://localhost:9200/_cat/indices?v
-health status index              uuid                   pri rep docs.count docs.deleted store.size pri.store.size
-yellow open   job_status-current QxnnmhokS5-Lw4t8GFxd-A   1   1         62            0     53.1kb         53.1kb
-```
-
-# GRQ
-
-#### Starting GRQ's Elasticsearch cluster
-
-```bash
-# downloading the helm charts from the repository
-helm repo add elastic https://helm.elastic.co
-
-# in the hysds/grq/ directory
-# starting the cluster
-helm install grq-es elastic/elasticsearch --version 7.9.3 -f elasticsearch/values-override.yml
-
-# tearing down the cluster
-helm uninstall grq-es
-```
-
-```bash
-$ curl http://localhost:9201
-# {
-#   "name" : "grq-es-master-0",
-#   "cluster_name" : "grq-es",
-#   "cluster_uuid" : "TWnGGEdKRJaWgkt6p3gtrA",
-#   "version" : {
-#     "number" : "7.9.3",
-#     "build_flavor" : "default",
-#     "build_type" : "docker",
-#     "build_hash" : "c4138e51121ef06a6404866cddc601906fe5c868",
-#     "build_date" : "2020-10-16T10:36:16.141335Z",
-#     "build_snapshot" : false,
-#     "lucene_version" : "8.6.2",
-#     "minimum_wire_compatibility_version" : "6.8.0",
-#     "minimum_index_compatibility_version" : "6.0.0-beta1"
-#   },
-#   "tagline" : "You Know, for Search"
-# }
-```
-
-#### Create the ConfigMap for GRQ's Rest APIs `settings.cfg`
-
-```bash
-# in the hysds/ root directory
+# start GRQ's ES
+helm install grq-es elastic/elasticsearch --version 7.9.3 --timeout 150 -f elasticsearch/values-override.yml
 kubectl create configmap grq2-settings --from-file ./grq/rest_api/settings.cfg
 
-# if using Docker desktop
-kubectl.docker create configmap grq2-settings --from-file ./grq/rest_api/settings.cfg
+helm uninstall mozart-es
+helm uninstall grq-es
+
+kubectl delete all --all
+kubectl delete cm --all  # deletes ConfigMap(s)
+kubectl delete pvc --all  # deletes PersistentVolumeClaim(s)
+kubectl delete pv --all  # deletes PersistentVolume(s)
 ```
 
-# Factotum
+# Troubleshooting
+
+- delete `/tmp/data` and restart your docker/kubernetes if you run into this issue
 
 ```bash
-$ kubectl.docker create cm datasets --from-file datasets.json
-# configmap/datasets created
-
-$ kubectl.docker create cm supervisord-job-worker --from-file supervisord.conf
-# configmap/supervisord-job-worker created
-```
-
-# All K8 resources
-
-```bash
-$ kubectl get all
-NAME                           READY   STATUS    RESTARTS   AGE
-pod/celery-tasks               1/1     Running   0          77s
-pod/factotum-job-worker        1/1     Running   0          5s
-pod/grq-es-master-0            1/1     Running   0          74s
-pod/grq2-7b7b749665-8csm9      1/1     Running   0          5s
-pod/logstash-f6897dbb7-qxlkd   1/1     Running   0          77s
-pod/mozart-56f7f5f4b7-nngj9    1/1     Running   0          78s
-pod/mozart-es-master-0         1/1     Running   0          2m24s
-pod/rabbitmq-0                 1/1     Running   0          77s
-pod/redis-6f486db698-h72np     1/1     Running   0          77s
-
-NAME                         TYPE           CLUSTER-IP       EXTERNAL-IP   PORT(S)                         AGE
-service/grq-es               LoadBalancer   10.107.74.255    localhost     9201:30068/TCP,9301:31307/TCP   74s
-service/grq-es-headless      ClusterIP      None             <none>        9201/TCP,9301/TCP               74s
-service/grq2                 LoadBalancer   10.111.253.126   localhost     8878:31290/TCP                  5s
-service/kubernetes           ClusterIP      10.96.0.1        <none>        443/TCP                         73m
-service/mozart               LoadBalancer   10.106.1.4       localhost     8888:30017/TCP                  78s
-service/mozart-es            LoadBalancer   10.98.13.197     localhost     9200:30578/TCP,9300:31764/TCP   2m24s
-service/mozart-es-headless   ClusterIP      None             <none>        9200/TCP,9300/TCP               2m24s
-service/rabbitmq             NodePort       10.107.111.4     <none>        4369:30444/TCP,5672:30950/TCP   77s
-service/rabbitmq-mgmt        LoadBalancer   10.106.84.161    localhost     15672:31520/TCP                 77s
-service/redis                NodePort       10.111.214.190   <none>        6379:31111/TCP                  77s
-
-NAME                       READY   UP-TO-DATE   AVAILABLE   AGE
-deployment.apps/grq2       1/1     1            1           5s
-deployment.apps/logstash   1/1     1            1           77s
-deployment.apps/mozart     1/1     1            1           78s
-deployment.apps/redis      1/1     1            1           77s
-
-NAME                                 DESIRED   CURRENT   READY   AGE
-replicaset.apps/grq2-7b7b749665      1         1         1       5s
-replicaset.apps/logstash-f6897dbb7   1         1         1       77s
-replicaset.apps/mozart-56f7f5f4b7    1         1         1       78s
-replicaset.apps/redis-6f486db698     1         1         1       77s
-
-NAME                                READY   AGE
-statefulset.apps/grq-es-master      1/1     74s
-statefulset.apps/mozart-es-master   1/1     2m24s
-statefulset.apps/rabbitmq           1/1     77s
-```
-
-## Deleting K8 cluster
-
-```bash
-$ helm uninstall mozart-es
-$ kubectl delete all --all
-$ kubectl delete cm --all  # deletes ConfigMap(s)
-$ kubectl delete pvc --all  # deletes PersistentVolume(s)
-
-# if using Docker desktop
-$ helm uninstall mozart-es
-$ kubectl.docker delete all --all
-$ kubectl.docker delete cm --all  # deletes ConfigMap(s)
-$ kubectl.docker delete pvc --all  # deletes PersistentVolume(s)
+Cannot start service factotum: error while creating mount source path '/host_mnt/d/project/c/test/docker': mkdir /private: file exists
 ```
