@@ -61,8 +61,8 @@ PYMONITOREDRUNNER_CFG = {
     }
 }
 
-MOZART_URL = "https://{{ MOZART_PVT_IP }}/mozart/"
-MOZART_REST_URL = "http://{{ MOZART_PVT_IP }}:8888/api/v0.1"
+MOZART_URL = "https://mozart:8888/mozart/"
+MOZART_REST_URL = "http://mozart:8888/api/v0.1"
 JOBS_ES_URL = "http://mozart-es:9200"
 JOBS_PROCESSED_QUEUE = "jobs_processed"
 USER_RULES_JOB_QUEUE = "user_rules_job"
@@ -71,9 +71,9 @@ USER_RULES_JOB_INDEX = "user_rules-mozart"
 STATUS_ALIAS = "job_status"
 
 TOSCA_URL = "https://{{ GRQ_PVT_IP }}/search/"
-GRQ_URL = "http://{{ GRQ_PVT_IP }}:{{ GRQ_PORT }}"
-GRQ_REST_URL = "http://{{ GRQ_PVT_IP }}:{{ GRQ_PORT }}/api/v0.1"
-GRQ_UPDATE_URL = "http://{{ GRQ_PVT_IP }}:{{ GRQ_PORT }}/api/v0.1/grq/dataset/index"
+GRQ_URL = "http://grq2:8878"
+GRQ_REST_URL = "http://grq2:8878/api/v0.1"
+GRQ_UPDATE_URL = "http://grq2:8878/api/v0.1/grq/dataset/index"
 
 
 GRQ_AWS_ES = False
@@ -99,9 +99,9 @@ PROCESS_EVENTS_TASKS_QUEUE = "process_events_tasks"
 METRICS_ES_URL = "http://{{ METRICS_ES_PVT_IP }}:9200"
 
 # REDIS_JOB_STATUS_URL = "redis://:{{ MOZART_REDIS_PASSWORD }}@{{ MOZART_REDIS_PVT_IP }}"
-REDIS_JOB_STATUS_URL = "redis://:6379"
+REDIS_JOB_STATUS_URL = "redis://redis:6379"
 REDIS_JOB_STATUS_KEY = "logstash"
-REDIS_JOB_INFO_URL = "redis://:{{ METRICS_REDIS_PASSWORD }}@{{ METRICS_REDIS_PVT_IP }}"
+REDIS_JOB_INFO_URL = "redis://redis:6379"
 REDIS_JOB_INFO_KEY = "logstash"
 REDIS_INSTANCE_METRICS_URL = "redis://:{{ METRICS_REDIS_PASSWORD }}@{{ METRICS_REDIS_PVT_IP }}"
 REDIS_INSTANCE_METRICS_KEY = "logstash"
@@ -111,7 +111,8 @@ REDIS_UNIX_DOMAIN_SOCKET = "unix://:/tmp/redis.sock"
 WORKER_CONTIGUOUS_FAILURE_THRESHOLD = 10
 WORKER_CONTIGUOUS_FAILURE_TIME = 5.
 
-ROOT_WORK_DIR = "/data/work"
+# ROOT_WORK_DIR = "/data/work"
+ROOT_WORK_DIR = "/private/tmp/data/work"
 WEBDAV_URL = None
 WEBDAV_PORT = 8085
 

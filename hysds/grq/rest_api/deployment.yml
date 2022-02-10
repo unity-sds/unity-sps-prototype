@@ -5,11 +5,11 @@ metadata:
   labels:
     app: grq2
 spec:
+  type: LoadBalancer
   ports:
     - port: 8878
   selector:
     app: grq2
-  type: LoadBalancer
 
 ---
 apiVersion: apps/v1
@@ -38,11 +38,14 @@ spec:
               name: grq2
           volumeMounts:
             - name: grq2-settings
-              mountPath: /root/grq2/settings.cfg
+              mountPath: /home/ops/grq2/settings.cfg
               subPath: settings.cfg
             - name: celeryconfig
-              mountPath: /root/grq2/celeryconfig.py
+              mountPath: /home/ops/grq2/celeryconfig.py
               subPath: celeryconfig.py
+            - name: netrc
+              mountPath: /home/ops/.netrc
+              subPath: .netrc
       volumes:
         - name: grq2-settings
           configMap:
@@ -50,3 +53,6 @@ spec:
         - name: celeryconfig
           configMap:
             name: celeryconfig
+        - name: netrc
+          configMap:
+            name: netrc
