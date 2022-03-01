@@ -82,6 +82,7 @@ fi
 if (($factotum == 1)); then
   $command delete -f ./factotum/deployment.yml || true
   $command delete -f ./orchestrator/deployment.yml || true
+  $command delete -f ./user_rules/deployment.yml || true
   $command delete -f ./minio/deployment.yml || true
   $command delete -f ./minio/post-setup.yml || true
   $command delete -f ./minio/volume.yml || true
@@ -89,6 +90,7 @@ if (($factotum == 1)); then
   $command delete cm datasets || true
   $command delete cm supervisord-job-worker || true
   $command delete cm supervisord-orchestrator || true
+  $command delete cm supervisord-user-rules || true
 fi
 
 if (($mozart == 1 && $factotum == 1 && $grq == 1)); then

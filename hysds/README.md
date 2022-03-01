@@ -7,6 +7,13 @@
 - [Helm](https://helm.sh/docs/intro/install/)
   - `brew install helm` if on Mac
 
+> :warning: if you're a Linux user, you can create a directory called `/private`
+
+```bash
+$ sudo mkdir -p /private/tmp/data
+$ sudo chown -R $UID:$(id -g) /private/tmp
+```
+
 # Docker resource settings
 
 > :warning: **Make sure to set "Memory" to value >= 6.0GB**

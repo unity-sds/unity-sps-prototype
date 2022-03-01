@@ -131,7 +131,7 @@ if (($grq == 1)); then
 fi
 
 if (($factotum == 1)); then
-  mkdir -p /private/tmp/buckets/datasets || true
+  mkdir -p /private/tmp/data || true
   $command apply -f ./minio/volume.yml
   sleep 5
 
@@ -139,13 +139,20 @@ if (($factotum == 1)); then
   $command create cm supervisord-orchestrator --from-file ./orchestrator/supervisord.conf
 
   $command delete cm datasets || true
+  if [[ ! -f "./configs/datasets.json" ]]; then
+    cp ./configs/datasets.template.json ./configs/datasets.json
+  fi
   $command create cm datasets --from-file ./configs/datasets.json
 
   $command delete cm supervisord-job-worker || true
   $command create cm supervisord-job-worker --from-file ./factotum/supervisord.conf
 
+  $command delete cm supervisord-user-rules || true
+  $command create cm supervisord-user-rules --from-file ./user_rules/supervisord.conf
+
   $command apply -f ./factotum/deployment.yml
   $command apply -f ./orchestrator/deployment.yml
+  $command apply -f ./user_rules/deployment.yml
 
   $command apply -f ./minio/deployment.yml
   $command apply -f ./minio/post-setup.yml

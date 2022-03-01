@@ -1,20 +1,20 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: orchestrator
+  name: user-rules
 spec:
   securityContext:
     runAsUser: 0
     runAsGroup: 0
   containers:
-    - name: orchestrator
+    - name: user-rules
       image: hysds-core:unity-v0.0.1
       command: ["supervisord", "--nodaemon"]
       volumeMounts:
         - name: celeryconfig
           mountPath: /home/ops/hysds/celeryconfig.py
           subPath: celeryconfig.py
-        - name: supervisord-orchestrator
+        - name: supervisord-user-rules
           mountPath: /etc/supervisord.conf
           subPath: supervisord.conf
         - name: data-work
@@ -23,9 +23,9 @@ spec:
     - name: celeryconfig
       configMap:
         name: celeryconfig
-    - name: supervisord-orchestrator
+    - name: supervisord-user-rules
       configMap:
-        name: supervisord-orchestrator
+        name: supervisord-user-rules
     - name: data-work
       hostPath:
         path: /private/tmp/data

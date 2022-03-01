@@ -209,4 +209,6 @@ $RECYCLE.BIN/
 .vscode
 .vscode/
 
-# datasets.json
+datasets.json
+config/datasets.json
+hysds/config/datasets.json
