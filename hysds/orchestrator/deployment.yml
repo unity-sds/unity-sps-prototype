@@ -1,31 +1,42 @@
-apiVersion: v1
-kind: Pod
+apiVersion: apps/v1
+kind: Deployment
 metadata:
   name: orchestrator
+  labels:
+    app: orchestrator
 spec:
-  securityContext:
-    runAsUser: 0
-    runAsGroup: 0
-  containers:
-    - name: orchestrator
-      image: hysds-core:unity-v0.0.1
-      command: ["supervisord", "--nodaemon"]
-      volumeMounts:
+  # replicas: 2
+  selector:
+    matchLabels:
+      app: orchestrator
+  template:
+    metadata:
+      labels:
+        app: orchestrator
+    spec:
+      securityContext:
+        runAsUser: 0
+        runAsGroup: 0
+      containers:
+        - name: orchestrator
+          image: hysds-core:unity-v0.0.1
+          command: ["supervisord", "--nodaemon"]
+          volumeMounts:
+            - name: celeryconfig
+              mountPath: /home/ops/hysds/celeryconfig.py
+              subPath: celeryconfig.py
+            - name: supervisord-orchestrator
+              mountPath: /etc/supervisord.conf
+              subPath: supervisord.conf
+            - name: data-work
+              mountPath: /private/tmp/data
+      volumes:
         - name: celeryconfig
-          mountPath: /home/ops/hysds/celeryconfig.py
-          subPath: celeryconfig.py
+          configMap:
+            name: celeryconfig
         - name: supervisord-orchestrator
-          mountPath: /etc/supervisord.conf
-          subPath: supervisord.conf
+          configMap:
+            name: supervisord-orchestrator
         - name: data-work
-          mountPath: /private/tmp/data
-  volumes:
-    - name: celeryconfig
-      configMap:
-        name: celeryconfig
-    - name: supervisord-orchestrator
-      configMap:
-        name: supervisord-orchestrator
-    - name: data-work
-      hostPath:
-        path: /private/tmp/data
+          hostPath:
+            path: /private/tmp/data
