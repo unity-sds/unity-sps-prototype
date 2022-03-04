@@ -7,6 +7,13 @@
 - [Helm](https://helm.sh/docs/intro/install/)
   - `brew install helm` if on Mac
 
+> :warning: if you're a Linux user, you can create a directory called `/private`
+
+```bash
+$ sudo mkdir -p /private/tmp/data
+$ sudo chown -R $UID:$(id -g) /private/tmp
+```
+
 # Docker resource settings
 
 > :warning: **Make sure to set "Memory" to value >= 6.0GB**
@@ -43,7 +50,6 @@ $ ./deploy.sh --help
 #   Deploys the HySDS cluster in Kubernetes (Elasticsearch, Rest API, RabbitMQ, Redis, etc.)
 #   ./deploy.sh [--docker] [mozart] [grq] [--all]
 #   Options:
-#     --docker : use if running Kubernetes on Docker for Desktop; kubectl vs kubectl.docker
 #     --all : deploy all HySDS resources (Mozart + GRQ + factotum)
 #     mozart : deploy Mozart cluster
 #     grq : deploy GRQ cluster
@@ -66,40 +72,61 @@ $ ./deploy.sh --all
 
 ```bash
 $ kubectl get all
-NAME                            READY   STATUS    RESTARTS   AGE
-pod/factotum-job-worker         1/1     Running   0          17s
-pod/grq-es-master-0             1/1     Running   0          78s
-pod/grq2-cbc7bdf6f-d48rh        1/1     Running   0          25s
-pod/hysds-ui-6c5d969498-2rb5x   1/1     Running   0          80s
-pod/logstash-f6897dbb7-7gvcq    1/1     Running   0          81s
-pod/minio-66b9cc99c8-5994s      1/1     Running   0          17s
-pod/mozart-cd9ffc587-2jmqd      1/1     Running   0          81s
-pod/mozart-es-master-0          1/1     Running   0          2m16s
-pod/orchestrator                1/1     Running   0          17s
-pod/rabbitmq-0                  1/1     Running   0          81s
-pod/redis-6f486db698-dgdxs      1/1     Running   0          81s
+NAME                                       READY   STATUS      RESTARTS   AGE
+pod/factotum-job-worker-58597f47f4-ct5cs   1/1     Running     0          2m14s
+pod/grq-es-master-0                        1/1     Running     0          3m15s
+pod/grq2-cbc7bdf6f-z5j6f                   1/1     Running     0          2m20s
+pod/hysds-ui-6c5d969498-9mp55              1/1     Running     0          3m17s
+pod/logstash-f6897dbb7-bq652               1/1     Running     0          3m18s
+pod/mc                                     0/1     Completed   0          2m14s
+pod/minio-66b9cc99c8-c2xvh                 1/1     Running     0          2m14s
+pod/mozart-cd9ffc587-rgdjx                 1/1     Running     0          3m18s
+pod/mozart-es-master-0                     1/1     Running     0          4m13s
+pod/orchestrator-d989856b9-mcdzq           1/1     Running     0          2m14s
+pod/rabbitmq-0                             1/1     Running     0          3m18s
+pod/redis-6f486db698-b2plf                 1/1     Running     0          3m18s
+pod/user-rules-548485c5bb-hbdcl            1/1     Running     0          2m14s
 
 NAME                         TYPE           CLUSTER-IP       EXTERNAL-IP   PORT(S)                                         AGE
-service/grq-es               LoadBalancer   10.103.109.169   localhost     9201:30893/TCP,9301:30751/TCP                   78s
-service/grq-es-headless      ClusterIP      None             <none>        9201/TCP,9301/TCP                               78s
-service/grq2                 LoadBalancer   10.102.241.22    localhost     8878:31168/TCP                                  25s
-service/hysds-ui             LoadBalancer   10.107.130.186   localhost     3000:31000/TCP                                  80s
-service/kubernetes           ClusterIP      10.96.0.1        <none>        443/TCP                                         2d
-service/minio                LoadBalancer   10.103.14.173    localhost     9000:31060/TCP,9001:31146/TCP                   17s
-service/mozart               LoadBalancer   10.100.99.150    localhost     8888:31662/TCP                                  81s
-service/mozart-es            LoadBalancer   10.109.84.170    localhost     9200:31162/TCP,9300:31303/TCP                   2m16s
-service/mozart-es-headless   ClusterIP      None             <none>        9200/TCP,9300/TCP                               2m16s
-service/rabbitmq             NodePort       10.99.164.99     <none>        4369:31559/TCP,5672:32013/TCP,15672:32059/TCP   81s
-service/rabbitmq-mgmt        LoadBalancer   10.107.140.108   localhost     15672:32114/TCP                                 81s
-service/redis                NodePort       10.105.36.23     <none>        6379:32016/TCP                                  81s
+service/grq-es               LoadBalancer   10.100.216.57    localhost     9201:31651/TCP,9301:30670/TCP                   3m15s
+service/grq-es-headless      ClusterIP      None             <none>        9201/TCP,9301/TCP                               3m15s
+service/grq2                 LoadBalancer   10.98.57.177     localhost     8878:32353/TCP                                  2m20s
+service/hysds-ui             LoadBalancer   10.101.127.235   localhost     3000:31000/TCP                                  3m17s
+service/kubernetes           ClusterIP      10.96.0.1        <none>        443/TCP                                         26d
+service/minio                LoadBalancer   10.100.0.194     localhost     9000:30818/TCP,9001:32193/TCP                   2m14s
+service/mozart               LoadBalancer   10.106.71.131    localhost     8888:31618/TCP                                  3m18s
+service/mozart-es            LoadBalancer   10.105.160.254   localhost     9200:32161/TCP,9300:31784/TCP                   4m13s
+service/mozart-es-headless   ClusterIP      None             <none>        9200/TCP,9300/TCP                               4m13s
+service/rabbitmq             NodePort       10.108.145.184   <none>        4369:30853/TCP,5672:31886/TCP,15672:31243/TCP   3m18s
+service/rabbitmq-mgmt        LoadBalancer   10.102.101.114   localhost     15672:31752/TCP                                 3m18s
+service/redis                NodePort       10.106.16.166    <none>        6379:32275/TCP                                  3m18s
 
-NAME                       READY   UP-TO-DATE   AVAILABLE   AGE
-deployment.apps/grq2       1/1     1            1           26s
-deployment.apps/hysds-ui   1/1     1            1           81s
-deployment.apps/logstash   1/1     1            1           82s
-deployment.apps/minio      1/1     1            1           18s
-deployment.apps/mozart     1/1     1            1           82s
-deployment.apps/redis      1/1     1            1           82s
+NAME                                  READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/factotum-job-worker   1/1     1            1           2m14s
+deployment.apps/grq2                  1/1     1            1           2m20s
+deployment.apps/hysds-ui              1/1     1            1           3m17s
+deployment.apps/logstash              1/1     1            1           3m18s
+deployment.apps/minio                 1/1     1            1           2m14s
+deployment.apps/mozart                1/1     1            1           3m18s
+deployment.apps/orchestrator          1/1     1            1           2m14s
+deployment.apps/redis                 1/1     1            1           3m18s
+deployment.apps/user-rules            1/1     1            1           2m14s
+
+NAME                                             DESIRED   CURRENT   READY   AGE
+replicaset.apps/factotum-job-worker-58597f47f4   1         1         1       2m14s
+replicaset.apps/grq2-cbc7bdf6f                   1         1         1       2m20s
+replicaset.apps/hysds-ui-6c5d969498              1         1         1       3m17s
+replicaset.apps/logstash-f6897dbb7               1         1         1       3m18s
+replicaset.apps/minio-66b9cc99c8                 1         1         1       2m14s
+replicaset.apps/mozart-cd9ffc587                 1         1         1       3m18s
+replicaset.apps/orchestrator-d989856b9           1         1         1       2m14s
+replicaset.apps/redis-6f486db698                 1         1         1       3m18s
+replicaset.apps/user-rules-548485c5bb            1         1         1       2m14s
+
+NAME                                READY   AGE
+statefulset.apps/grq-es-master      1/1     3m16s
+statefulset.apps/mozart-es-master   1/1     4m14s
+statefulset.apps/rabbitmq           1/1     3m19s
 
 $ kubectl get pv
 NAME                                       CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM                                         STORAGECLASS   REASON   AGE

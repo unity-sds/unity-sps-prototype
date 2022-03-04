@@ -13,7 +13,6 @@ Usage:
   Tear down the HySDS cluster in Kubernetes
   $0 [--docker] [mozart] [grq] [--all]
   Options:
-    --docker : use if running Kubernetes on Docker for Desktop; kubectl vs kubectl.docker
     --all : destroy all HySDS resources (Mozart + GRQ + factotum)
     mozart : destroy mozart cluster
     grq : destroy GRQ cluster
@@ -26,9 +25,6 @@ while [ "$1" != "" ]; do
   -h | --help)
     docstring # run docstring function
     exit 0
-    ;;
-  --docker)
-    command=kubectl.docker
     ;;
   -a | --all)
     mozart=1
@@ -59,40 +55,42 @@ fi
 if (($mozart == 1)); then
   helm uninstall mozart-es || true
 
-  $command delete -f ./mozart/rest_api/deployment.yml || true
-  $command delete -f ./mozart/redis/deployment.yml || true
-  $command delete -f ./mozart/logstash/deployment.yml || true
-  $command delete -f ./mozart/rabbitmq/deployment.yml || true
-  $command delete -f ./ui/deployment.yml || true
-  $command delete cm mozart-settings || true
-  $command delete cm logstash-configs || true
+  kubectl delete -f ./mozart/rest_api/deployment.yml || true
+  kubectl delete -f ./mozart/redis/deployment.yml || true
+  kubectl delete -f ./mozart/logstash/deployment.yml || true
+  kubectl delete -f ./mozart/rabbitmq/deployment.yml || true
+  kubectl delete -f ./ui/deployment.yml || true
+  kubectl delete cm mozart-settings || true
+  kubectl delete cm logstash-configs || true
 
-  $command get pvc --no-headers=true | awk '/mozart-es/{print $1}' | xargs kubectl delete pvc || true
+  kubectl get pvc --no-headers=true | awk '/mozart-es/{print $1}' | xargs kubectl delete pvc || true
 fi
 
 if (($grq == 1)); then
   helm uninstall grq-es || true
 
-  $command delete cm grq2-settings || true
-  $command delete -f ./grq/rest_api/deployment.yml || true
+  kubectl delete cm grq2-settings || true
+  kubectl delete -f ./grq/rest_api/deployment.yml || true
 
-  $command get pvc --no-headers=true | awk '/grq-es/{print $1}' | xargs kubectl delete pvc || true
+  kubectl get pvc --no-headers=true | awk '/grq-es/{print $1}' | xargs kubectl delete pvc || true
 fi
 
 if (($factotum == 1)); then
-  $command delete -f ./factotum/deployment.yml || true
-  $command delete -f ./orchestrator/deployment.yml || true
-  $command delete -f ./minio/deployment.yml || true
-  $command delete -f ./minio/post-setup.yml || true
-  $command delete -f ./minio/volume.yml || true
+  kubectl delete -f ./factotum/deployment.yml || true
+  kubectl delete -f ./orchestrator/deployment.yml || true
+  kubectl delete -f ./user_rules/deployment.yml || true
+  kubectl delete -f ./minio/deployment.yml || true
+  kubectl delete -f ./minio/post-setup.yml || true
+  kubectl delete -f ./minio/volume.yml || true
 
-  $command delete cm datasets || true
-  $command delete cm supervisord-job-worker || true
-  $command delete cm supervisord-orchestrator || true
+  kubectl delete cm datasets || true
+  kubectl delete cm supervisord-job-worker || true
+  kubectl delete cm supervisord-orchestrator || true
+  kubectl delete cm supervisord-user-rules || true
 fi
 
 if (($mozart == 1 && $factotum == 1 && $grq == 1)); then
-  $command delete cm celeryconfig || true
-  $command delete cm netrc || true
-  $command delete cm aws-credentials || true
+  kubectl delete cm celeryconfig || true
+  kubectl delete cm netrc || true
+  kubectl delete cm aws-credentials || true
 fi
