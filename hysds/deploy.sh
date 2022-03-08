@@ -133,6 +133,9 @@ if (($factotum == 1)); then
   kubectl delete cm supervisord-orchestrator || true
   kubectl create cm supervisord-orchestrator --from-file ./orchestrator/supervisord.conf
 
+  if [[ ! -f "./configs/datasets.json" ]]; then
+    cp ./configs/datasets.template.json ./configs/datasets.json
+  fi
   kubectl create cm datasets --from-file ./configs/datasets.json
 
   kubectl delete cm supervisord-job-worker || true
@@ -140,10 +143,6 @@ if (($factotum == 1)); then
 
   kubectl delete cm supervisord-user-rules || true
   kubectl create cm supervisord-user-rules --from-file ./user_rules/supervisord.conf
-
-  if [[ ! -f "./configs/datasets.json" ]]; then
-    cp ./configs/datasets.template.json ./configs/datasets.json
-  fi
 
   kubectl apply -f ./factotum/deployment.yml
   kubectl apply -f ./orchestrator/deployment.yml
