@@ -1,4 +1,4 @@
-FROM hysds-core:unity-v0.0.1
+FROM ghcr.io/unity-sds/unity-sps-prototype/hysds-core:unity-v0.0.1
 
 WORKDIR /home/ops
 
