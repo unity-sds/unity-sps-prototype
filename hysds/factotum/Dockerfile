@@ -1,4 +1,5 @@
-FROM hysds-core:unity-v0.0.1
+ARG PARENT_DOCKER_IMAGE=docker.io/library/hysds-core:unity-v0.0.1
+FROM $PARENT_DOCKER_IMAGE
 
 USER root
 
