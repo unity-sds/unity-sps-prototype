@@ -59,3 +59,5 @@ jobs:
         push: true
         tags: ${{ env.REGISTRY }}/${{ env.MOZART_IMAGE_NAME }}:${{ env.TAG }}
         labels: ${{ steps.metamozart.outputs.labels }}
+        build-args: |
+          PARENT_DOCKER_IMAGE=${{ env.REGISTRY }}/${{ env.HYSDS_CORE_IMAGE_NAME }}:${{ env.TAG }}
