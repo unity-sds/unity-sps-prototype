@@ -212,3 +212,6 @@ $RECYCLE.BIN/
 datasets.json
 config/datasets.json
 hysds/config/datasets.json
+
+*.tfstate*
+.terraform*
