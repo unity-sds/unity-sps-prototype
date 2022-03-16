@@ -136,7 +136,14 @@ if (($factotum == 1)); then
   if [[ ! -f "./configs/datasets.json" ]]; then
     cp ./configs/datasets.template.json ./configs/datasets.json
   fi
+  kubectl delete cm datasets || true
   kubectl create cm datasets --from-file ./configs/datasets.json
+
+  if [[ ! -f "./verdi/supervisord.conf" ]]; then
+    cp ./verdi/supervisord.template.conf ./verdi/supervisord.conf
+  fi
+  kubectl delete cm supervisord-verdi || true
+  kubectl create cm supervisord-verdi --from-file ./verdi/supervisord.conf
 
   kubectl delete cm supervisord-job-worker || true
   kubectl create cm supervisord-job-worker --from-file ./factotum/supervisord.conf
@@ -144,9 +151,10 @@ if (($factotum == 1)); then
   kubectl delete cm supervisord-user-rules || true
   kubectl create cm supervisord-user-rules --from-file ./user_rules/supervisord.conf
 
-  kubectl apply -f ./factotum/deployment.yml
   kubectl apply -f ./orchestrator/deployment.yml
   kubectl apply -f ./user_rules/deployment.yml
+  kubectl apply -f ./factotum/deployment.yml
+  kubectl apply -f ./verdi/deployment.yml
 
   kubectl apply -f ./minio/deployment.yml
   kubectl apply -f ./minio/post-setup.yml

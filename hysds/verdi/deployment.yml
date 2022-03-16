@@ -1,18 +1,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: factotum-job-worker
+  name: verdi
   labels:
-    app: factotum-job-worker
+    app: verdi
 spec:
   # replicas: 2
   selector:
     matchLabels:
-      app: factotum-job-worker
+      app: verdi
   template:
     metadata:
       labels:
-        app: factotum-job-worker
+        app: verdi
     spec:
       initContainers:
         - name: change-ownership
@@ -27,7 +27,7 @@ spec:
             - name: data-work
               mountPath: /private/tmp/data
       containers:
-        - name: factotum-job-worker
+        - name: verdi
           image: verdi:unity-v0.0.1
           command: ["supervisord", "--nodaemon"]
           volumeMounts:
@@ -39,8 +39,8 @@ spec:
             - name: datasets
               mountPath: /home/ops/datasets.json
               subPath: datasets.json
-            - name: supervisord-job-worker
-              mountPath: /home/ops/supervisord.conf
+            - name: supervisord-verdi
+              mountPath: /etc/supervisord.conf
               subPath: supervisord.conf
             - name: aws-credentials
               mountPath: /home/ops/.aws/credentials
@@ -57,9 +57,9 @@ spec:
         - name: datasets
           configMap:
             name: datasets
-        - name: supervisord-job-worker
+        - name: supervisord-verdi
           configMap:
-            name: supervisord-job-worker
+            name: supervisord-verdi
         - name: aws-credentials
           configMap:
             name: aws-credentials
