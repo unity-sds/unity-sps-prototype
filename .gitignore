@@ -212,3 +212,5 @@ $RECYCLE.BIN/
 datasets.json
 config/datasets.json
 hysds/config/datasets.json
+
+hysds/verdi/supervisord.conf
