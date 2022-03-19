@@ -1,6 +1,10 @@
 {
   "command": "/home/ops/verdi/ops/hello_world_pge/run_hello_world.sh",
-  "recommended-queues": [ "factotum-job_worker-small", "factotum-job_worker-large" ],
+  "recommended-queues": [
+    "factotum-job_worker-small",
+    "factotum-job_worker-large",
+    "verdi-job_worker"
+  ],
   "params": [],
   "disk_usage": "100KB",
   "soft_time_limit": 900,
