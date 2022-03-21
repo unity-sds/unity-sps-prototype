@@ -1,4 +1,5 @@
-FROM hysds-core:unity-v0.0.1
+ARG PARENT_DOCKER_IMAGE=hysds-core:unity-v0.0.1
+FROM $PARENT_DOCKER_IMAGE
 
 WORKDIR /home/ops
 
