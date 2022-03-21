@@ -42,3 +42,31 @@ esConfig:
   elasticsearch.yml: |
     http.cors.enabled : true
     http.cors.allow-origin: "*"
+
+lifecycle:
+  postStart:
+    exec:
+      command:
+        - bash
+        - -c
+        - |
+          #!/bin/bash
+          ES_URL=http://localhost:9200
+          while [[ "$(curl -s -o /dev/null -w '%{http_code}\n' $ES_URL)" != "200" ]]; do sleep 1; done
+          mozart_es_template=$(curl -s https://raw.githubusercontent.com/hysds/mozart/develop/configs/es_template.json)
+          for idx in "containers" "job_specs" "hysds_io"; do
+            template=$(echo ${mozart_es_template} | sed "s/{{ index }}/${idx}/")
+            curl -X PUT "$ES_URL/_template/${idx}" -H 'Content-Type: application/json' -d "${template}" >/dev/null
+          done
+
+          hysds_io_mozart=$(curl -s https://raw.githubusercontent.com/hysds/mozart/develop/configs/hysds_ios.mapping)
+          curl -X PUT "$ES_URL/_template/hysds_ios-mozart?pretty" -H 'Content-Type: application/json' -d '${hysds_io_mozart}'
+
+          user_rules_mozart=$(curl -s https://raw.githubusercontent.com/hysds/mozart/develop/configs/user_rules_job.mapping)
+          curl -X PUT "$ES_URL/user_rules-mozart?pretty" -H 'Content-Type: application/json' -d "${user_rules_mozart}"
+
+          hysds_io_grq=$(curl -s https://raw.githubusercontent.com/hysds/grq2/develop/config/hysds_ios.mapping)
+          curl -X PUT "$ES_URL/hysds_ios-grq?pretty"  -H 'Content-Type: application/json' -d "${hysds_io_grq}"
+
+          user_rules_grq=$(curl -s https://raw.githubusercontent.com/hysds/grq2/develop/config/user_rules_dataset.mapping)
+          curl -X PUT "$ES_URL/user_rules-grq?pretty" -H 'Content-Type: application/json' -d "${user_rules_grq}"
