@@ -128,5 +128,3 @@ resource "kubernetes_deployment" "factotum-job-worker" {
 
   }
 }
-
-

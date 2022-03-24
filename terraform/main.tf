@@ -9,5 +9,3 @@ provider "helm" {
     insecure    = true
   }
 }
-
-
