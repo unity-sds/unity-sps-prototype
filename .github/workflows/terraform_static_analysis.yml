@@ -22,7 +22,7 @@ jobs:
       - name: terraform validate
         uses: dflook/terraform-validate@master
         with:
-          path: "${{ env.working_directory }}**"
+          path: "${{ env.working_directory }}"
 
   terraform_fmt:
     name: Check Terraform files are formatted correctly.
