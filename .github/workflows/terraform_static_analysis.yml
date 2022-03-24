@@ -1,0 +1,96 @@
+name: Terraform Static Analysis
+
+env:
+  working_directory: "terraform/"
+
+on:
+  push:
+    paths:
+      - "${{env.working_directory}}**"
+
+jobs:
+  terraform_validate:
+    name: Validates all Terraform configuration files.
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@master
+
+      - name: terraform validate
+        uses: dflook/terraform-validate@master
+        with:
+          path: "${{env.working_directory}}**"
+
+  terraform_fmt:
+    name: Check Terraform files are formatted correctly.
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@master
+
+      - name: terraform fmt
+        uses: dflook/terraform-fmt-check@master
+        with:
+          path: ${{env.working_directory}}
+
+  terraform_tflint:
+    name: Validates all Terraform configuration files with TFLint.
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@master
+
+      - name: Cache plugin dir
+        uses: actions/cache@master
+        with:
+          path: ~/.tflint.d/plugins
+          key: ${{ matrix.os }}-tflint-${{ hashFiles('.tflint.hcl') }}
+
+      - name: Setup TFLint
+        uses: terraform-linters/setup-tflint@master
+        with:
+          tflint_version: v0.29.0
+
+      - name: Show version
+        run: tflint --version
+
+      - name: Init TFLint
+        run: tflint --init
+
+      - name: Run TFLint
+        run: tflint -f compact ${{env.working_directory}}
+
+  terraform_tfsec:
+    name: Static analysis of Terraform templates to spot potential security issues.
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@master
+
+      - name: tfsec
+        uses: aquasecurity/tfsec-action@master
+        with:
+          working_directory: ${{env.working_directory}}
+          soft_fail: true
+
+  checkov:
+    runs-on: ubuntu-latest
+    name: checkov-action
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@master
+
+      - name: Run Checkov action
+        id: checkov
+        uses: bridgecrewio/checkov-action@master
+        with:
+          directory: ${{env.working_directory}}
+          quiet: true # optional: display only failed checks
+          soft_fail: true # optional: do not return an error code if there are failed checks
+          framework: terraform # optional: run only on a specific infrastructure {cloudformation,terraform,kubernetes,all}
+          output_format: github_failed_only # optional: the output format, one of: cli, json, junitxml, github_failed_only, or sarif. Default: sarif
+          download_external_modules: true # optional: download external terraform modules from public git repositories and terraform registry

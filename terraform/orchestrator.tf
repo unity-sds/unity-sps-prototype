@@ -76,5 +76,3 @@ resource "kubernetes_deployment" "orchestrator" {
     }
   }
 }
-
-

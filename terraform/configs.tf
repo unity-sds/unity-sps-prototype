@@ -94,4 +94,3 @@ resource "kubernetes_config_map" "aws-credentials" {
     "aws-credentials" = "${file("${path.module}/../hysds/configs/aws-credentials")}"
   }
 }
-

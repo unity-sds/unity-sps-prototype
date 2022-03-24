@@ -6,6 +6,7 @@
 - `kubectl` - kubernetes command line tool
 - [Helm](https://helm.sh/docs/intro/install/)
   - `brew install helm` if on Mac
+- [Terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli)
 
 > :warning: if you're a Linux user, you can create a directory called `/private`
 
@@ -42,7 +43,11 @@ hysds-core          unity-v0.0.1         e1ab6d70f58e   3 hours ago     934MB
 
 # Deploying cluster on local
 
-use the `deploy.sh` script to deploy all resources at once
+The cluster can be deployed with two different methods which are described in the following subsections.
+
+## Method 1: Deploy via Bash script
+
+Use the `deploy.sh` script to deploy all resources at once
 
 ```bash
 $ ./deploy.sh --help
@@ -56,6 +61,51 @@ $ ./deploy.sh --help
 #     factotum : deploy factotum
 
 $ ./deploy.sh --all
+```
+
+## Method 2: Deploy via Terraform
+
+From within the Terraform module directory (unity-sps-prototype/terraform/), run the following commands to initialize, apply, and then destroy the Terraform module:
+
+```bash
+$ terraform init
+$ terraform apply
+$ terraform destroy
+```
+
+### :warning: Note: Debugging a deployment
+
+It is often useful to modify the level of TF_LOG environment variable when debugging
+a Terraform deployment. The levels include:
+
+An example of setting the `TF_LOG` environment variable to `INFO`:
+
+```bash
+$ export TF_LOG=INFO
+```
+
+Additionally, it is also often useful to pipe the output of a Terraform deployment into a log file.
+
+An example of piping the `terraform apply` output into a file named apply_output.txt:
+
+```bash
+$ terraform apply -no-color 2>&1 | tee apply_output.txt
+```
+
+Occasionally, a Terraform deployment goes awry and Terraform loses track of existing resources. When this happens, `terraform destroy` is unable to clean up the resources and you'll likely end up with existing resource errors when attempting your next `terraform apply`. This requires some manual garbage collection of the lingering orphan resources. It also sometimes requires nuking the existing Terraform-related state tracking files/directory.
+
+The following commands are useful for manually ensuring all orphan resources are destroyed:
+
+```bash
+$ helm uninstall mozart-es
+$ helm uninstall grq-es
+$ kubectl delete all --all
+$ kubectl delete cm --all  # deletes ConfigMap(s)
+$ kubectl delete pvc --all  # deletes PersistentVolumeClaim(s)
+$ kubectl delete pv --all  # deletes PersistentVolume(s)
+$ rm -rf .terraform
+$ rm terraform.tfstate
+$ rm terraform.tf.backup
 ```
 
 # HySDS Resources

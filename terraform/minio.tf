@@ -107,7 +107,7 @@ resource "kubernetes_deployment" "minio" {
   }
 }
 
-/* 
+/*
 resource "kubernetes_pod" "mc" {
   metadata {
     name = "mc"
