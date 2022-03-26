@@ -73,72 +73,77 @@ $ ./deploy.sh --all
 ```bash
 $ kubectl get all
 NAME                                       READY   STATUS      RESTARTS   AGE
-pod/factotum-job-worker-58597f47f4-ct5cs   1/1     Running     0          2m14s
-pod/grq-es-master-0                        1/1     Running     0          3m15s
-pod/grq2-cbc7bdf6f-z5j6f                   1/1     Running     0          2m20s
-pod/hysds-ui-6c5d969498-9mp55              1/1     Running     0          3m17s
-pod/logstash-f6897dbb7-bq652               1/1     Running     0          3m18s
-pod/mc                                     0/1     Completed   0          2m14s
-pod/minio-66b9cc99c8-c2xvh                 1/1     Running     0          2m14s
-pod/mozart-cd9ffc587-rgdjx                 1/1     Running     0          3m18s
-pod/mozart-es-master-0                     1/1     Running     0          4m13s
-pod/orchestrator-d989856b9-mcdzq           1/1     Running     0          2m14s
-pod/rabbitmq-0                             1/1     Running     0          3m18s
-pod/redis-6f486db698-b2plf                 1/1     Running     0          3m18s
-pod/user-rules-548485c5bb-hbdcl            1/1     Running     0          2m14s
+pod/factotum-job-worker-7d899b4d88-885xz   1/1     Running     0          14m
+pod/grq-es-master-0                        1/1     Running     0          15m
+pod/grq2-cbc7bdf6f-qm769                   1/1     Running     0          14m
+pod/hysds-ui-6c5d969498-pm7br              1/1     Running     0          15m
+pod/logstash-f6897dbb7-f5rrs               1/1     Running     0          15m
+pod/mc                                     0/1     Completed   0          14m
+pod/minio-66b9cc99c8-b9qth                 1/1     Running     0          14m
+pod/mozart-cd9ffc587-djmwq                 1/1     Running     0          16m
+pod/mozart-es-master-0                     1/1     Running     0          16m
+pod/orchestrator-d989856b9-pkptx           1/1     Running     0          14m
+pod/rabbitmq-0                             1/1     Running     0          15m
+pod/redis-master-0                         1/1     Running     0          15m
+pod/user-rules-548485c5bb-w9k79            1/1     Running     0          14m
+pod/verdi-6c4f568d4b-9d5f6                 1/1     Running     0          14m
 
 NAME                         TYPE           CLUSTER-IP       EXTERNAL-IP   PORT(S)                                         AGE
-service/grq-es               LoadBalancer   10.100.216.57    localhost     9201:31651/TCP,9301:30670/TCP                   3m15s
-service/grq-es-headless      ClusterIP      None             <none>        9201/TCP,9301/TCP                               3m15s
-service/grq2                 LoadBalancer   10.98.57.177     localhost     8878:32353/TCP                                  2m20s
-service/hysds-ui             LoadBalancer   10.101.127.235   localhost     3000:31000/TCP                                  3m17s
-service/kubernetes           ClusterIP      10.96.0.1        <none>        443/TCP                                         26d
-service/minio                LoadBalancer   10.100.0.194     localhost     9000:30818/TCP,9001:32193/TCP                   2m14s
-service/mozart               LoadBalancer   10.106.71.131    localhost     8888:31618/TCP                                  3m18s
-service/mozart-es            LoadBalancer   10.105.160.254   localhost     9200:32161/TCP,9300:31784/TCP                   4m13s
-service/mozart-es-headless   ClusterIP      None             <none>        9200/TCP,9300/TCP                               4m13s
-service/rabbitmq             NodePort       10.108.145.184   <none>        4369:30853/TCP,5672:31886/TCP,15672:31243/TCP   3m18s
-service/rabbitmq-mgmt        LoadBalancer   10.102.101.114   localhost     15672:31752/TCP                                 3m18s
-service/redis                NodePort       10.106.16.166    <none>        6379:32275/TCP                                  3m18s
+service/grq-es               LoadBalancer   10.98.248.151    localhost     9201:30557/TCP,9301:30957/TCP                   15m
+service/grq-es-headless      ClusterIP      None             <none>        9201/TCP,9301/TCP                               15m
+service/grq2                 LoadBalancer   10.100.12.236    localhost     8878:31879/TCP                                  14m
+service/hysds-ui             LoadBalancer   10.105.112.52    localhost     3000:31000/TCP                                  15m
+service/kubernetes           ClusterIP      10.96.0.1        <none>        443/TCP                                         48d
+service/minio                LoadBalancer   10.101.34.42     localhost     9000:30405/TCP,9001:31261/TCP                   14m
+service/mozart               LoadBalancer   10.96.213.87     localhost     8888:32726/TCP                                  16m
+service/mozart-es            LoadBalancer   10.108.63.3      localhost     9200:32299/TCP,9300:32083/TCP                   16m
+service/mozart-es-headless   ClusterIP      None             <none>        9200/TCP,9300/TCP                               16m
+service/rabbitmq             NodePort       10.110.219.153   <none>        4369:31748/TCP,5672:32150/TCP,15672:32168/TCP   15m
+service/rabbitmq-mgmt        LoadBalancer   10.100.15.210    localhost     15672:31377/TCP                                 15m
+service/redis-headless       ClusterIP      None             <none>        6379/TCP                                        15m
+service/redis-master         ClusterIP      10.100.4.71      <none>        6379/TCP                                        15m
 
 NAME                                  READY   UP-TO-DATE   AVAILABLE   AGE
-deployment.apps/factotum-job-worker   1/1     1            1           2m14s
-deployment.apps/grq2                  1/1     1            1           2m20s
-deployment.apps/hysds-ui              1/1     1            1           3m17s
-deployment.apps/logstash              1/1     1            1           3m18s
-deployment.apps/minio                 1/1     1            1           2m14s
-deployment.apps/mozart                1/1     1            1           3m18s
-deployment.apps/orchestrator          1/1     1            1           2m14s
-deployment.apps/redis                 1/1     1            1           3m18s
-deployment.apps/user-rules            1/1     1            1           2m14s
+deployment.apps/factotum-job-worker   1/1     1            1           14m
+deployment.apps/grq2                  1/1     1            1           14m
+deployment.apps/hysds-ui              1/1     1            1           15m
+deployment.apps/logstash              1/1     1            1           15m
+deployment.apps/minio                 1/1     1            1           14m
+deployment.apps/mozart                1/1     1            1           16m
+deployment.apps/orchestrator          1/1     1            1           14m
+deployment.apps/user-rules            1/1     1            1           14m
+deployment.apps/verdi                 1/1     1            1           14m
 
 NAME                                             DESIRED   CURRENT   READY   AGE
-replicaset.apps/factotum-job-worker-58597f47f4   1         1         1       2m14s
-replicaset.apps/grq2-cbc7bdf6f                   1         1         1       2m20s
-replicaset.apps/hysds-ui-6c5d969498              1         1         1       3m17s
-replicaset.apps/logstash-f6897dbb7               1         1         1       3m18s
-replicaset.apps/minio-66b9cc99c8                 1         1         1       2m14s
-replicaset.apps/mozart-cd9ffc587                 1         1         1       3m18s
-replicaset.apps/orchestrator-d989856b9           1         1         1       2m14s
-replicaset.apps/redis-6f486db698                 1         1         1       3m18s
-replicaset.apps/user-rules-548485c5bb            1         1         1       2m14s
+replicaset.apps/factotum-job-worker-7d899b4d88   1         1         1       14m
+replicaset.apps/grq2-cbc7bdf6f                   1         1         1       14m
+replicaset.apps/hysds-ui-6c5d969498              1         1         1       15m
+replicaset.apps/logstash-f6897dbb7               1         1         1       15m
+replicaset.apps/minio-66b9cc99c8                 1         1         1       14m
+replicaset.apps/mozart-cd9ffc587                 1         1         1       16m
+replicaset.apps/orchestrator-d989856b9           1         1         1       14m
+replicaset.apps/user-rules-548485c5bb            1         1         1       14m
+replicaset.apps/verdi-6c4f568d4b                 1         1         1       14m
 
 NAME                                READY   AGE
-statefulset.apps/grq-es-master      1/1     3m16s
-statefulset.apps/mozart-es-master   1/1     4m14s
-statefulset.apps/rabbitmq           1/1     3m19s
+statefulset.apps/grq-es-master      1/1     15m
+statefulset.apps/mozart-es-master   1/1     16m
+statefulset.apps/rabbitmq           1/1     15m
+statefulset.apps/redis-master       1/1     15m
 
 $ kubectl get pv
 NAME                                       CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM                                         STORAGECLASS   REASON   AGE
-pvc-3b445f22-5d10-4429-b4b6-44b1f702ef5c   5Gi        RWO            Delete           Bound    default/grq-es-master-grq-es-master-0         hostpath                4m29s
-pvc-53487dc6-11d7-4427-a907-8ee369247bc6   20Gi       RWO            Delete           Bound    default/minio-pv-claim                        hostpath                3m36s
-pvc-74f3d22d-272d-4de1-86ae-882c64926deb   5Gi        RWO            Delete           Bound    default/mozart-es-master-mozart-es-master-0   hostpath                5m27s
+pvc-07542676-bd22-477e-9257-79e2ef318b2f   5Gi        RWO            Delete           Bound    default/mozart-es-master-mozart-es-master-0   hostpath                17m
+pvc-0dc13c15-3063-413c-b515-ea214d5d2273   8Gi        RWO            Delete           Bound    default/redis-data-redis-master-0             hostpath                16m
+pvc-cf7e1956-bf8c-4d0a-a6d5-ea83fee40b78   5Gi        RWO            Delete           Bound    default/grq-es-master-grq-es-master-0         hostpath                16m
+pvc-f482b0b7-9803-42fe-88de-af7d1e6c30b5   20Gi       RWO            Delete           Bound    default/minio-pv-claim                        hostpath                15m
 
 $ kubectl get pvc
 NAME                                  STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   AGE
-grq-es-master-grq-es-master-0         Bound    pvc-3b445f22-5d10-4429-b4b6-44b1f702ef5c   5Gi        RWO            hostpath       4m30s
-minio-pv-claim                        Bound    pvc-53487dc6-11d7-4427-a907-8ee369247bc6   20Gi       RWO            hostpath       3m37s
-mozart-es-master-mozart-es-master-0   Bound    pvc-74f3d22d-272d-4de1-86ae-882c64926deb   5Gi        RWO            hostpath       5m28s
+grq-es-master-grq-es-master-0         Bound    pvc-cf7e1956-bf8c-4d0a-a6d5-ea83fee40b78   5Gi        RWO            hostpath       16m
+minio-pv-claim                        Bound    pvc-f482b0b7-9803-42fe-88de-af7d1e6c30b5   20Gi       RWO            hostpath       15m
+mozart-es-master-mozart-es-master-0   Bound    pvc-07542676-bd22-477e-9257-79e2ef318b2f   5Gi        RWO            hostpath       18m
+redis-data-redis-master-0             Bound    pvc-0dc13c15-3063-413c-b515-ea214d5d2273   8Gi        RWO            hostpath       17m
 ```
 
 # HySDS Bucket(s)
@@ -226,10 +231,9 @@ helm repo update
 
 # start mozart's ES
 helm install mozart-es elastic/elasticsearch --version 7.9.3 --timeout 150 -f elasticsearch/values-override.yml
-
+helm install --wait --timeout 60s redis bitnami/redis -f ./mozart/redis/values.yml
 kubectl apply -f ./mozart/rest_api/deployment.yml
 kubectl apply -f ./grq/rest_api/deployment.yml
-kubectl apply -f ./mozart/redis/deployment.yml
 kubectl apply -f ./mozart/logstash/deployment.yml
 kubectl apply -f ./mozart/rabbitmq/deployment.yml
 kubectl apply -f ./ui/deployment.yml
@@ -242,6 +246,7 @@ kubectl create configmap grq2-settings --from-file ./grq/rest_api/settings.cfg
 
 helm uninstall mozart-es
 helm uninstall grq-es
+helm uninstall redis
 
 kubectl delete all --all
 kubectl delete cm --all  # deletes ConfigMap(s)

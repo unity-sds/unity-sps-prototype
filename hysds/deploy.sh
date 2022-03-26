@@ -61,6 +61,7 @@ kubectl delete cm aws-credentials || true
 kubectl create cm aws-credentials --from-file ./configs/aws-credentials
 
 helm repo add elastic https://helm.elastic.co
+helm repo add bitnami https://charts.bitnami.com/bitnami
 helm repo update
 
 if (($mozart == 1)); then
@@ -99,7 +100,10 @@ if (($mozart == 1)); then
   curl -X PUT -H 'Content-Type: application/json' 'http://127.0.0.1:9200/user_rules-grq?pretty' -d "${user_rules_grq}"
 
   kubectl apply -f ./mozart/rest_api/deployment.yml
-  kubectl apply -f ./mozart/redis/deployment.yml
+
+  # kubectl apply -f ./mozart/redis/deployment.yml
+  helm install --wait --timeout 60s redis bitnami/redis -f ./mozart/redis/values.yml
+
   kubectl apply -f ./mozart/logstash/deployment.yml
   kubectl apply -f ./mozart/rabbitmq/deployment.yml
   kubectl apply -f ./ui/deployment.yml

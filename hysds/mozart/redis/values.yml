@@ -1,0 +1,5 @@
+architecture: standalone
+
+auth:
+  enabled: false
+  sentinel: false
