@@ -1,7 +1,7 @@
 name: Terraform Static Analysis
 
 env:
-  working_directory: "terraform/"
+  working_directory: "./terraform/"
 
 on:
   push:
@@ -81,7 +81,7 @@ jobs:
 
   checkov:
     runs-on: ubuntu-latest
-    name: checkov-action
+    name: Static analysis of Terraform templates.
     steps:
       - name: Checkout repo
         uses: actions/checkout@master
