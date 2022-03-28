@@ -99,13 +99,10 @@ if (($mozart == 1)); then
   user_rules_grq=$(curl -s https://raw.githubusercontent.com/hysds/grq2/develop/config/user_rules_dataset.mapping)
   curl -X PUT -H 'Content-Type: application/json' 'http://127.0.0.1:9200/user_rules-grq?pretty' -d "${user_rules_grq}"
 
+  helm install --wait --timeout 90s redis bitnami/redis -f ./mozart/redis/values.yml
+  helm install --wait --timeout 90s rabbitmq bitnami/rabbitmq -f ./mozart/rabbitmq/values.yml
   kubectl apply -f ./mozart/rest_api/deployment.yml
-
-  # kubectl apply -f ./mozart/redis/deployment.yml
-  helm install --wait --timeout 60s redis bitnami/redis -f ./mozart/redis/values.yml
-
   kubectl apply -f ./mozart/logstash/deployment.yml
-  kubectl apply -f ./mozart/rabbitmq/deployment.yml
   kubectl apply -f ./ui/deployment.yml
 fi
 

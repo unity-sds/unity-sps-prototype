@@ -1,0 +1,6 @@
+service:
+  type: LoadBalancer
+
+auth:
+  username: guest
+  password: guest

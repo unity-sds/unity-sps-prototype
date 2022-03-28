@@ -53,18 +53,19 @@ if (($grq == 0 && $mozart == 0 && $factotum == 0)); then
 fi
 
 if (($mozart == 1)); then
+  kubectl delete -f ./ui/deployment.yml || true
   kubectl delete -f ./mozart/rest_api/deployment.yml || true
   kubectl delete -f ./mozart/logstash/deployment.yml || true
-  kubectl delete -f ./mozart/rabbitmq/deployment.yml || true
+  helm uninstall rabbitmq || true
   helm uninstall redis || true
 
-  kubectl delete -f ./ui/deployment.yml || true
   kubectl delete cm mozart-settings || true
   kubectl delete cm logstash-configs || true
 
   helm uninstall mozart-es || true
   kubectl get pvc --no-headers=true | awk '/mozart-es/{print $1}' | xargs kubectl delete pvc || true
   kubectl get pvc --no-headers=true | awk '/redis/{print $1}' | xargs kubectl delete pvc || true
+  kubectl get pvc --no-headers=true | awk '/data-rabbitmq/{print $1}' | xargs kubectl delete pvc || true
 fi
 
 if (($grq == 1)); then
