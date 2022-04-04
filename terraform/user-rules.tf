@@ -1,6 +1,7 @@
 resource "kubernetes_deployment" "user-rules" {
   metadata {
-    name = "user-rules"
+    name      = "user-rules"
+    namespace = kubernetes_namespace.unity-sps.metadata.0.name
     labels = {
       app = "user-rules"
     }

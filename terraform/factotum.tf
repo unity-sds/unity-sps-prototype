@@ -1,6 +1,7 @@
 resource "kubernetes_deployment" "factotum-job-worker" {
   metadata {
-    name = "factotum-job-worker"
+    name      = "factotum-job-worker"
+    namespace = kubernetes_namespace.unity-sps.metadata.0.name
     labels = {
       app = "factotum-job-worker"
     }

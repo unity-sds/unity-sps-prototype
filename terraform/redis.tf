@@ -1,7 +1,8 @@
 
 resource "kubernetes_service" "redis_service" {
   metadata {
-    name = "redis"
+    name      = "redis"
+    namespace = kubernetes_namespace.unity-sps.metadata.0.name
   }
 
   spec {
@@ -22,7 +23,8 @@ resource "kubernetes_service" "redis_service" {
 
 resource "kubernetes_deployment" "redis" {
   metadata {
-    name = "redis"
+    name      = "redis"
+    namespace = kubernetes_namespace.unity-sps.metadata.0.name
     labels = {
       app = "redis"
     }
@@ -39,6 +41,7 @@ resource "kubernetes_deployment" "redis" {
 
     template {
       metadata {
+        namespace = kubernetes_namespace.unity-sps.metadata.0.name
         labels = {
           app = "redis"
         }

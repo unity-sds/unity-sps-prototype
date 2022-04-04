@@ -1,7 +1,8 @@
 
 resource "kubernetes_service" "rabbitmq_mgmt_service" {
   metadata {
-    name = "rabbitmq-mgmt"
+    name      = "rabbitmq-mgmt"
+    namespace = kubernetes_namespace.unity-sps.metadata.0.name
   }
 
   spec {
@@ -22,7 +23,8 @@ resource "kubernetes_service" "rabbitmq_mgmt_service" {
 
 resource "kubernetes_service" "rabbitmq_service" {
   metadata {
-    name = "rabbitmq"
+    name      = "rabbitmq"
+    namespace = kubernetes_namespace.unity-sps.metadata.0.name
   }
 
   spec {
@@ -55,7 +57,8 @@ resource "kubernetes_service" "rabbitmq_service" {
 
 resource "kubernetes_stateful_set" "rabbitmq_statefulset" {
   metadata {
-    name = "rabbitmq"
+    name      = "rabbitmq"
+    namespace = kubernetes_namespace.unity-sps.metadata.0.name
   }
   spec {
     service_name = "rabbitmq"

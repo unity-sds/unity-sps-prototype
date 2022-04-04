@@ -1,6 +1,7 @@
 resource "kubernetes_service" "mozart_service" {
   metadata {
-    name = "mozart"
+    name      = "mozart"
+    namespace = kubernetes_namespace.unity-sps.metadata.0.name
   }
 
   spec {
@@ -21,7 +22,8 @@ resource "kubernetes_service" "mozart_service" {
 
 resource "kubernetes_deployment" "mozart" {
   metadata {
-    name = "mozart"
+    name      = "mozart"
+    namespace = kubernetes_namespace.unity-sps.metadata.0.name
     labels = {
       app = "mozart"
     }
