@@ -1,7 +1,8 @@
 
 resource "kubernetes_service" "grq2_service" {
   metadata {
-    name = "grq2"
+    name      = "grq2"
+    namespace = kubernetes_namespace.unity-sps.metadata.0.name
   }
 
   spec {
@@ -22,7 +23,8 @@ resource "kubernetes_service" "grq2_service" {
 
 resource "kubernetes_deployment" "grq2" {
   metadata {
-    name = "grq2"
+    name      = "grq2"
+    namespace = kubernetes_namespace.unity-sps.metadata.0.name
     labels = {
       app = "grq2"
     }

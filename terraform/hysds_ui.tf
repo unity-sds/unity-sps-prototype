@@ -1,7 +1,8 @@
 
 resource "kubernetes_service" "hysds-ui_service" {
   metadata {
-    name = "hysds-ui"
+    name      = "hysds-ui"
+    namespace = kubernetes_namespace.unity-sps.metadata.0.name
   }
   spec {
     selector = {
@@ -22,7 +23,8 @@ resource "kubernetes_service" "hysds-ui_service" {
 
 resource "kubernetes_deployment" "hysds-ui" {
   metadata {
-    name = "hysds-ui"
+    name      = "hysds-ui"
+    namespace = kubernetes_namespace.unity-sps.metadata.0.name
   }
 
   spec {

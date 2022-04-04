@@ -1,6 +1,7 @@
 resource "kubernetes_deployment" "orchestrator" {
   metadata {
-    name = "orchestrator"
+    name      = "orchestrator"
+    namespace = kubernetes_namespace.unity-sps.metadata.0.name
     labels = {
       app = "orchestrator"
     }

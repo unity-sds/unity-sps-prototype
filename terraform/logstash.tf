@@ -1,7 +1,8 @@
 
 resource "kubernetes_deployment" "logstash" {
   metadata {
-    name = "logstash"
+    name      = "logstash"
+    namespace = kubernetes_namespace.unity-sps.metadata.0.name
     labels = {
       app = "logstash"
     }
@@ -86,7 +87,6 @@ resource "kubernetes_deployment" "logstash" {
             }
           }
         }
-
 
         volume {
           name = "job-status-mapping"

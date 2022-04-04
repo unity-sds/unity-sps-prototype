@@ -9,3 +9,9 @@ provider "helm" {
     insecure    = true
   }
 }
+
+resource "kubernetes_namespace" "unity-sps" {
+  metadata {
+    name = var.namespace
+  }
+}
