@@ -5,19 +5,8 @@ metadata:
 spec:
   restartPolicy: Never
   initContainers:
-    - name: ping-minio-server
-      image: k8s.gcr.io/busybox
-      command: ["/bin/sh", "-c"]
-      args:
-        - /bin/sh
-        - -c
-        - >
-          set -x;
-          while [ $(curl -sw '%{http_code}' "http://minio:9001" -o /dev/null) -ne 200 ]; do
-            sleep 5;
-          done
     - name: minio-setup
-      image: minio/mc
+      image: minio/mc:RELEASE.2022-03-13T22-34-00Z
       env:
         - name: MINIO_ACCESS_KEY
           value: hysds
@@ -25,7 +14,9 @@ spec:
           value: password
       command: ["/bin/sh", "-c"]
       args:
-        - mc alias set s3 http://minio:9000 ${MINIO_ACCESS_KEY} ${MINIO_SECRET_KEY};
+        - until curl -s -I http://minio:9000; do echo "(Minio server) waiting..."; sleep 2; done;
+          until curl -s -I http://minio:9001; do echo "(Minio client) waiting..."; sleep 2; done;
+          mc alias set s3 http://minio:9000 ${MINIO_ACCESS_KEY} ${MINIO_SECRET_KEY};
           mc mb s3/datasets;
           mc policy set public s3/datasets;
   containers:
