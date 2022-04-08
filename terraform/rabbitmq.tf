@@ -18,7 +18,6 @@ resource "kubernetes_service" "rabbitmq_mgmt_service" {
     }
     type = "LoadBalancer"
   }
-
 }
 
 resource "kubernetes_service" "rabbitmq_service" {

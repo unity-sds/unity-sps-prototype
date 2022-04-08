@@ -99,10 +99,11 @@ The following commands are useful for manually ensuring all orphan resources are
 ```bash
 $ helm uninstall mozart-es
 $ helm uninstall grq-es
-$ kubectl delete all --all
-$ kubectl delete cm --all  # deletes ConfigMap(s)
-$ kubectl delete pvc --all  # deletes PersistentVolumeClaim(s)
-$ kubectl delete pv --all  # deletes PersistentVolume(s)
+$ kubectl delete all --all -n unity-sps
+$ kubectl delete cm --all -n unity-sps # deletes ConfigMap(s)
+$ kubectl delete pvc --all -n unity-sps # deletes PersistentVolumeClaim(s)
+$ kubectl delete pv --all -n unity-sps # deletes PersistentVolume(s)
+$ kubectl delete namespaces unity-sps
 $ rm -rf .terraform
 $ rm terraform.tfstate
 $ rm terraform.tf.backup

@@ -16,7 +16,6 @@ resource "kubernetes_service" "mozart_service" {
 
     type = "LoadBalancer"
   }
-
 }
 
 

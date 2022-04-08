@@ -209,7 +209,10 @@ $RECYCLE.BIN/
 .vscode
 .vscode/
 
-datasets.json
+# Commented out temporarily to get Github Actions to work.
+# This file is referenced in terraform/configs.tf.
+# TODO - Check with Dustin to see how datasets.json and datasets.template.json should be handled.
+#datasets.json
 config/datasets.json
 hysds/config/datasets.json
 
