@@ -2,18 +2,20 @@ name: Build Docker Images
 
 env:
   REGISTRY: ghcr.io
+  TAG: unity-v0.0.1
   HYSDS_CORE_IMAGE_NAME: ${{ github.repository }}/hysds-core
-  MOZART_NAME: ${{ github.repository }}/hysds-mozart
-  CELERY_NAME: ${{ github.repository }}/celery-tasks
+  MOZART_IMAGE_NAME: ${{ github.repository }}/hysds-mozart
+  GRQ_IMAGE_NAME: ${{ github.repository }}/hysds-grq2
+  VERDI_IMAGE_NAME: ${{ github.repository }}/hysds-verdi
+  UI_IMAGE_NAME: ${{ github.repository }}/hysds-ui
+  ADES_WPST_API_IMAGE_NAME: ${{ github.repository }}/ades-wpst-api
 
 on: workflow_dispatch
 
 jobs:
 
-  build-core:
-
+  build-hysds-core:
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v2
     - name: Log in to the Container registry
@@ -22,16 +24,144 @@ jobs:
         registry: ${{ env.REGISTRY }}
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
-    - name: Extract metadata (tags, labels) for Docker
-      id: meta
+    - name: Extract metadata (tags, labels) for HySDS Core Docker image
+      id: metacore
       uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
       with:
         images: ${{ env.REGISTRY }}/${{ env.HYSDS_CORE_IMAGE_NAME }}
-    - name: Build and push Docker image
+    - name: Build and push HySDS Core Docker image
       uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
       with:
         context: hysds
         push: true
-        tags: ${{ steps.meta.outputs.tags }}
-        labels: ${{ steps.meta.outputs.labels }}
-        target: package
+        tags: ${{ env.REGISTRY }}/${{ env.HYSDS_CORE_IMAGE_NAME }}:${{ env.TAG }}
+        labels: ${{ steps.metacore.outputs.labels }}
+
+  build-hysds-mozart:
+    runs-on: ubuntu-latest
+    needs: build-hysds-core
+    steps:
+    - uses: actions/checkout@v2
+    - name: Log in to the Container registry
+      uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
+      with:
+        registry: ${{ env.REGISTRY }}
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    - name: Extract metadata (tags, labels) for HyDSDS Mozart Docker image
+      id: metamozart
+      uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
+      with:
+        images: ${{ env.REGISTRY }}/${{ env.MOZART_IMAGE_NAME }}
+    - name: Build and push HySDS Mozart Docker image
+      uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
+      with:
+        context: hysds/mozart/rest_api/
+        push: true
+        tags: ${{ env.REGISTRY }}/${{ env.MOZART_IMAGE_NAME }}:${{ env.TAG }}
+        labels: ${{ steps.metamozart.outputs.labels }}
+        build-args: |
+          PARENT_DOCKER_IMAGE=${{ env.REGISTRY }}/${{ env.HYSDS_CORE_IMAGE_NAME }}:${{ env.TAG }}
+
+  build-hysds-grq:
+    runs-on: ubuntu-latest
+    needs: build-hysds-core
+    steps:
+    - uses: actions/checkout@v2
+    - name: Log in to the Container registry
+      uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
+      with:
+        registry: ${{ env.REGISTRY }}
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    - name: Extract metadata (tags, labels) for HyDSDS GRQ Docker image
+      id: metagrq
+      uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
+      with:
+        images: ${{ env.REGISTRY }}/${{ env.GRQ_IMAGE_NAME }}
+    - name: Build and push HySDS GRQ Docker image
+      uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
+      with:
+        context: hysds/grq/rest_api/
+        push: true
+        tags: ${{ env.REGISTRY }}/${{ env.GRQ_IMAGE_NAME }}:${{ env.TAG }}
+        labels: ${{ steps.metagrq.outputs.labels }}
+        build-args: |
+          PARENT_DOCKER_IMAGE=${{ env.REGISTRY }}/${{ env.HYSDS_CORE_IMAGE_NAME }}:${{ env.TAG }}
+
+  build-hysds-verdi:
+    runs-on: ubuntu-latest
+    needs: build-hysds-core
+    steps:
+    - uses: actions/checkout@v2
+    - name: Log in to the Container registry
+      uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
+      with:
+        registry: ${{ env.REGISTRY }}
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    - name: Extract metadata (tags, labels) for HyDSDS Verdi Docker image
+      id: metaverdi
+      uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
+      with:
+        images: ${{ env.REGISTRY }}/${{ env.VERDI_IMAGE_NAME }}
+    - name: Build and push HySDS Verdi Docker image
+      uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
+      with:
+        context: hysds/verdi/
+        push: true
+        tags: ${{ env.REGISTRY }}/${{ env.VERDI_IMAGE_NAME }}:${{ env.TAG }}
+        labels: ${{ steps.metaverdi.outputs.labels }}
+        build-args: |
+          PARENT_DOCKER_IMAGE=${{ env.REGISTRY }}/${{ env.HYSDS_CORE_IMAGE_NAME }}:${{ env.TAG }}
+
+
+  build-hysds-ui:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Log in to the Container registry
+      uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
+      with:
+        registry: ${{ env.REGISTRY }}
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    - name: Extract metadata (tags, labels) for HyDSDS UI Docker image
+      id: metaui
+      uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
+      with:
+        images: ${{ env.REGISTRY }}/${{ env.UI_IMAGE_NAME }}
+    - name: Build and push HySDS UI Docker image
+      uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
+      with:
+        context: hysds/ui/
+        push: true
+        tags: ${{ env.REGISTRY }}/${{ env.UI_IMAGE_NAME }}:${{ env.TAG }}
+        labels: ${{ steps.metaui.outputs.labels }}
+
+  build-ades-wpst-api:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+      with:
+        repository: unity-sds/ades_wpst
+    - name: Log in to the container registry
+      uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
+      with:
+        registry: ${{ env.REGISTRY }}
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    - name: Extract metadata (tags, labels) for ADES WPST API Docker image
+      id: metaades
+      uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
+      with:
+        images: ${{ env.REGISTRY }}/${{ env.ADES_WPST_API_IMAGE_NAME }}
+    - name: Build and push ADES WPST API Docker image
+      uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
+      with:
+        context: .
+        file: docker/Dockerfile
+        push: true
+        tags: ${{ env.REGISTRY }}/${{ env.ADES_WPST_API_IMAGE_NAME }}:${{ env.TAG }}
+        labels: ${{ steps.metaades.outputs.labels }}

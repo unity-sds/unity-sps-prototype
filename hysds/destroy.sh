@@ -53,8 +53,6 @@ if (($grq == 0 && $mozart == 0 && $factotum == 0)); then
 fi
 
 if (($mozart == 1)); then
-  helm uninstall mozart-es || true
-
   kubectl delete -f ./mozart/rest_api/deployment.yml || true
   kubectl delete -f ./mozart/redis/deployment.yml || true
   kubectl delete -f ./mozart/logstash/deployment.yml || true
@@ -63,20 +61,21 @@ if (($mozart == 1)); then
   kubectl delete cm mozart-settings || true
   kubectl delete cm logstash-configs || true
 
+  helm uninstall mozart-es || true
   kubectl get pvc --no-headers=true | awk '/mozart-es/{print $1}' | xargs kubectl delete pvc || true
 fi
 
 if (($grq == 1)); then
-  helm uninstall grq-es || true
-
   kubectl delete cm grq2-settings || true
   kubectl delete -f ./grq/rest_api/deployment.yml || true
 
+  helm uninstall grq-es || true
   kubectl get pvc --no-headers=true | awk '/grq-es/{print $1}' | xargs kubectl delete pvc || true
 fi
 
 if (($factotum == 1)); then
   kubectl delete -f ./factotum/deployment.yml || true
+  kubectl delete -f ./verdi/deployment.yml
   kubectl delete -f ./orchestrator/deployment.yml || true
   kubectl delete -f ./user_rules/deployment.yml || true
   kubectl delete -f ./minio/deployment.yml || true
@@ -85,6 +84,7 @@ if (($factotum == 1)); then
 
   kubectl delete cm datasets || true
   kubectl delete cm supervisord-job-worker || true
+  kubectl delete cm supervisord-verdi || true
   kubectl delete cm supervisord-orchestrator || true
   kubectl delete cm supervisord-user-rules || true
 fi
