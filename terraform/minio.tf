@@ -73,7 +73,7 @@ resource "kubernetes_deployment" "minio" {
 
       spec {
         container {
-          image = "minio/minio:latest"
+          image = "minio/minio:RELEASE.2022-03-17T06-34-49Z"
           name  = "minio"
           args  = ["server", "/storage", "--console-address=:9001"]
           env {
@@ -110,91 +110,6 @@ resource "kubernetes_deployment" "minio" {
   }
 }
 
-/* # TODO - Change this toa `kubernetes_job`
-resource "kubernetes_pod" "mc" {
-  metadata {
-    name      = "mc"
-    namespace = kubernetes_namespace.unity-sps.metadata.0.name
-  }
-  spec {
-    restart_policy = "Never"
-    # TODO add command and arguments
-    init_container {
-      name  = "ping-minio-server"
-      image = "k8s.gcr.io/busybox"
-      command = [
-        "/bin/sh", "-c",
-        "while [ $(curl -sw \"%%{http_code}\" \"http://minio:9001\" -o /dev/null) -ne 200 ]; do sleep 5; done;"
-      ]
-    }
-    init_container {
-      name  = "minio-setup"
-      image = "minio/mc"
-      env {
-        name  = "MINIO_ACCESS_KEY"
-        value = "hysds"
-      }
-      env {
-        name  = "MINIO_SECRET_KEY"
-        value = "password"
-      }
-      # TODO remove hardcoded passing of minio access and secret keys
-      command = [
-        "/bin/sh", "-c",
-        "mc alias set s3 http://minio:9000 hysds password;",
-        "mc mb s3/datasets;",
-        "mc policy set public s3/datasets;"
-      ]
-    }
-    container {
-      name    = "publish-aoi"
-      image   = "hysds-core:unity-v0.0.1"
-      command = ["/bin/sh", "-c", "cd /home/ops/hysds/test/examples;", "/home/ops/hysds/scripts/ingest_dataset.py AOI_sacramento_valley /home/ops/datasets.json;"]
-      volume_mount {
-        name       = "celeryconfig"
-        mount_path = "/home/ops/hysds/celeryconfig.py"
-        sub_path   = "celeryconfig.py"
-        read_only  = false
-      }
-      volume_mount {
-        name       = "aws-credentials"
-        mount_path = "/home/ops/.aws/credentials"
-        sub_path   = "aws-credentials"
-        read_only  = false
-      }
-      volume_mount {
-        name       = "datasets"
-        mount_path = "/home/ops/datasets.json"
-        sub_path   = "datasets.json"
-        read_only  = false
-      }
-    }
-    volume {
-      name = "celeryconfig"
-      config_map {
-        name = "celeryconfig"
-      }
-    }
-    volume {
-      name = "aws-credentials"
-      config_map {
-        name = "aws-credentials"
-      }
-    }
-    volume {
-      name = "datasets"
-      config_map {
-        name = "datasets"
-      }
-    }
-  }
-  # TODO - Identify why this `depends_on` is necessary.
-  depends_on = [
-    kubernetes_config_map.celeryconfig, kubernetes_config_map.aws-credentials, kubernetes_config_map.datasets
-  ]
-} */
-
-
 resource "kubernetes_job" "mc" {
   metadata {
     name      = "mc"
@@ -204,39 +119,26 @@ resource "kubernetes_job" "mc" {
     template {
       metadata {}
       spec {
-        # TODO add command and arguments
         init_container {
-          name    = "ping-minio-server"
-          image   = "k8s.gcr.io/busybox"
-          command = [
-            "/bin/sh",
-            "-c",
-            "while [ $(curl -sw \"%%{http_code}\" \"http://minio:9001\" -o /dev/null) -ne 200 ]; do sleep 5; done;"
-          ]
-        }
-        init_container {
-          name  = "minio-setup"
-          image = "minio/mc"
-/*           env {
-            name  = "MINIO_ACCESS_KEY"
-            value = "hysds"
-          }
-          env {
-            name  = "MINIO_SECRET_KEY"
-            value = "password"
-          } */
-          # TODO remove hardcoded passing of minio access and secret keys
-          command = [
-            "/bin/sh", "-c",
-            "mc alias set s3 http://minio:9000 hysds password;",
-            "mc mb s3/datasets;",
-            "mc policy set public s3/datasets;"
+          name    = "minio-setup"
+          image   = "minio/mc:RELEASE.2022-03-13T22-34-00Z"
+          command = ["/bin/sh", "-c"]
+          args = [
+            <<-EOT
+             while [ $$(curl -sw '%%{http_code}' "http://minio:9000/minio/health/live" -o /dev/null) -ne 200 ]; do
+               echo "Waiting for minio server to be ready..." && sleep 5;
+             done
+             mc alias set s3 http://minio:9000 hysds password;
+             mc mb s3/datasets;
+             mc policy set public s3/datasets;
+             EOT
           ]
         }
         container {
           name    = "publish-aoi"
           image   = "hysds-core:unity-v0.0.1"
-          #command = ["/bin/sh", "-c", "cd /home/ops/hysds/test/examples;", "/home/ops/hysds/scripts/ingest_dataset.py AOI_sacramento_valley /home/ops/datasets.json;"]
+          command = ["/bin/sh"]
+          args    = ["-c", "cd /home/ops/hysds/test/examples;", "/home/ops/hysds/scripts/ingest_dataset.py AOI_sacramento_valley /home/ops/datasets.json;"]
           volume_mount {
             name       = "celeryconfig"
             mount_path = "/home/ops/hysds/celeryconfig.py"
@@ -274,12 +176,13 @@ resource "kubernetes_job" "mc" {
             name = "datasets"
           }
         }
+        restart_policy = "Never"
       }
     }
   }
-  # TODO - Identify why this `depends_on` is necessary.
-  depends_on = [
-    kubernetes_config_map.celeryconfig, kubernetes_config_map.aws-credentials, kubernetes_config_map.datasets
-  ]
   wait_for_completion = true
+  timeouts {
+    create = "2m"
+    update = "2m"
+  }
 }

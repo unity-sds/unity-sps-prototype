@@ -17,7 +17,6 @@ resource "kubernetes_service" "grq2_service" {
 
     type = "LoadBalancer"
   }
-
 }
 
 

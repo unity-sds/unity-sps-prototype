@@ -19,7 +19,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@master
 
-      - name: terraform validate
+      - name: Run Terraform validate
         uses: dflook/terraform-validate@master
         with:
           path: "${{ env.working_directory }}"
@@ -32,7 +32,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@master
 
-      - name: terraform fmt
+      - name: Run Terraform fmt
         uses: dflook/terraform-fmt-check@master
         with:
           path: ${{ env.working_directory }}
@@ -56,9 +56,6 @@ jobs:
         with:
           tflint_version: v0.29.0
 
-      - name: Show version
-        run: tflint --version
-
       - name: Init TFLint
         run: tflint --init
 
@@ -73,7 +70,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@master
 
-      - name: tfsec
+      - name: Run tfsec
         uses: aquasecurity/tfsec-action@master
         with:
           working_directory: ${{ env.working_directory }}
@@ -86,7 +83,7 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@master
 
-      - name: Run Checkov action
+      - name: Run Checkov
         id: checkov
         uses: bridgecrewio/checkov-action@master
         with:

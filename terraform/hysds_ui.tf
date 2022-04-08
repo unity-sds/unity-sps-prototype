@@ -17,7 +17,6 @@ resource "kubernetes_service" "hysds-ui_service" {
     }
     type = "LoadBalancer"
   }
-
 }
 
 
