@@ -32,8 +32,8 @@ spec:
         app: minio
     spec:
       containers:
-        - image: "minio/minio:latest"
-          name: minio
+        - name: minio
+          image: minio/minio:RELEASE.2022-03-17T06-34-49Z
           args:
             - server
             - /storage
