@@ -125,13 +125,15 @@ resource "kubernetes_job" "mc" {
           command = ["/bin/sh", "-c"]
           args = [
             <<-EOT
-             while [ $$(curl -sw '%%{http_code}' "http://minio:9000/minio/health/live" -o /dev/null) -ne 200 ]; do
-               echo "Waiting for minio server to be ready..." && sleep 5;
-             done
-             mc alias set s3 http://minio:9000 hysds password;
-             mc mb s3/datasets;
-             mc policy set public s3/datasets;
-             EOT
+            until curl -s -I http://minio:9000; do echo "(Minio server) waiting..."; sleep 2; done;
+            until curl -s -I http://minio:9001; do echo "(Minio client) waiting..."; sleep 2; done;
+            while [ $$(curl -sw '%%{http_code}' "http://minio:9000/minio/health/live" -o /dev/null) -ne 200 ]; do
+              echo "Waiting for minio health live to be ready..." && sleep 5;
+            done
+            mc alias set s3 http://minio:9000 hysds password;
+            mc mb s3/datasets;
+            mc policy set public s3/datasets;
+            EOT
           ]
         }
         container {
