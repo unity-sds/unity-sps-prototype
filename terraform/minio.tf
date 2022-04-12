@@ -139,8 +139,15 @@ resource "kubernetes_job" "mc" {
         container {
           name    = "publish-aoi"
           image   = "hysds-core:unity-v0.0.1"
-          command = ["/bin/sh"]
-          args    = ["-c", "cd /home/ops/hysds/test/examples;", "/home/ops/hysds/scripts/ingest_dataset.py AOI_sacramento_valley /home/ops/datasets.json;"]
+          command = ["/bin/sh", "-c"]
+          args = [
+            <<-EOT
+            set -x;
+            until curl -s -I http://grq2:8878; do echo "(GRQ2) waiting..."; sleep 2; done;
+            cd /home/ops/hysds/test/examples;
+            /home/ops/hysds/scripts/ingest_dataset.py AOI_sacramento_valley /home/ops/datasets.json;
+            EOT
+          ]
           volume_mount {
             name       = "celeryconfig"
             mount_path = "/home/ops/hysds/celeryconfig.py"
@@ -182,6 +189,10 @@ resource "kubernetes_job" "mc" {
       }
     }
   }
+  depends_on = [
+    kubernetes_deployment.grq2,
+    helm_release.grq2-es,
+  ]
   wait_for_completion = true
   timeouts {
     create = "2m"
