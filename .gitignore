@@ -252,3 +252,5 @@ override.tf.json
 .terraformrc
 terraform.rc
 hysds/verdi/supervisord.conf
+
+**/kubeconfig.yaml
