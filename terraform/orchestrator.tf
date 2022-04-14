@@ -33,14 +33,14 @@ resource "kubernetes_deployment" "orchestrator" {
           command = ["supervisord", "--nodaemon"]
 
           volume_mount {
-            name       = "celeryconfig"
-            mount_path = "/home/ops/factotum/celeryconfig.py"
+            name       = kubernetes_config_map.celeryconfig.metadata.0.name
+            mount_path = "/home/ops/hysds/celeryconfig.py"
             sub_path   = "celeryconfig.py"
             read_only  = false
           }
 
           volume_mount {
-            name       = "supervisord-orchestrator"
+            name       = kubernetes_config_map.supervisord-orchestrator.metadata.0.name
             mount_path = "/etc/supervisord.conf"
             sub_path   = "supervisord.conf"
             read_only  = false
@@ -54,16 +54,16 @@ resource "kubernetes_deployment" "orchestrator" {
         }
 
         volume {
-          name = "celeryconfig"
+          name = kubernetes_config_map.celeryconfig.metadata.0.name
           config_map {
-            name = "celeryconfig"
+            name = kubernetes_config_map.celeryconfig.metadata.0.name
           }
         }
 
         volume {
-          name = "supervisord-orchestrator"
+          name = kubernetes_config_map.supervisord-orchestrator.metadata.0.name
           config_map {
-            name = "supervisord-orchestrator"
+            name = kubernetes_config_map.supervisord-orchestrator.metadata.0.name
           }
         }
 

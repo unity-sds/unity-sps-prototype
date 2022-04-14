@@ -66,21 +66,21 @@ resource "kubernetes_deployment" "mozart" {
           }
 
           volume_mount {
-            name       = "mozart-settings"
+            name       = kubernetes_config_map.mozart-settings.metadata.0.name
             mount_path = "/home/ops/mozart/settings.cfg"
             sub_path   = "settings.cfg"
             read_only  = false
           }
 
           volume_mount {
-            name       = "celeryconfig"
+            name       = kubernetes_config_map.celeryconfig.metadata.0.name
             mount_path = "/home/ops/mozart/celeryconfig.py"
             sub_path   = "celeryconfig.py"
             read_only  = false
           }
 
           volume_mount {
-            name       = "netrc"
+            name       = kubernetes_config_map.netrc.metadata.0.name
             mount_path = "/home/ops/.netrc"
             sub_path   = ".netrc"
             read_only  = false
@@ -89,23 +89,23 @@ resource "kubernetes_deployment" "mozart" {
         }
 
         volume {
-          name = "mozart-settings"
+          name = kubernetes_config_map.mozart-settings.metadata.0.name
           config_map {
-            name = "mozart-settings"
+            name = kubernetes_config_map.mozart-settings.metadata.0.name
           }
         }
 
         volume {
-          name = "celeryconfig"
+          name = kubernetes_config_map.celeryconfig.metadata.0.name
           config_map {
-            name = "celeryconfig"
+            name = kubernetes_config_map.celeryconfig.metadata.0.name
           }
         }
 
         volume {
-          name = "netrc"
+          name = kubernetes_config_map.netrc.metadata.0.name
           config_map {
-            name = "netrc"
+            name = kubernetes_config_map.netrc.metadata.0.name
           }
         }
 

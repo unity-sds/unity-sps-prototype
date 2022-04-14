@@ -55,21 +55,21 @@ resource "kubernetes_deployment" "grq2" {
           }
 
           volume_mount {
-            name       = "grq2-settings"
+            name       = kubernetes_config_map.grq2-settings.metadata.0.name
             mount_path = "/home/ops/grq2/settings.cfg"
             sub_path   = "settings.cfg"
             read_only  = false
           }
 
           volume_mount {
-            name       = "celeryconfig"
+            name       = kubernetes_config_map.celeryconfig.metadata.0.name
             mount_path = "/home/ops/grq2/celeryconfig.py"
             sub_path   = "celeryconfig.py"
             read_only  = false
           }
 
           volume_mount {
-            name       = "netrc"
+            name       = kubernetes_config_map.netrc.metadata.0.name
             mount_path = "/home/ops/.netrc"
             sub_path   = ".netrc"
             read_only  = false
@@ -78,23 +78,24 @@ resource "kubernetes_deployment" "grq2" {
         }
 
         volume {
-          name = "grq2-settings"
+          name = kubernetes_config_map.grq2-settings.metadata.0.name
           config_map {
-            name = "grq2-settings"
+            name = kubernetes_config_map.grq2-settings.metadata.0.name
+          }
+        }
+
+
+        volume {
+          name = kubernetes_config_map.celeryconfig.metadata.0.name
+          config_map {
+            name = kubernetes_config_map.celeryconfig.metadata.0.name
           }
         }
 
         volume {
-          name = "celeryconfig"
+          name = kubernetes_config_map.netrc.metadata.0.name
           config_map {
-            name = "celeryconfig"
-          }
-        }
-
-        volume {
-          name = "netrc"
-          config_map {
-            name = "netrc"
+            name = kubernetes_config_map.netrc.metadata.0.name
           }
         }
 
