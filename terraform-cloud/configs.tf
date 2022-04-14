@@ -154,7 +154,7 @@ resource "kubernetes_config_map" "supervisord-verdi" {
     namespace = kubernetes_namespace.unity-sps.metadata.0.name
   }
   data = {
-    "supervisord.conf" = "${file("${path.module}/hysds/verdi/supervisord.conf")}"
+    "supervisord.conf" = "${file("${path.module}/hysds/verdi/supervisord.template.conf")}"
   }
 }
 
