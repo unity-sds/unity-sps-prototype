@@ -82,7 +82,7 @@ resource "kubernetes_deployment" "ades-wpst-api" {
         volume {
           name = "sqlite-db"
           persistent_volume_claim {
-            claim_name = "minio-pv-claim"
+            claim_name = kubernetes_persistent_volume_claim.ades-wpst-sqlite-pv-claim.metadata.0.name
           }
         }
         restart_policy = "Always"

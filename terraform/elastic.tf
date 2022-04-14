@@ -10,11 +10,11 @@ resource "helm_release" "mozart-es" {
   chart      = "elasticsearch"
   version    = "7.9.3"
   wait       = true
-  timeout    = 150
+  timeout    = 300
   values = [
     file("${path.module}/../hysds/mozart/elasticsearch/values-override.yml")
   ]
-  depends_on = [kubernetes_namespace.unity-sps]
+  # depends_on = [kubernetes_namespace.unity-sps]
 }
 
 resource "helm_release" "grq2-es" {
@@ -24,9 +24,9 @@ resource "helm_release" "grq2-es" {
   chart      = "elasticsearch"
   version    = "7.9.3"
   wait       = true
-  timeout    = 150
+  timeout    = 300
   values = [
     file("${path.module}/../hysds/grq/elasticsearch/values-override.yml")
   ]
-  depends_on = [kubernetes_namespace.unity-sps]
+  # depends_on = [kubernetes_namespace.unity-sps]
 }

@@ -53,6 +53,70 @@ resource "kubernetes_config_map" "logstash-configs" {
   }
 }
 
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ LOG STASH ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+# resource "kubernetes_config_map" "logstash-job-status" {
+#   metadata {
+#     name      = "logstash-job-status"
+#     namespace = kubernetes_namespace.unity-sps.metadata.0.name
+#   }
+#   data = {
+#     "job_status.template.json" = "${file("${path.module}/../hysds/mozart/logstash/job_status.template.json")}"
+#   }
+# }
+
+# resource "kubernetes_config_map" "logstash-event-status" {
+#   metadata {
+#     name      = "logstash-event-status"
+#     namespace = kubernetes_namespace.unity-sps.metadata.0.name
+#   }
+#   data = {
+#     "event_status.template.json" = "${file("${path.module}/../hysds/mozart/logstash/event_status.template.json")}"
+#   }
+# }
+
+# resource "kubernetes_config_map" "logstash-worker-status" {
+#   metadata {
+#     name      = "logstash-worker-status"
+#     namespace = kubernetes_namespace.unity-sps.metadata.0.name
+#   }
+#   data = {
+#     "worker_status.template.json" = "${file("${path.module}/../hysds/mozart/logstash/worker_status.template.json")}"
+#   }
+# }
+
+# resource "kubernetes_config_map" "logstash-task-status" {
+#   metadata {
+#     name      = "logstash-task-status"
+#     namespace = kubernetes_namespace.unity-sps.metadata.0.name
+#   }
+#   data = {
+#     "task_status.template.json" = "${file("${path.module}/../hysds/mozart/logstash/task_status.template.json")}"
+#   }
+# }
+
+# resource "kubernetes_config_map" "logstash-conf" {
+#   metadata {
+#     name      = "logstash-conf"
+#     namespace = kubernetes_namespace.unity-sps.metadata.0.name
+#   }
+#   data = {
+#     "logstash.conf" = "${file("${path.module}/../hysds/mozart/logstash/logstash.conf")}"
+#   }
+# }
+
+# resource "kubernetes_config_map" "logstash-yml" {
+#   metadata {
+#     name      = "logstash-yml"
+#     namespace = kubernetes_namespace.unity-sps.metadata.0.name
+#   }
+#   data = {
+#     "logstash.yml" = "${file("${path.module}/../hysds/mozart/logstash/logstash.yml")}"
+#   }
+# }
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+
 resource "kubernetes_config_map" "supervisord-orchestrator" {
   metadata {
     name      = "supervisord-orchestrator"
@@ -84,6 +148,15 @@ resource "kubernetes_config_map" "supervisord-job-worker" {
   }
 }
 
+resource "kubernetes_config_map" "supervisord-verdi" {
+  metadata {
+    name      = "supervisord-verdi"
+    namespace = kubernetes_namespace.unity-sps.metadata.0.name
+  }
+  data = {
+    "supervisord.conf" = "${file("${path.module}/../hysds/verdi/supervisord.conf")}"
+  }
+}
 
 resource "kubernetes_config_map" "supervisord-user-rules" {
   metadata {

@@ -1,32 +1,35 @@
-resource "kubernetes_deployment" "factotum-job-worker" {
+resource "kubernetes_deployment" "verdi" {
   metadata {
-    name      = "factotum-job-worker"
+    name      = "verdi"
     namespace = kubernetes_namespace.unity-sps.metadata.0.name
     labels = {
-      app = "factotum-job-worker"
+      app = "verdi"
     }
   }
-
   spec {
     # replicas = 2
     selector {
       match_labels = {
-        app = "factotum-job-worker"
+        app = "verdi"
       }
     }
-
     template {
       metadata {
         labels = {
-          app = "factotum-job-worker"
+          app = "verdi"
         }
       }
-
       spec {
         init_container {
-          name    = "changeume-ownership"
+          name    = "change-ownership"
           image   = "k8s.gcr.io/busybox"
-          command = ["/bin/sh", "-c", "chmod 777 /var/run/docker.sock; chown -R 1000:1000 /private/tmp/data;"]
+          command = ["/bin/sh", "-c"]
+          args = [
+            <<-EOT
+            chmod 777 /var/run/docker.sock;
+            chown -R 1000:1000 /private/tmp/data;
+            EOT
+          ]
           volume_mount {
             name       = "docker-sock"
             mount_path = "/var/run/docker.sock"
@@ -37,8 +40,8 @@ resource "kubernetes_deployment" "factotum-job-worker" {
           }
         }
         container {
+          name    = "verdi"
           image   = "verdi:unity-v0.0.1"
-          name    = "factotum-job-worker"
           command = ["supervisord", "--nodaemon"]
 
           volume_mount {
@@ -62,8 +65,8 @@ resource "kubernetes_deployment" "factotum-job-worker" {
           }
 
           volume_mount {
-            name       = kubernetes_config_map.supervisord-job-worker.metadata.0.name
-            mount_path = "/home/ops/supervisord.conf"
+            name       = kubernetes_config_map.supervisord-verdi.metadata.0.name
+            mount_path = "/etc/supervisord.conf"
             sub_path   = "supervisord.conf"
             read_only  = false
           }
@@ -78,54 +81,44 @@ resource "kubernetes_deployment" "factotum-job-worker" {
             mount_path = "/private/tmp/data"
             read_only  = false
           }
-
-
         }
-
         volume {
           name = "docker-sock"
           host_path {
             path = "/var/run/docker.sock"
           }
         }
-
         volume {
           name = kubernetes_config_map.celeryconfig.metadata.0.name
           config_map {
             name = kubernetes_config_map.celeryconfig.metadata.0.name
           }
         }
-
         volume {
           name = kubernetes_config_map.datasets.metadata.0.name
           config_map {
             name = kubernetes_config_map.datasets.metadata.0.name
           }
         }
-
         volume {
-          name = kubernetes_config_map.supervisord-job-worker.metadata.0.name
+          name = kubernetes_config_map.supervisord-verdi.metadata.0.name
           config_map {
-            name = kubernetes_config_map.supervisord-job-worker.metadata.0.name
+            name = kubernetes_config_map.supervisord-verdi.metadata.0.name
           }
         }
-
         volume {
           name = kubernetes_config_map.aws-credentials.metadata.0.name
           config_map {
             name = kubernetes_config_map.aws-credentials.metadata.0.name
           }
         }
-
         volume {
           name = "data-work"
           host_path {
             path = "/private/tmp/data"
           }
         }
-
       }
     }
-
   }
 }
