@@ -132,9 +132,11 @@ resource "kubernetes_config_map" "datasets" {
     name      = "datasets"
     namespace = kubernetes_namespace.unity-sps.metadata.0.name
   }
-  # TODO - Check to see how datasets.template.json should be handled.
+  # TODO - Using this template file is temporary. A more sophisticated method for generating
+  # custom config files will be added in the future. This could take the form of a Terraform
+  # resource that generates all the custom config files.
   data = {
-    "datasets.json" = "${file("${path.module}/../hysds/configs/datasets.json")}"
+    "datasets.json" = "${file("${path.module}/../hysds/configs/datasets.template.json")}"
   }
 }
 
@@ -153,8 +155,11 @@ resource "kubernetes_config_map" "supervisord-verdi" {
     name      = "supervisord-verdi"
     namespace = kubernetes_namespace.unity-sps.metadata.0.name
   }
+  # TODO - Using this template file is temporary. A more sophisticated method for generating
+  # custom config files will be added in the future. This could take the form of a Terraform
+  # resource that generates all the custom config files.
   data = {
-    "supervisord.conf" = "${file("${path.module}/../hysds/verdi/supervisord.conf")}"
+    "supervisord.conf" = "${file("${path.module}/../hysds/verdi/supervisord.template.conf")}"
   }
 }
 
