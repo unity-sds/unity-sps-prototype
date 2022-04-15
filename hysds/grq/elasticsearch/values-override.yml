@@ -43,3 +43,21 @@ esConfig:
     http.cors.enabled : true
     http.cors.allow-origin: "*"
     http.port: 9201
+
+lifecycle:
+  postStart:
+    exec:
+      command:
+        - bash
+        - -c
+        - |
+          #!/bin/bash
+          ES_URL=http://localhost:9201
+          while [[ "$(curl -s -o /dev/null -w '%{http_code}\n' $ES_URL)" != "200" ]]; do sleep 1; done
+
+          grq_es_template=$(curl -s https://raw.githubusercontent.com/hysds/grq2/develop/config/es_template.json)
+          template=$(echo ${grq_es_template} | sed 's/{{ prefix }}/grq/;s/{{ alias }}/grq/')
+          curl -X PUT "$ES_URL/_template/grq" -H 'Content-Type: application/json' -d "${template}"
+
+          ingest_pipeline=$(curl -s https://raw.githubusercontent.com/hysds/grq2/develop/config/ingest_pipeline.json)
+          curl -X PUT "$ES_URL/_ingest/pipeline/dataset_pipeline" -H 'Content-Type: application/json' -d "${ingest_pipeline}"
