@@ -213,8 +213,9 @@ $RECYCLE.BIN/
 # This file is referenced in terraform/configs.tf.
 # TODO - Check with Dustin to see how datasets.json and datasets.template.json should be handled.
 #datasets.json
-config/datasets.json
-hysds/config/datasets.json
+#config/datasets.json
+#hysds/config/datasets.json
+#hysds/verdi/supervisord.conf
 
 # Terraform
 # Local .terraform directories
@@ -251,4 +252,3 @@ override.tf.json
 # Ignore CLI configuration files
 .terraformrc
 terraform.rc
-hysds/verdi/supervisord.conf
