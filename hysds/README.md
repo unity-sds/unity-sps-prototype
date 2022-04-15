@@ -2,10 +2,11 @@
 
 - [Docker](https://www.docker.com/products/docker-desktop)
 - [Kubernetes](https://kubernetes.io/)
-  - enable kubernetes in [Docker for Desktop](https://docs.docker.com/desktop/kubernetes/#enable-kubernetes) or use [Minikube](https://minikube.sigs.k8s.io/docs/start/)
-- `kubectl` - kubernetes command line tool
+  - Enable Kubernetes in [Docker for Desktop](https://docs.docker.com/desktop/kubernetes/#enable-kubernetes) or use [Minikube](https://minikube.sigs.k8s.io/docs/start/).
+- [kubectl](https://kubernetes.io/docs/reference/kubectl/) - kubernetes command line tool.
 - [Helm](https://helm.sh/docs/intro/install/)
-  - `brew install helm` if on Mac
+  - `brew install helm`, if on Mac.
+- [Terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli)
 
 > :warning: if you're a Linux user, you can create a directory called `/private`
 
@@ -14,17 +15,17 @@ $ sudo mkdir -p /private/tmp/data
 $ sudo chown -R $UID:$(id -g) /private/tmp
 ```
 
-# Docker resource settings
+# Docker Resource Settings
 
 > :warning: **Make sure to set "Memory" to value >= 6.0GB**
 
 <img src="./img/docker_resource_settings.png" alt="drawing" width="1000"/>
 
-# Building the docker image(s)
+# Building the Docker image(s)
 
-#### Building the base `hysds` docker image
+## Building the Base `hysds` Docker Image
 
-use the `build_imges.sh` script to build all necessary docker images at once
+Use the `hysds/build_images.sh` script to build all necessary Docker images at once.
 
 ```bash
 $ ./build_images.sh [--progress plain|--no-cache]
@@ -34,15 +35,23 @@ $ ./build_images.sh [--progress plain|--no-cache]
 $ docker images
 REPOSITORY          TAG                  IMAGE ID       CREATED         SIZE
 hysds-ui            unity-v0.0.1         08d98f617351   3 hours ago     19.3MB
-factotum            unity-v0.0.1         cd9eff273a89   3 hours ago     1.17GB
+verdi               unity-v0.0.1         cd9eff273a89   3 hours ago     1.17GB
 hysds-grq2          unity-v0.0.1         c89d99d41e3b   3 hours ago     1.08GB
 hysds-mozart        unity-v0.0.1         515d0bf75e50   3 hours ago     1.04GB
 hysds-core          unity-v0.0.1         e1ab6d70f58e   3 hours ago     934MB
 ```
 
-# Deploying cluster on local
+## Building the OGC ADES/WPS-T Flask API Docker Image
 
-use the `deploy.sh` script to deploy all resources at once
+Follow the directions described in the README of the [unity-sds/ades_wpst](https://github.com/unity-sds/ades_wpst) repository.
+
+# Deploying the SPS Cluster Locally
+
+The cluster can be deployed with two different methods which are described in the following subsections.
+
+## Method 1: Deploy via Bash Script
+
+Use the `hysds/deploy.sh` script to deploy all resources at once.
 
 ```bash
 $ ./deploy.sh --help
@@ -56,6 +65,17 @@ $ ./deploy.sh --help
 #     factotum : deploy factotum
 
 $ ./deploy.sh --all
+```
+
+## Method 2: Deploy via Terraform
+
+This method will use Terraform to deploy the Kubernetes cluster represented by the `~/.kube/config` file which is referenced in `terraform/main.tf`. Terraform will deploy the resources in the Kubernetes namespace named in `terrafrom/variables.tf` (defaults to `unity-sps`).
+
+From within the Terraform module directory (terraform/), run the following commands to initialize, and apply the Terraform module:
+
+```bash
+$ terraform init
+$ terraform apply
 ```
 
 # HySDS Resources
@@ -143,20 +163,20 @@ mozart-es-master-mozart-es-master-0   Bound    pvc-74f3d22d-272d-4de1-86ae-882c6
 
 # HySDS Bucket(s)
 
-[minio](https://min.io/) is used as an alternative to s3 as an object store
+[Minio](https://min.io/) is used as an alternative to AWS S3 as an object store.
 
-the minio console can be accessed with `http://localhost:9001`:
+The minio console can be accessed with `http://localhost:9001`:
 
 - user: `hysds`
 - password: `password`
 
-a bucket called `datasets` will be created when provisioning
+A bucket called `datasets` will be created when provisioning.
 
 <img src="./img/minio.png" alt="drawing" width="1000"/>
 
 # Building PGEs
 
-use the `build_container.py` python script to build your PGE and publish the job metadata
+Use the `hysds/build_container.py` Python script to build your PGE and publish the job metadata:
 
 ```bash
 $ python build_container.py --help
@@ -171,13 +191,13 @@ $ python build_container.py --help
 $ python build_container.py -i <pge_name>:<tag> -f ~/path/to/project
 ```
 
-example:
+An example using the `hello-world` PGE:
 
 ```bash
 python build_container.py -i hello_world:develop -f pge/hello_world
 ```
 
-##### navigate to Tosca's "on demand" page
+## Navigate to Tosca's "On-Demand" Page
 
 <div>
   <img src="./img/on-demand-jobs.png" alt="drawing" width="1000"/>
@@ -187,9 +207,13 @@ python build_container.py -i hello_world:develop -f pge/hello_world
   <img src="./img/hello_world-job.png" alt="drawing" width="1000"/>
 </div>
 
-# Tear down HySDS cluster
+# Tear Down the SPS Cluster
 
-use the `destroy.sh` script to tear down your HySDS cluster
+The cluster can be destroyed with two different methods which are described in the following subsections. The method to destroy the cluster should match the method chosen to create the cluster.
+
+## Method 1: Destroy via Bash script
+
+Use the `hysds/destroy.sh` script to tear down your HySDS cluster:
 
 ```bash
 $ ./destroy.sh --help
@@ -204,6 +228,14 @@ $ ./destroy.sh --help
 #     factotum : destroy factotum
 
 $ ./destroy.sh --all
+```
+
+## Method 2: Destroy via Terraform
+
+From within the Terraform module directory (terraform/), run the following command to destroy the SPS cluster:
+
+```
+$ terraform destroy
 ```
 
 # Commands used:
@@ -251,8 +283,44 @@ kubectl delete pv --all  # deletes PersistentVolume(s)
 
 # Troubleshooting
 
-- delete `/tmp/data` and restart your docker/kubernetes if you run into this issue
+Delete `/tmp/data` and restart your Docker/Kubernetes if you run into this issue:
 
 ```bash
 Cannot start service factotum: error while creating mount source path '/host_mnt/d/project/c/test/docker': mkdir /private: file exists
+```
+
+## Debugging a Terraform Deployment
+
+It is often useful to modify the level of TF_LOG environment variable when debugging
+a Terraform deployment. The levels include: `TRACE`, `DEBUG`, `INFO`, `WARN`, and `ERROR`.
+
+An example of setting the `TF_LOG` environment variable to `INFO`:
+
+```bash
+$ export TF_LOG=INFO
+```
+
+Additionally, it is also often useful to pipe the output of a Terraform deployment into a log file.
+
+An example of piping the `terraform apply` output into a file named apply_output.txt:
+
+```bash
+$ terraform apply -no-color 2>&1 | tee apply_output.txt
+```
+
+Occasionally, a Terraform deployment goes awry and Terraform loses track of existing resources. When this happens, `terraform destroy` is unable to clean up the resources and you'll likely end up with existing resource errors when attempting your next `terraform apply`. This requires some manual garbage collection of the lingering orphan resources. It also sometimes requires nuking the existing Terraform-related state tracking files/directory.
+
+The following commands are useful for manually ensuring all orphan resources are destroyed:
+
+```bash
+$ helm uninstall mozart-es
+$ helm uninstall grq-es
+$ kubectl delete all --all -n unity-sps
+$ kubectl delete cm --all -n unity-sps # deletes ConfigMap(s)
+$ kubectl delete pvc --all -n unity-sps # deletes PersistentVolumeClaim(s)
+$ kubectl delete pv --all -n unity-sps # deletes PersistentVolume(s)
+$ kubectl delete namespaces unity-sps
+$ rm -rf .terraform
+$ rm terraform.tfstate
+$ rm terraform.tf.backup
 ```
