@@ -30,7 +30,7 @@ resource "kubernetes_service" "ades-wpst-api_service" {
     session_affinity = "ClientIP"
     port {
       protocol    = "TCP"
-      port        = 5000
+      port        = 5001
       target_port = 5000
     }
     type = "LoadBalancer"
