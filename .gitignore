@@ -209,13 +209,6 @@ $RECYCLE.BIN/
 .vscode
 .vscode/
 
-# Commented out temporarily to get Github Actions to work.
-# This file is referenced in terraform/configs.tf.
-# TODO - Check with Dustin to see how datasets.json and datasets.template.json should be handled.
-#datasets.json
-config/datasets.json
-hysds/config/datasets.json
-
 # Terraform
 # Local .terraform directories
 **/.terraform/*
@@ -251,4 +244,3 @@ override.tf.json
 # Ignore CLI configuration files
 .terraformrc
 terraform.rc
-hysds/verdi/supervisord.conf
