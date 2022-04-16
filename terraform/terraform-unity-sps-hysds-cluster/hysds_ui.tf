@@ -42,7 +42,7 @@ resource "kubernetes_deployment" "hysds-ui" {
 
       spec {
         container {
-          image = "hysds-ui:unity-v0.0.1"
+          image = var.hysds_ui_image
           name  = "hysds-ui"
 
           port {

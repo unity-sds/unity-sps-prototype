@@ -64,7 +64,7 @@ resource "kubernetes_deployment" "ades-wpst-api" {
 
       spec {
         container {
-          image             = "unity/ades-wpst-api:latest"
+          image             = var.ades_wpst_api_image
           image_pull_policy = "Never"
           name              = "ades-wpst-api"
           env {

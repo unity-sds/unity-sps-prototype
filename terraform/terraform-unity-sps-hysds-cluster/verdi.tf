@@ -22,7 +22,7 @@ resource "kubernetes_deployment" "verdi" {
       spec {
         init_container {
           name    = "change-ownership"
-          image   = "k8s.gcr.io/busybox"
+          image   = var.busybox_image
           command = ["/bin/sh", "-c"]
           args = [
             <<-EOT
@@ -41,7 +41,7 @@ resource "kubernetes_deployment" "verdi" {
         }
         container {
           name    = "verdi"
-          image   = "verdi:unity-v0.0.1"
+          image   = var.hysds_verdi_image
           command = ["supervisord", "--nodaemon"]
 
           volume_mount {

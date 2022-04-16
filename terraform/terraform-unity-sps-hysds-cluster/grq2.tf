@@ -46,7 +46,7 @@ resource "kubernetes_deployment" "grq2" {
 
       spec {
         container {
-          image = "hysds-grq2:unity-v0.0.1"
+          image = var.hysds_grq2_image
           name  = "grq2"
 
           port {

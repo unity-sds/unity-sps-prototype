@@ -49,7 +49,7 @@ resource "kubernetes_deployment" "redis" {
 
       spec {
         container {
-          image             = "redis:latest"
+          image             = var.redis_image
           name              = "redis"
           image_pull_policy = "IfNotPresent"
 

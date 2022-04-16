@@ -4,7 +4,7 @@ resource "kubernetes_config_map" "mozart-settings" {
     namespace = kubernetes_namespace.unity-sps.metadata.0.name
   }
   data = {
-    "settings.cfg" = "${file("${path.module}/../hysds/mozart/rest_api/settings.cfg")}"
+    "settings.cfg" = "${file("${path.module}/../../hysds/mozart/rest_api/settings.cfg")}"
   }
 }
 
@@ -14,7 +14,7 @@ resource "kubernetes_config_map" "grq2-settings" {
     namespace = kubernetes_namespace.unity-sps.metadata.0.name
   }
   data = {
-    "settings.cfg" = "${file("${path.module}/../hysds/grq/rest_api/settings.cfg")}"
+    "settings.cfg" = "${file("${path.module}/../../hysds/grq/rest_api/settings.cfg")}"
   }
 }
 
@@ -24,7 +24,7 @@ resource "kubernetes_config_map" "celeryconfig" {
     namespace = kubernetes_namespace.unity-sps.metadata.0.name
   }
   data = {
-    "celeryconfig.py" = "${file("${path.module}/../hysds/configs/celeryconfig.py")}"
+    "celeryconfig.py" = "${file("${path.module}/../../hysds/configs/celeryconfig.py")}"
   }
 }
 
@@ -34,7 +34,7 @@ resource "kubernetes_config_map" "netrc" {
     namespace = kubernetes_namespace.unity-sps.metadata.0.name
   }
   data = {
-    ".netrc" = "${file("${path.module}/../hysds/configs/.netrc")}"
+    ".netrc" = "${file("${path.module}/../../hysds/configs/.netrc")}"
   }
 }
 
@@ -44,12 +44,12 @@ resource "kubernetes_config_map" "logstash-configs" {
     namespace = kubernetes_namespace.unity-sps.metadata.0.name
   }
   data = {
-    "job-status"    = "${file("${path.module}/../hysds/mozart/logstash/job_status.template.json")}"
-    "event-status"  = "${file("${path.module}/../hysds/mozart/logstash/event_status.template.json")}"
-    "worker-status" = "${file("${path.module}/../hysds/mozart/logstash/worker_status.template.json")}"
-    "task-status"   = "${file("${path.module}/../hysds/mozart/logstash/task_status.template.json")}"
-    "logstash-conf" = "${file("${path.module}/../hysds/mozart/logstash/logstash.conf")}"
-    "logstash-yml"  = "${file("${path.module}/../hysds/mozart/logstash/logstash.yml")}"
+    "job-status"    = "${file("${path.module}/../../hysds/mozart/logstash/job_status.template.json")}"
+    "event-status"  = "${file("${path.module}/../../hysds/mozart/logstash/event_status.template.json")}"
+    "worker-status" = "${file("${path.module}/../../hysds/mozart/logstash/worker_status.template.json")}"
+    "task-status"   = "${file("${path.module}/../../hysds/mozart/logstash/task_status.template.json")}"
+    "logstash-conf" = "${file("${path.module}/../../hysds/mozart/logstash/logstash.conf")}"
+    "logstash-yml"  = "${file("${path.module}/../../hysds/mozart/logstash/logstash.yml")}"
   }
 }
 
@@ -60,7 +60,7 @@ resource "kubernetes_config_map" "logstash-configs" {
 #     namespace = kubernetes_namespace.unity-sps.metadata.0.name
 #   }
 #   data = {
-#     "job_status.template.json" = "${file("${path.module}/../hysds/mozart/logstash/job_status.template.json")}"
+#     "job_status.template.json" = "${file("${path.module}/../../hysds/mozart/logstash/job_status.template.json")}"
 #   }
 # }
 
@@ -70,7 +70,7 @@ resource "kubernetes_config_map" "logstash-configs" {
 #     namespace = kubernetes_namespace.unity-sps.metadata.0.name
 #   }
 #   data = {
-#     "event_status.template.json" = "${file("${path.module}/../hysds/mozart/logstash/event_status.template.json")}"
+#     "event_status.template.json" = "${file("${path.module}/../../hysds/mozart/logstash/event_status.template.json")}"
 #   }
 # }
 
@@ -80,7 +80,7 @@ resource "kubernetes_config_map" "logstash-configs" {
 #     namespace = kubernetes_namespace.unity-sps.metadata.0.name
 #   }
 #   data = {
-#     "worker_status.template.json" = "${file("${path.module}/../hysds/mozart/logstash/worker_status.template.json")}"
+#     "worker_status.template.json" = "${file("${path.module}/../../hysds/mozart/logstash/worker_status.template.json")}"
 #   }
 # }
 
@@ -90,7 +90,7 @@ resource "kubernetes_config_map" "logstash-configs" {
 #     namespace = kubernetes_namespace.unity-sps.metadata.0.name
 #   }
 #   data = {
-#     "task_status.template.json" = "${file("${path.module}/../hysds/mozart/logstash/task_status.template.json")}"
+#     "task_status.template.json" = "${file("${path.module}/../../hysds/mozart/logstash/task_status.template.json")}"
 #   }
 # }
 
@@ -100,7 +100,7 @@ resource "kubernetes_config_map" "logstash-configs" {
 #     namespace = kubernetes_namespace.unity-sps.metadata.0.name
 #   }
 #   data = {
-#     "logstash.conf" = "${file("${path.module}/../hysds/mozart/logstash/logstash.conf")}"
+#     "logstash.conf" = "${file("${path.module}/../../hysds/mozart/logstash/logstash.conf")}"
 #   }
 # }
 
@@ -110,7 +110,7 @@ resource "kubernetes_config_map" "logstash-configs" {
 #     namespace = kubernetes_namespace.unity-sps.metadata.0.name
 #   }
 #   data = {
-#     "logstash.yml" = "${file("${path.module}/../hysds/mozart/logstash/logstash.yml")}"
+#     "logstash.yml" = "${file("${path.module}/../../hysds/mozart/logstash/logstash.yml")}"
 #   }
 # }
 
@@ -123,7 +123,7 @@ resource "kubernetes_config_map" "supervisord-orchestrator" {
     namespace = kubernetes_namespace.unity-sps.metadata.0.name
   }
   data = {
-    "supervisord.conf" = "${file("${path.module}/../hysds/orchestrator/supervisord.conf")}"
+    "supervisord.conf" = "${file("${path.module}/../../hysds/orchestrator/supervisord.conf")}"
   }
 }
 
@@ -136,7 +136,7 @@ resource "kubernetes_config_map" "datasets" {
   # custom config files will be added in the future. This could take the form of a Terraform
   # resource that generates all the custom config files.
   data = {
-    "datasets.json" = "${file("${path.module}/../hysds/configs/datasets.template.json")}"
+    "datasets.json" = "${file("${path.module}/../../hysds/configs/datasets.template.json")}"
   }
 }
 
@@ -146,7 +146,7 @@ resource "kubernetes_config_map" "supervisord-job-worker" {
     namespace = kubernetes_namespace.unity-sps.metadata.0.name
   }
   data = {
-    "supervisord.conf" = "${file("${path.module}/../hysds/factotum/supervisord.conf")}"
+    "supervisord.conf" = "${file("${path.module}/../../hysds/factotum/supervisord.conf")}"
   }
 }
 
@@ -159,7 +159,7 @@ resource "kubernetes_config_map" "supervisord-verdi" {
   # custom config files will be added in the future. This could take the form of a Terraform
   # resource that generates all the custom config files.
   data = {
-    "supervisord.conf" = "${file("${path.module}/../hysds/verdi/supervisord.template.conf")}"
+    "supervisord.conf" = "${file("${path.module}/../../hysds/verdi/supervisord.template.conf")}"
   }
 }
 
@@ -169,7 +169,7 @@ resource "kubernetes_config_map" "supervisord-user-rules" {
     namespace = kubernetes_namespace.unity-sps.metadata.0.name
   }
   data = {
-    "supervisord.conf" = "${file("${path.module}/../hysds/user_rules/supervisord.conf")}"
+    "supervisord.conf" = "${file("${path.module}/../../hysds/user_rules/supervisord.conf")}"
   }
 }
 
@@ -180,6 +180,6 @@ resource "kubernetes_config_map" "aws-credentials" {
     namespace = kubernetes_namespace.unity-sps.metadata.0.name
   }
   data = {
-    "aws-credentials" = "${file("${path.module}/../hysds/configs/aws-credentials")}"
+    "aws-credentials" = "${file("${path.module}/../../hysds/configs/aws-credentials")}"
   }
 }

@@ -1,9 +1,9 @@
-resource "kubernetes_deployment" "orchestrator" {
+resource "kubernetes_deployment" "user-rules" {
   metadata {
-    name      = "orchestrator"
+    name      = "user-rules"
     namespace = kubernetes_namespace.unity-sps.metadata.0.name
     labels = {
-      app = "orchestrator"
+      app = "user-rules"
     }
   }
 
@@ -11,14 +11,14 @@ resource "kubernetes_deployment" "orchestrator" {
     # replicas = 2
     selector {
       match_labels = {
-        app = "orchestrator"
+        app = "user-rules"
       }
     }
 
     template {
       metadata {
         labels = {
-          app = "orchestrator"
+          app = "user-rules"
         }
       }
 
@@ -28,8 +28,8 @@ resource "kubernetes_deployment" "orchestrator" {
           run_as_group = 0
         }
         container {
-          image   = "hysds-core:unity-v0.0.1"
-          name    = "orchestrator"
+          image   = var.hysds_core_image
+          name    = "user-rules"
           command = ["supervisord", "--nodaemon"]
 
           volume_mount {
@@ -40,7 +40,7 @@ resource "kubernetes_deployment" "orchestrator" {
           }
 
           volume_mount {
-            name       = kubernetes_config_map.supervisord-orchestrator.metadata.0.name
+            name       = kubernetes_config_map.supervisord-user-rules.metadata.0.name
             mount_path = "/etc/supervisord.conf"
             sub_path   = "supervisord.conf"
             read_only  = false
@@ -61,9 +61,9 @@ resource "kubernetes_deployment" "orchestrator" {
         }
 
         volume {
-          name = kubernetes_config_map.supervisord-orchestrator.metadata.0.name
+          name = kubernetes_config_map.supervisord-user-rules.metadata.0.name
           config_map {
-            name = kubernetes_config_map.supervisord-orchestrator.metadata.0.name
+            name = kubernetes_config_map.supervisord-user-rules.metadata.0.name
           }
         }
 

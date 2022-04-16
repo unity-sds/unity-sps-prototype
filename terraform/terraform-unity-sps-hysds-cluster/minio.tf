@@ -73,7 +73,7 @@ resource "kubernetes_deployment" "minio" {
 
       spec {
         container {
-          image = "minio/minio:RELEASE.2022-03-17T06-34-49Z"
+          image = var.minio_image
           name  = "minio"
           # security_context {
           #   run_as_non_root = true
@@ -127,7 +127,7 @@ resource "kubernetes_job" "mc" {
       spec {
         init_container {
           name    = "minio-setup"
-          image   = "minio/mc:RELEASE.2022-03-13T22-34-00Z"
+          image   = var.mc_image
           command = ["/bin/sh", "-c"]
           args = [
             <<-EOT
@@ -144,7 +144,7 @@ resource "kubernetes_job" "mc" {
         }
         container {
           name    = "publish-aoi"
-          image   = "hysds-core:unity-v0.0.1"
+          image   = var.hysds_core_image
           command = ["/bin/sh", "-c"]
           args = [
             <<-EOT

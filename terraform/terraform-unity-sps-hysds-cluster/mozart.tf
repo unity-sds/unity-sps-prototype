@@ -46,7 +46,7 @@ resource "kubernetes_deployment" "mozart" {
 
       spec {
         container {
-          image = "hysds-mozart:unity-v0.0.1"
+          image = var.hysds_mozart_image
           name  = "mozart"
 
           #resources {
