@@ -82,6 +82,9 @@ resource "kubernetes_deployment" "verdi" {
             read_only  = false
           }
         }
+        image_pull_secrets {
+          name = kubernetes_secret.container-registry.metadata.0.name
+        }
         volume {
           name = "docker-sock"
           host_path {

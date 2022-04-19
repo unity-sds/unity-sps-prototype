@@ -1,7 +1,6 @@
-variable "docker_config_filepath" {
-  description = "Path to the Docker config json file"
+variable "kubeconfig_filepath" {
+  description = "Path to the kubeconfig file for the Kubernetes cluster"
   type        = string
-  default     = "~/.docker/config.json"
 }
 
 variable "namespace" {
@@ -10,13 +9,17 @@ variable "namespace" {
   default     = "unity-sps"
 }
 
-variable "base64_encoded_dockerconfig" {
-  description = "Base64 encoded Docker config json file"
+variable "container_registry_server" {
+  description = "Container registry server"
   type        = string
 }
 
-variable "kubeconfig_filepath" {
-  description = "Path to the kubeconfig file for the Kubernetes cluster"
+variable "container_registry_username" {
+  description = "Container registry username"
+  type        = string
+}
+variable "container_registry_password" {
+  description = "Container registry password"
   type        = string
 }
 
@@ -62,10 +65,12 @@ variable "hysds_factotum_image" {
   default     = "ghcr.io/unity-sds/unity-sps-prototype/hysds-factotum:unity-v0.0.1"
 }
 
+# Bump version from 7.9.3 to 7.10.2 in order to provide support for Apple M1
+# https://stackoverflow.com/questions/65962810/m1-mac-issue-bringing-up-elasticsearch-cannot-run-jdk-bin-java
 variable "logstash_image" {
   description = "Docker image for the Logstash container"
   type        = string
-  default     = "logstash:7.9.3"
+  default     = "docker.elastic.co/logstash/logstash:7.10.2"
 }
 
 variable "minio_image" {

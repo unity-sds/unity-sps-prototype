@@ -78,8 +78,10 @@ resource "kubernetes_deployment" "factotum-job-worker" {
             mount_path = "/private/tmp/data"
             read_only  = false
           }
+        }
 
-
+        image_pull_secrets {
+          name = kubernetes_secret.container-registry.metadata.0.name
         }
 
         volume {
