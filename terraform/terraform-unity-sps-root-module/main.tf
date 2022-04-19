@@ -7,8 +7,10 @@
 
 
 module "unity-sps-hysds-cluster" {
-  source    = "../terraform-unity-sps-hysds-cluster"
-  namespace = var.namespace
-  kubeconfig_filepath = var.kubeconfig_filepath
-  base64_encoded_dockerconfig = var.base64_encoded_dockerconfig
+  source                      = "../terraform-unity-sps-hysds-cluster"
+  namespace                   = var.namespace
+  kubeconfig_filepath         = var.kubeconfig_filepath
+  container_registry_server   = var.container_registry_server
+  container_registry_username = var.container_registry_username
+  container_registry_password = var.container_registry_password
 }

@@ -8,7 +8,16 @@ variable "kubeconfig_filepath" {
   type        = string
 }
 
-variable "base64_encoded_dockerconfig" {
-  description = "Base64 encoded Docker config json file"
+variable "container_registry_server" {
+  description = "Container registry server"
+  type        = string
+}
+
+variable "container_registry_username" {
+  description = "Container registry username"
+  type        = string
+}
+variable "container_registry_password" {
+  description = "Container registry password"
   type        = string
 }
