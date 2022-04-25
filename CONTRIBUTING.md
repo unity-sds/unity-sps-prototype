@@ -72,8 +72,8 @@ Make sure people are aware you're working on a patch! Check out our [issue track
 #### Choose the Right Branch to Fork
 
 Our project typically has the following branches available, make sure to fork either the default branch or a branch someone else already tagged with a particular issue ticket you're working with.
-- (default) `main`[INSERT DEFAULT VCS BRANCH NAME HERE]
-- [INSERT ADDITIONAL TYPICAL VCS BRANCH NAMES HERE]
+- `main`[INSERT DEFAULT VCS BRANCH NAME HERE] - default branch
+- [INSERT ADDITIONAL TYPICAL VCS BRANCH NAMES HERE] - 
 
 ### Make your Modifications
 
@@ -189,12 +189,6 @@ Here's some guidance on submitting a new feature issue:
 1. Navigate to our [issue tracking system]([INSERT LINK TO YOUR ISSUE TRACKING SYSTEM]) and file a new issue
 2. Select a new feature template (if available) for your issue
    1. Fill out the template fields to the best of your ability
-3. Follow the general guidelines below for extra information about your bug
-   1. Include a code snippet if you have it showcasing the bug
-   2. Provide reproducible steps of how to recreate the bug
-   3. If the bug triggers an exception or error message, include the *full message* or *stacktrace*
-   4. Provide information about your operating system and the version of our project you're using
-
 
 #### Submitting Security Vulnerability Issues
 
