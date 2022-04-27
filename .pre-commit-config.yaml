@@ -1,0 +1,26 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v3.2.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-added-large-files
+      - id: check-json #checks json files for parseable syntax.
+      - id: pretty-format-json #sets a standard for formatting json files.
+      - id: detect-aws-credentials #detects *your* aws credentials from the aws cli credentials file.
+      - id: detect-private-key #detects the presence of private keys.
+      - id: requirements-txt-fixer #sorts entries in requirements.txt.
+
+  - repo: https://github.com/antonbabenko/pre-commit-terraform
+    rev: 48bc03ca3f0f2f782d2f430069868019a6892062
+    hooks:
+      - id: terraform_validate #Validates all Terraform configuration files.
+      - id: terraform_fmt #Rewrites all Terraform configuration files to a canonical format.
+      - id: terraform_tflint #Validates all Terraform configuration files with TFLint.
+      - id: terraform_tfsec #Static analysis of Terraform templates to spot potential security issues.
+      - id: terrascan #Detect compliance and security violations of Terraform templates.
+      - id: terraform_docs
+        args:
+          - --hook-config=--add-to-existing-file=true # Boolean. true or false
+          - --hook-config=--create-file-if-not-exist=true # Boolean. true or false
