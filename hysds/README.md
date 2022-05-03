@@ -69,9 +69,9 @@ $ ./deploy.sh --all
 
 ## Method 2: Deploy via Terraform
 
-This method will use Terraform to deploy the Kubernetes cluster represented by the `~/.kube/config` file which is referenced in `terraform/main.tf`. Terraform will deploy the resources in the Kubernetes namespace named in `terrafrom/variables.tf` (defaults to `unity-sps`).
+This method will use Terraform to deploy the Kubernetes cluster represented by the `~/.kube/config` file which is referenced in `terraform_modules/main.tf`. Terraform will deploy the resources in the Kubernetes namespace named in `terrafrom/variables.tf` (defaults to `unity-sps`).
 
-From within the Terraform module directory (terraform/), run the following commands to initialize, and apply the Terraform module:
+From within the Terraform module directory (terraform_modules/), run the following commands to initialize, and apply the Terraform module:
 
 ```bash
 $ terraform init
@@ -232,7 +232,7 @@ $ ./destroy.sh --all
 
 ## Method 2: Destroy via Terraform
 
-From within the Terraform module directory (terraform/), run the following command to destroy the SPS cluster:
+From within the Terraform module directory (terraform_modules/), run the following command to destroy the SPS cluster:
 
 ```
 $ terraform destroy

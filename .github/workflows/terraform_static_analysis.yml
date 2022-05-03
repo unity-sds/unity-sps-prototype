@@ -1,12 +1,12 @@
 name: Terraform Static Analysis
 
 env:
-  working_directory: "./terraform/"
+  working_directory: "./terraform_modules/"
 
 on:
   push:
     paths:
-      - "terraform/"
+      - "terraform_modules/"
 
   workflow_dispatch:
 
