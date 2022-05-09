@@ -69,11 +69,20 @@ $ ./deploy.sh --all
 
 ## Method 2: Deploy via Terraform
 
-This method will use Terraform to deploy the Kubernetes cluster represented by the `~/.kube/config` file which is referenced in `terraform_modules/main.tf`. Terraform will deploy the resources in the Kubernetes namespace named in `terrafrom/variables.tf` (defaults to `unity-sps`).
+This method will use Terraform to deploy the Kubernetes cluster represented by the `~/.kube/config` file which is referenced in `terraform_modules/main.tf`. Terraform will deploy the resources in the Kubernetes namespace named in `terrafrom/variables.tf` (defaults to `unity-sps`). Additional variables (including secrets) can be set in `terraform.tfvars`, a template is shown below. For instructions on how to auto-generate this file, see the [terraform_modules/README.md](../terraform_modules/README.md#auto-generate-a-terraform.tfvars-template-file:).
 
-From within the Terraform module directory (terraform_modules/), run the following commands to initialize, and apply the Terraform module:
+```HCL
+namespace = "unity-sps"
+kubeconfig_filepath = "~/.kube/config"
+container_registry_server = "ghcr.io"
+container_registry_username = "*Insert GitHub username*"
+container_registry_password = "*Insert GitHub PAT*"
+```
+
+From within the Terraform root module directory (`terraform_modules/terraform-unity-sps-root-module/`), run the following commands to initialize, and apply the Terraform module:
 
 ```bash
+$ cd terraform_modules/terraform-unity-sps-root-module
 $ terraform init
 $ terraform apply
 ```

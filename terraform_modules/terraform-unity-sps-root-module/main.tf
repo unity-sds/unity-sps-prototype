@@ -5,18 +5,9 @@
 # https://learn.hashicorp.com/tutorials/terraform/module-private-registry-share?in=terraform/modules
 # https://www.terraform.io/language/modules/syntax
 
-
-# module "unity-sps-hysds-cluster" {
-#   source                      = "../terraform-unity-sps-hysds-cluster"
-#   namespace                   = var.namespace
-#   kubeconfig_filepath         = var.kubeconfig_filepath
-#   container_registry_server   = var.container_registry_server
-#   container_registry_username = var.container_registry_username
-#   container_registry_password = var.container_registry_password
-# }
-
 module "unity-sps-hysds-cluster" {
-  source                      = "git::https://github.com/unity-sds/unity-sps-prototype.git//terraform/terraform-unity-sps-hysds-cluster?ref=terraform"
+  #source = "../terraform-unity-sps-hysds-cluster"
+  source                      = "git::https://github.com/unity-sds/unity-sps-prototype.git//terraform_modules/terraform-unity-sps-hysds-cluster?ref=main"
   namespace                   = var.namespace
   kubeconfig_filepath         = var.kubeconfig_filepath
   container_registry_server   = var.container_registry_server
