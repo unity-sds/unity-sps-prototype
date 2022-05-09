@@ -1,18 +1,17 @@
-
-resource "kubernetes_service" "grq2_service" {
+resource "kubernetes_service" "mozart_service" {
   metadata {
-    name      = "grq2"
+    name      = "mozart"
     namespace = kubernetes_namespace.unity-sps.metadata.0.name
   }
 
   spec {
     selector = {
-      app = "grq2"
+      app = "mozart"
     }
     session_affinity = "ClientIP"
     port {
-      port        = 8878
-      target_port = 8878
+      port        = 8888
+      target_port = 8888
     }
 
     type = "LoadBalancer"
@@ -20,50 +19,62 @@ resource "kubernetes_service" "grq2_service" {
 }
 
 
-resource "kubernetes_deployment" "grq2" {
+resource "kubernetes_deployment" "mozart" {
   metadata {
-    name      = "grq2"
+    name      = "mozart"
     namespace = kubernetes_namespace.unity-sps.metadata.0.name
     labels = {
-      app = "grq2"
+      app = "mozart"
     }
   }
 
   spec {
-    # replicas = 2
+    # replicas = 3
+
     selector {
       match_labels = {
-        app = "grq2"
+        app = "mozart"
       }
     }
 
     template {
       metadata {
         labels = {
-          app = "grq2"
+          app = "mozart"
         }
       }
 
       spec {
         container {
-          image = "hysds-grq2:unity-v0.0.1"
-          name  = "grq2"
+          image = var.hysds_mozart_image
+          name  = "mozart"
+
+          #resources {
+          #  limits = {
+          #    cpu    = "0.5"
+          #    memory = "512Mi"
+          #  }
+          #  requests = {
+          #    cpu    = "250m"
+          #    memory = "50Mi"
+          #  }
+          #}
 
           port {
-            container_port = 8878
-            name           = "grq2"
+            container_port = 8888
+            name           = "mozart"
           }
 
           volume_mount {
-            name       = kubernetes_config_map.grq2-settings.metadata.0.name
-            mount_path = "/home/ops/grq2/settings.cfg"
+            name       = kubernetes_config_map.mozart-settings.metadata.0.name
+            mount_path = "/home/ops/mozart/settings.cfg"
             sub_path   = "settings.cfg"
             read_only  = false
           }
 
           volume_mount {
             name       = kubernetes_config_map.celeryconfig.metadata.0.name
-            mount_path = "/home/ops/grq2/celeryconfig.py"
+            mount_path = "/home/ops/mozart/celeryconfig.py"
             sub_path   = "celeryconfig.py"
             read_only  = false
           }
@@ -77,13 +88,16 @@ resource "kubernetes_deployment" "grq2" {
 
         }
 
-        volume {
-          name = kubernetes_config_map.grq2-settings.metadata.0.name
-          config_map {
-            name = kubernetes_config_map.grq2-settings.metadata.0.name
-          }
+        image_pull_secrets {
+          name = kubernetes_secret.container-registry.metadata.0.name
         }
 
+        volume {
+          name = kubernetes_config_map.mozart-settings.metadata.0.name
+          config_map {
+            name = kubernetes_config_map.mozart-settings.metadata.0.name
+          }
+        }
 
         volume {
           name = kubernetes_config_map.celeryconfig.metadata.0.name
@@ -98,7 +112,6 @@ resource "kubernetes_deployment" "grq2" {
             name = kubernetes_config_map.netrc.metadata.0.name
           }
         }
-
       }
     }
 

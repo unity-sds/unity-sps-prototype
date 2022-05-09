@@ -22,7 +22,7 @@ resource "kubernetes_deployment" "verdi" {
       spec {
         init_container {
           name    = "change-ownership"
-          image   = "k8s.gcr.io/busybox"
+          image   = var.busybox_image
           command = ["/bin/sh", "-c"]
           args = [
             <<-EOT
@@ -41,7 +41,7 @@ resource "kubernetes_deployment" "verdi" {
         }
         container {
           name    = "verdi"
-          image   = "verdi:unity-v0.0.1"
+          image   = var.hysds_verdi_image
           command = ["supervisord", "--nodaemon"]
 
           volume_mount {
@@ -81,6 +81,9 @@ resource "kubernetes_deployment" "verdi" {
             mount_path = "/private/tmp/data"
             read_only  = false
           }
+        }
+        image_pull_secrets {
+          name = kubernetes_secret.container-registry.metadata.0.name
         }
         volume {
           name = "docker-sock"

@@ -42,12 +42,15 @@ resource "kubernetes_deployment" "hysds-ui" {
 
       spec {
         container {
-          image = "hysds-ui:unity-v0.0.1"
+          image = var.hysds_ui_image
           name  = "hysds-ui"
 
           port {
             container_port = 80
           }
+        }
+        image_pull_secrets {
+          name = kubernetes_secret.container-registry.metadata.0.name
         }
         restart_policy = "Always"
       }

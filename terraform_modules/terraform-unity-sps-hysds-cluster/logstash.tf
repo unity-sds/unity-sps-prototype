@@ -24,7 +24,7 @@ resource "kubernetes_deployment" "logstash" {
 
       spec {
         container {
-          image   = "logstash:7.9.3"
+          image   = var.logstash_image
           name    = "logstash"
           command = ["bin/logstash"]
           args    = ["-f", "/usr/share/logstash/logstash.conf"]

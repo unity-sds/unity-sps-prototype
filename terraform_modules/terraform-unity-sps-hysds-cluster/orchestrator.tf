@@ -28,7 +28,7 @@ resource "kubernetes_deployment" "orchestrator" {
           run_as_group = 0
         }
         container {
-          image   = "hysds-core:unity-v0.0.1"
+          image   = var.hysds_core_image
           name    = "orchestrator"
           command = ["supervisord", "--nodaemon"]
 
@@ -51,6 +51,10 @@ resource "kubernetes_deployment" "orchestrator" {
             mount_path = "/private/tmp/data"
             read_only  = false
           }
+        }
+
+        image_pull_secrets {
+          name = kubernetes_secret.container-registry.metadata.0.name
         }
 
         volume {

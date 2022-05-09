@@ -75,7 +75,7 @@ resource "kubernetes_stateful_set" "rabbitmq_statefulset" {
       spec {
         container {
           name  = "rabbitmq"
-          image = "rabbitmq:3-management"
+          image = var.rabbitmq_image
           env {
             name  = "RABBITMQ_ERLANG_COOKIE"
             value = "1WqgH8N2v1qDBDZDbNy8Bg9IkPWLEpu79m6q+0t36lQ="

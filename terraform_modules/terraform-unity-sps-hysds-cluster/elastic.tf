@@ -12,7 +12,7 @@ resource "helm_release" "mozart-es" {
   wait       = true
   timeout    = 300
   values = [
-    file("${path.module}/../hysds/mozart/elasticsearch/values-override.yml")
+    file("${path.module}/../../hysds/mozart/elasticsearch/values-override.yml")
   ]
   # depends_on = [kubernetes_namespace.unity-sps]
 }
@@ -26,7 +26,7 @@ resource "helm_release" "grq2-es" {
   wait       = true
   timeout    = 300
   values = [
-    file("${path.module}/../hysds/grq/elasticsearch/values-override.yml")
+    file("${path.module}/../../hysds/grq/elasticsearch/values-override.yml")
   ]
   # depends_on = [kubernetes_namespace.unity-sps]
 }
