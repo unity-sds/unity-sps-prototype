@@ -34,4 +34,4 @@ exports.RABBIT_MQ_PORT = 15672;
 
 // root path for app
 // set to "/" if you are developing locally
-exports.ROOT_PATH = "/hysds_ui/";
+exports.ROOT_PATH = "/";
