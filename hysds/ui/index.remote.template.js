@@ -1,5 +1,5 @@
 // settings are changed if you want to do local development
-exports.LOCAL_DEV = false;
+exports.LOCAL_DEV = true;
 
 // authentication
 exports.AUTH = true;
