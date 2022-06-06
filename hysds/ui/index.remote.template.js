@@ -30,8 +30,8 @@ exports.METRICS_URL = "http://13.52.177.59:9100";
 exports.KIBANA_URL = `${this.METRICS_URL}/app/kibana`;
 
 // RabbitMQ
-exports.RABBIT_MQ_PORT = 15673;
+exports.RABBIT_MQ_PORT = 15672;
 
 // root path for app
 // set to "/" if you are developing locally
-exports.ROOT_PATH = "/";
+exports.ROOT_PATH = "/hysds_ui/";
