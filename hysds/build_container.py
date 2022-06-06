@@ -7,10 +7,6 @@ import requests
 import jsonschema
 
 
-__MOZART_REST_API = "http://localhost:8888/api/v0.1"
-__GRQ_REST_API = "http://localhost:8878/api/v0.1"
-
-
 def build_image(tag):
     """
     Builds the Docker image
@@ -188,17 +184,31 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("-f", "--file-path")
     parser.add_argument("-i", "--image", required=True)
+    parser.add_argument("-e", "--environment", choices=["local", "remote"], default="local")
     parser.add_argument("--dry-run", action='store_true', default=False)
 
     args = parser.parse_args()
     file_path = os.path.abspath(args.file_path) or os.getcwd()
     image = args.image
+    environment = args.environment
     dry_run = args.dry_run
 
     print("Building from %s..." % file_path)
 
     if not image.startswith("container-"):
         image = "container-%s" % image
+
+    if environment == "local":
+        ip = "localhost"
+        mozart_rest_port = 8888
+        grq_rest_port = 8878
+    elif environment == "remote":
+        ip = "13.52.177.59"
+        mozart_rest_port = 30001
+        grq_rest_port = 30002
+
+    __MOZART_REST_API = f"http://{ip}:{mozart_rest_port}/api/v0.1/"
+    __GRQ_REST_API = f"http://{ip}:{grq_rest_port}/api/v0.1/"
 
     pwd = os.getcwd()
     os.chdir(file_path)

@@ -189,21 +189,22 @@ Use the `hysds/build_container.py` Python script to build your PGE and publish t
 
 ```bash
 $ python build_container.py --help
-# usage: build_container.py [-h] [-f FILE_PATH] -i IMAGE [--dry-run]
+# usage: build_container.py [-h] [-f FILE_PATH] -i IMAGE [-e {local,remote}] [--dry-run]
 
 # optional arguments:
 #   -h, --help            show this help message and exit
 #   -f FILE_PATH, --file-path FILE_PATH
 #   -i IMAGE, --image IMAGE
+#   -e {local,remote}, --environment {local,remote}
 #   --dry-run
 
-$ python build_container.py -i <pge_name>:<tag> -f ~/path/to/project
+$ python build_container.py -e <deployment_environment> -i <pge_name>:<tag> -f ~/path/to/project
 ```
 
 An example using the `hello-world` PGE:
 
 ```bash
-python build_container.py -i hello_world:develop -f pge/hello_world
+python build_container.py -e local -i hello_world:develop -f pge/hello_world
 ```
 
 ## Navigate to Tosca's "On-Demand" Page
