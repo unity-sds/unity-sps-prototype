@@ -133,8 +133,8 @@ jobs:
       - name: Build and push HySDS UI Docker image
         uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
         with:
-          context: hysds/ui/
-          file: local.Dockerfile
+          context: hysds/ui/local/
+          file: Dockerfile
           push: true
           tags: ${{ env.REGISTRY }}/${{ env.LOCAL_UI_IMAGE_NAME }}:${{ env.TAG }}
           labels: ${{ steps.metauilocal.outputs.labels }}
@@ -157,8 +157,8 @@ jobs:
       - name: Build and push HySDS Remote UI Docker image
         uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
         with:
-          context: hysds/ui/
-          file: remote.Dockerfile
+          context: hysds/ui/remote/
+          file: Dockerfile
           push: true
           tags: ${{ env.REGISTRY }}/${{ env.REMOTE_UI_IMAGE_NAME }}:${{ env.TAG }}
           labels: ${{ steps.metauiremote.outputs.labels }}
