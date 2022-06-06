@@ -5,7 +5,8 @@ WORKDIR /root
 
 RUN git clone https://github.com/hysds/hysds_ui.git
 
-COPY index.local.template.js tosca.js figaro.js /root/hysds_ui/src/config/
+COPY index.local.template.js /root/hysds_ui/src/config/index.js
+COPY tosca.js figaro.js /root/hysds_ui/src/config/
 
 RUN cd hysds_ui && \
   npm install --silent && \
