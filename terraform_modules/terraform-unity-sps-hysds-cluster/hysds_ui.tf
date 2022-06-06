@@ -13,9 +13,9 @@ resource "kubernetes_service" "hysds-ui_service" {
       protocol    = "TCP"
       port        = 3000
       target_port = 80
-      node_port   = 31000
+      node_port   = var.service_type != "NodePort" ? null : var.node_port_map.hysds_ui_service
     }
-    type = "LoadBalancer"
+    type = var.service_type
   }
 }
 
@@ -42,7 +42,7 @@ resource "kubernetes_deployment" "hysds-ui" {
 
       spec {
         container {
-          image = var.hysds_ui_image
+          image = var.docker_images.hysds_ui
           name  = "hysds-ui"
 
           port {

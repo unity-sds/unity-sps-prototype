@@ -24,18 +24,20 @@ resource "kubernetes_service" "minio_service" {
   }
 
   spec {
-    type             = "LoadBalancer"
+    type             = var.service_type
     session_affinity = "ClientIP"
     port {
       name        = "minio-api"
+      protocol    = "TCP"
       port        = 9000
       target_port = 9000
-      protocol    = "TCP"
+      node_port   = var.service_type != "NodePort" ? null : var.node_port_map.minio_service_api
     }
     port {
-      name     = "minio-interface"
-      port     = 9001
-      protocol = "TCP"
+      name      = "minio-interface"
+      protocol  = "TCP"
+      port      = 9001
+      node_port = var.service_type != "NodePort" ? null : var.node_port_map.minio_service_interface
     }
     selector = {
       app = "minio"
@@ -73,7 +75,7 @@ resource "kubernetes_deployment" "minio" {
 
       spec {
         container {
-          image = var.minio_image
+          image = var.docker_images.minio
           name  = "minio"
           # security_context {
           #   run_as_non_root = true
@@ -127,7 +129,7 @@ resource "kubernetes_job" "mc" {
       spec {
         init_container {
           name    = "minio-setup"
-          image   = var.mc_image
+          image   = var.docker_images.mc
           command = ["/bin/sh", "-c"]
           args = [
             <<-EOT
@@ -144,7 +146,7 @@ resource "kubernetes_job" "mc" {
         }
         container {
           name    = "publish-aoi"
-          image   = var.hysds_core_image
+          image   = var.docker_images.hysds_core
           command = ["/bin/sh", "-c"]
           args = [
             <<-EOT

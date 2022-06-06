@@ -13,9 +13,9 @@ resource "kubernetes_service" "grq2_service" {
     port {
       port        = 8878
       target_port = 8878
+      node_port   = var.service_type != "NodePort" ? null : var.node_port_map.grq2_service
     }
-
-    type = "LoadBalancer"
+    type = var.service_type
   }
 }
 
@@ -46,7 +46,7 @@ resource "kubernetes_deployment" "grq2" {
 
       spec {
         container {
-          image = var.hysds_grq2_image
+          image = var.docker_images.hysds_grq2
           name  = "grq2"
 
           port {

@@ -28,7 +28,7 @@ resource "kubernetes_deployment" "orchestrator" {
           run_as_group = 0
         }
         container {
-          image   = var.hysds_core_image
+          image   = var.docker_images.hysds_core
           name    = "orchestrator"
           command = ["supervisord", "--nodaemon"]
 

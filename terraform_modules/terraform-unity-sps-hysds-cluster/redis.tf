@@ -13,9 +13,9 @@ resource "kubernetes_service" "redis_service" {
     port {
       port        = 6379
       target_port = 6379
+      node_port   = var.service_type != "NodePort" ? null : var.node_port_map.redis_service
     }
-
-    type = "NodePort"
+    type = var.service_type
   }
 
 }
@@ -49,7 +49,7 @@ resource "kubernetes_deployment" "redis" {
 
       spec {
         container {
-          image             = var.redis_image
+          image             = var.docker_images.redis
           name              = "redis"
           image_pull_policy = "IfNotPresent"
 

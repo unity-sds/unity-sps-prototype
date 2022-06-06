@@ -12,9 +12,9 @@ resource "kubernetes_service" "mozart_service" {
     port {
       port        = 8888
       target_port = 8888
+      node_port   = var.service_type != "NodePort" ? null : var.node_port_map.mozart_service
     }
-
-    type = "LoadBalancer"
+    type = var.service_type
   }
 }
 
@@ -46,7 +46,7 @@ resource "kubernetes_deployment" "mozart" {
 
       spec {
         container {
-          image = var.hysds_mozart_image
+          image = var.docker_images.hysds_mozart
           name  = "mozart"
 
           #resources {

@@ -1,4 +1,3 @@
-
 resource "kubernetes_service" "rabbitmq_mgmt_service" {
   metadata {
     name      = "rabbitmq-mgmt"
@@ -15,8 +14,9 @@ resource "kubernetes_service" "rabbitmq_mgmt_service" {
       name        = "cluster-rpc"
       port        = 15672
       target_port = 15672
+      node_port   = var.service_type != "NodePort" ? null : var.node_port_map.rabbitmq_mgmt_service_cluster_rpc
     }
-    type = "LoadBalancer"
+    type = var.service_type
   }
 }
 
@@ -37,18 +37,21 @@ resource "kubernetes_service" "rabbitmq_service" {
       protocol    = "TCP"
       port        = 4369
       target_port = 4369
+      node_port   = var.service_type != "NodePort" ? null : var.node_port_map.rabbitmq_service_epmd
     }
     port {
       name        = "listener"
       protocol    = "TCP"
       port        = 5672
       target_port = 5672
+      node_port   = var.service_type != "NodePort" ? null : var.node_port_map.rabbitmq_service_listener
     }
     port {
       name        = "cluster-rpc"
       protocol    = "TCP"
       port        = 15672
       target_port = 15672
+      node_port   = var.service_type != "NodePort" ? null : var.node_port_map.rabbitmq_service_cluster_rpc
     }
   }
 
@@ -75,7 +78,7 @@ resource "kubernetes_stateful_set" "rabbitmq_statefulset" {
       spec {
         container {
           name  = "rabbitmq"
-          image = var.rabbitmq_image
+          image = var.docker_images.rabbitmq
           env {
             name  = "RABBITMQ_ERLANG_COOKIE"
             value = "1WqgH8N2v1qDBDZDbNy8Bg9IkPWLEpu79m6q+0t36lQ="

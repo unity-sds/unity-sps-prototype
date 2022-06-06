@@ -25,7 +25,7 @@ resource "kubernetes_deployment" "factotum-job-worker" {
       spec {
         init_container {
           name    = "changeume-ownership"
-          image   = var.busybox_image
+          image   = var.docker_images.busybox
           command = ["/bin/sh", "-c", "chmod 777 /var/run/docker.sock; chown -R 1000:1000 /private/tmp/data;"]
           volume_mount {
             name       = "docker-sock"
@@ -37,7 +37,8 @@ resource "kubernetes_deployment" "factotum-job-worker" {
           }
         }
         container {
-          image   = var.hysds_factotum_image
+          #image   = var.docker_images.hysds_factotum
+          image   = var.docker_images.hysds_verdi
           name    = "factotum-job-worker"
           command = ["supervisord", "--nodaemon"]
 

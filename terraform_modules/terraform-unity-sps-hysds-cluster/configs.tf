@@ -136,7 +136,7 @@ resource "kubernetes_config_map" "datasets" {
   # custom config files will be added in the future. This could take the form of a Terraform
   # resource that generates all the custom config files.
   data = {
-    "datasets.json" = "${file("${path.module}/../../hysds/configs/datasets.template.json")}"
+    "datasets.json" = "${file("${path.module}/../../hysds/configs/${var.datasets_filename}")}"
   }
 }
 

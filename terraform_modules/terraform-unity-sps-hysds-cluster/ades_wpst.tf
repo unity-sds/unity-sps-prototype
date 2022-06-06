@@ -28,12 +28,13 @@ resource "kubernetes_service" "ades-wpst-api_service" {
       app = "ades-wpst-api"
     }
     session_affinity = "ClientIP"
+    type             = var.service_type
     port {
       protocol    = "TCP"
       port        = 5001
       target_port = 5000
+      node_port   = var.service_type != "NodePort" ? null : var.node_port_map.ades_wpst_api_service
     }
-    type = "LoadBalancer"
   }
 }
 
@@ -64,7 +65,7 @@ resource "kubernetes_deployment" "ades-wpst-api" {
 
       spec {
         container {
-          image = var.ades_wpst_api_image
+          image = var.docker_images.ades_wpst_api
           name  = "ades-wpst-api"
           env {
             name  = "ADES_PLATFORM"
