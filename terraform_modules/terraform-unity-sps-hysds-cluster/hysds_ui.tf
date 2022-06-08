@@ -43,8 +43,8 @@ resource "kubernetes_deployment" "hysds-ui" {
       spec {
         container {
           image = var.docker_images.hysds_ui
+          image_pull_policy = "Always"
           name  = "hysds-ui"
-
           port {
             container_port = 80
           }

@@ -24,7 +24,7 @@ resource "kubernetes_config_map" "celeryconfig" {
     namespace = kubernetes_namespace.unity-sps.metadata.0.name
   }
   data = {
-    "celeryconfig.py" = "${file("${path.module}/../../hysds/configs/celeryconfig.py")}"
+    "celeryconfig.py" = "${file("${path.module}/../../hysds/configs/${var.celeryconfig_filename}")}"
   }
 }
 

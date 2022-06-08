@@ -1,42 +1,42 @@
 locals {
   mozart-es-values = {
-    clusterName = var.mozart_es.cluster_name
+    clusterName = "mozart-es"
     # Permit co-located instances for solitary minikube virtual machines.
-    antiAffinity = var.mozart_es.anti_affinity
+    antiAffinity = "soft"
     # Shrink default JVM heap.
-    esJavaOpts = var.mozart_es.es_java_opts
+    esJavaOpts = "-Xmx512m -Xms512m"
     # Allocate smaller chunks of memory per pod.
     resources = {
       requests = {
-        cpu    = var.mozart_es.resources.requests.cpu
-        memory = var.mozart_es.resources.requests.memory
+        cpu    = "1000m"
+        memory = "2Gi"
       }
       limits = {
-        cpu    = var.mozart_es.resources.limits.cpu
-        memory = var.mozart_es.resources.limits.memory
+        cpu    = "1000m"
+        memory = "2Gi"
       }
     }
     # Request smaller persistent volumes.
     volumeClaimTemplate = {
-      accessModes      = var.mozart_es.volume_claim_template.access_modes
+      accessModes      = ["ReadWriteOnce"]
       storageClassName = var.mozart_es.volume_claim_template.storage_class_name
       resources = {
         requests = {
-          storage = var.mozart_es.volume_claim_template.resources.requests.storage
+          storage = "5Gi"
         }
       }
     }
     # elasticsearch:
-    masterService = var.mozart_es.master_service
+    masterService = "mozart-es"
     # because we're using 1 node the cluster health will be YELLOW instead of GREEN after data is ingested
-    clusterHealthCheckParams = var.mozart_es.cluster_health_check_params
-    replicas                 = var.mozart_es.replicas
+    clusterHealthCheckParams = "wait_for_status=yellow&timeout=1s"
+    replicas                 = 1
     service = {
       type     = var.service_type
       nodePort = var.service_type != "NodePort" ? null : var.node_port_map.mozart_es
     }
-    httpPort      = var.mozart_es.http_port
-    transportPort = var.mozart_es.transport_port
+    httpPort      = 9200
+    transportPort = 9300
     esConfig = {
       "elasticsearch.yml" = <<-EOT
       http.cors.enabled : true
@@ -77,43 +77,43 @@ locals {
     }
   }
   grq2-es-values = {
-    clusterName = var.grq2_es.cluster_name
+    clusterName = "grq-es"
     # Permit co-located instances for solitary minikube virtual machines.
-    antiAffinity = var.grq2_es.anti_affinity
+    antiAffinity = "soft"
     # Shrink default JVM heap.
-    esJavaOpts = var.grq2_es.es_java_opts
+    esJavaOpts = "-Xmx512m -Xms512m"
     # Allocate smaller chunks of memory per pod.
     resources = {
       requests = {
-        cpu    = var.grq2_es.resources.requests.cpu
-        memory = var.grq2_es.resources.requests.memory
+        cpu    = "1000m"
+        memory = "2Gi"
       }
       limits = {
-        cpu    = var.grq2_es.resources.limits.cpu
-        memory = var.grq2_es.resources.limits.memory
+        cpu    = "1000m"
+        memory = "2Gi"
       }
     }
     # Request smaller persistent volumes.
     volumeClaimTemplate = {
-      accessModes      = var.grq2_es.volume_claim_template.access_modes
+      accessModes      = ["ReadWriteOnce"]
       storageClassName = var.grq2_es.volume_claim_template.storage_class_name
       resources = {
         requests = {
-          storage = var.grq2_es.volume_claim_template.resources.requests.storage
+          storage = "5Gi"
         }
       }
     }
     # elasticsearch:
-    masterService = var.grq2_es.master_service
+    masterService = "grq-es"
     # because we're using 1 node the cluster health will be YELLOW instead of GREEN after data is ingested
-    clusterHealthCheckParams = var.grq2_es.cluster_health_check_params
-    replicas                 = var.grq2_es.replicas
+    clusterHealthCheckParams = "wait_for_status=yellow&timeout=1s"
+    replicas                 = 1
     service = {
       type     = var.service_type
       nodePort = var.service_type != "NodePort" ? null : var.node_port_map.grq2_es
     }
-    httpPort      = var.grq2_es.http_port
-    transportPort = var.grq2_es.transport_port
+    httpPort      = 9201
+    transportPort = 9301
 
     esConfig = {
       "elasticsearch.yml" = <<-EOT

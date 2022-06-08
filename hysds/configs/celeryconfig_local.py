@@ -22,7 +22,7 @@ broker_heartbeat = 120
 broker_heartbeat_checkrate = 2
 
 broker_pool_limit = None
-broker_transport_options = { "confirm_publish": True }
+broker_transport_options = {"confirm_publish": True}
 
 imports = [
     "hysds.task_worker",
@@ -31,10 +31,8 @@ imports = [
 ]
 
 CELERY_SEND_TASK_ERROR_EMAILS = False
-ADMINS = (
-    ('{{ ADMIN_NAME }}', '{{ ADMIN_EMAIL }}'),
-)
-SERVER_EMAIL = '{{ HOST_STRING }}'
+ADMINS = (("{{ ADMIN_NAME }}", "{{ ADMIN_EMAIL }}"),)
+SERVER_EMAIL = "{{ HOST_STRING }}"
 
 HYSDS_HANDLE_SIGNALS = False
 HYSDS_JOB_STATUS_EXPIRES = 86400
@@ -48,17 +46,13 @@ PYMONITOREDRUNNER_CFG = {
     "rabbitmq": {
         "hostname": "{{ MOZART_RABBIT_PVT_IP }}",
         "port": 5672,
-        "queue": "stdouterr"
+        "queue": "stdouterr",
     },
-
     "StreamObserverFileWriter": {
         "stdout_filepath": "_stdout.txt",
-        "stderr_filepath": "_stderr.txt"
+        "stderr_filepath": "_stderr.txt",
     },
-
-    "StreamObserverMessenger": {
-        "send_interval": 1
-    }
+    "StreamObserverMessenger": {"send_interval": 1},
 }
 
 MOZART_URL = "https://mozart:8888/mozart/"
@@ -80,7 +74,7 @@ GRQ_AWS_ES = False
 GRQ_ES_HOST = "grq-es"
 GRQ_ES_PORT = 9201
 GRQ_ES_PROTOCOL = "http"
-GRQ_ES_URL = '%s://%s:%d' % (GRQ_ES_PROTOCOL, GRQ_ES_HOST, GRQ_ES_PORT)
+GRQ_ES_URL = "%s://%s:%d" % (GRQ_ES_PROTOCOL, GRQ_ES_HOST, GRQ_ES_PORT)
 
 
 DATASET_PROCESSED_QUEUE = "dataset_processed"
@@ -103,13 +97,15 @@ REDIS_JOB_STATUS_URL = "redis://redis:6379"
 REDIS_JOB_STATUS_KEY = "logstash"
 REDIS_JOB_INFO_URL = "redis://redis:6379"
 REDIS_JOB_INFO_KEY = "logstash"
-REDIS_INSTANCE_METRICS_URL = "redis://:{{ METRICS_REDIS_PASSWORD }}@{{ METRICS_REDIS_PVT_IP }}"
+REDIS_INSTANCE_METRICS_URL = (
+    "redis://:{{ METRICS_REDIS_PASSWORD }}@{{ METRICS_REDIS_PVT_IP }}"
+)
 REDIS_INSTANCE_METRICS_KEY = "logstash"
 # REDIS_UNIX_DOMAIN_SOCKET = "unix://:{{ MOZART_REDIS_PASSWORD }}@/tmp/redis.sock"
 REDIS_UNIX_DOMAIN_SOCKET = "unix://:/tmp/redis.sock"
 
 WORKER_CONTIGUOUS_FAILURE_THRESHOLD = 10
-WORKER_CONTIGUOUS_FAILURE_TIME = 5.
+WORKER_CONTIGUOUS_FAILURE_TIME = 5.0
 
 # ROOT_WORK_DIR = "/data/work"
 ROOT_WORK_DIR = "/private/tmp/data/work"

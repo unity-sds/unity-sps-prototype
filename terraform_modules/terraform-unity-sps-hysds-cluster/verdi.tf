@@ -40,23 +40,45 @@ resource "kubernetes_deployment" "verdi" {
           }
         }
         container {
+          name  = "dind-daemon"
+          image = "docker:dind"
+          env {
+            name  = "DOCKER_TLS_CERTDIR"
+            value = ""
+          }
+          resources {
+            requests = {
+              cpu    = "20m"
+              memory = "512Mi"
+            }
+          }
+          security_context {
+            privileged = true
+          }
+          volume_mount {
+            name       = "docker-graph-storage"
+            mount_path = "/var/lib/docker"
+          }
+        }
+        container {
           name    = "verdi"
           image   = var.docker_images.hysds_verdi
           command = ["supervisord", "--nodaemon"]
-
+          env {
+            name  = "DOCKER_HOST"
+            value = "tcp://localhost:2375"
+          }
           volume_mount {
             name       = "docker-sock"
             mount_path = "/var/run/docker.sock"
             read_only  = false
           }
-
           volume_mount {
             name       = kubernetes_config_map.celeryconfig.metadata.0.name
             mount_path = "/home/ops/hysds/celeryconfig.py"
             sub_path   = "celeryconfig.py"
             read_only  = false
           }
-
           volume_mount {
             name       = kubernetes_config_map.datasets.metadata.0.name
             mount_path = "/home/ops/datasets.json"
@@ -84,6 +106,10 @@ resource "kubernetes_deployment" "verdi" {
         }
         image_pull_secrets {
           name = kubernetes_secret.container-registry.metadata.0.name
+        }
+        volume {
+          name = "docker-graph-storage"
+          empty_dir {}
         }
         volume {
           name = "docker-sock"

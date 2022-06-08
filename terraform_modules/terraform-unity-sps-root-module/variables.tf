@@ -37,123 +37,27 @@ variable "docker_images" {
 
 variable "mozart_es" {
   type = object({
-    cluster_name  = string
-    anti_affinity = string
-    es_java_opts  = string
-    resources = object({
-      requests = object({
-        cpu    = string
-        memory = string
-      })
-      limits = object({
-        cpu    = string
-        memory = string
-      })
-    })
     volume_claim_template = object({
-      access_modes       = list(string)
       storage_class_name = string
-      resources = object({
-        requests = object({
-          storage = string
-        })
-      })
     })
-    master_service              = string
-    cluster_health_check_params = string
-    replicas                    = number
-    http_port                   = number
-    transport_port              = number
   })
   default = {
-    cluster_name  = "mozart-es"
-    anti_affinity = "soft"
-    es_java_opts  = "-Xmx512m -Xms512m"
-    resources = {
-      requests = {
-        cpu    = "1000m"
-        memory = "2Gi"
-      }
-      limits = {
-        cpu    = "1000m"
-        memory = "2Gi"
-      }
-    }
     volume_claim_template = {
-      access_modes       = ["ReadWriteOnce"]
       storage_class_name = "microk8s-hostpath"
-      resources = {
-        requests = {
-          storage = "5Gi"
-        }
-      }
     }
-    master_service              = "mozart-es"
-    cluster_health_check_params = "wait_for_status=yellow&timeout=1s"
-    replicas                    = 1
-    http_port                   = 9200
-    transport_port              = 9300
   }
 }
 
 variable "grq2_es" {
   type = object({
-    cluster_name  = string
-    anti_affinity = string
-    es_java_opts  = string
-    resources = object({
-      requests = object({
-        cpu    = string
-        memory = string
-      })
-      limits = object({
-        cpu    = string
-        memory = string
-      })
-    })
     volume_claim_template = object({
-      access_modes       = list(string)
       storage_class_name = string
-      resources = object({
-        requests = object({
-          storage = string
-        })
-      })
     })
-    master_service              = string
-    cluster_health_check_params = string
-    replicas                    = number
-    http_port                   = number
-    transport_port              = number
   })
   default = {
-    cluster_name  = "grq-es"
-    anti_affinity = "soft"
-    es_java_opts  = "-Xmx512m -Xms512m"
-    resources = {
-      requests = {
-        cpu    = "1000m"
-        memory = "2Gi"
-      }
-      limits = {
-        cpu    = "1000m"
-        memory = "2Gi"
-      }
-    }
     volume_claim_template = {
-      access_modes       = ["ReadWriteOnce"]
       storage_class_name = "microk8s-hostpath"
-      resources = {
-        requests = {
-          storage = "5Gi"
-        }
-      }
     }
-    master_service              = "grq-es"
-    cluster_health_check_params = "wait_for_status=yellow&timeout=1s"
-    replicas                    = 1
-    http_port                   = 9201
-    transport_port              = 9301
   }
 }
 
@@ -184,4 +88,9 @@ variable "node_port_map" {
 variable "datasets_filename" {
   type    = string
   default = "datasets.template.json"
+}
+
+variable "celeryconfig_filename" {
+  type    = string
+  default = "celeryconfig_remote.py"
 }
