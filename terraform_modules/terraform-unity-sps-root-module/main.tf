@@ -15,6 +15,4 @@ module "unity-sps-hysds-cluster" {
   service_type        = var.service_type
   node_port_map       = var.node_port_map
   mozart_es           = var.mozart_es
-  grq2_es             = var.grq2_es
-  datasets_filename   = var.datasets_filename
 }
