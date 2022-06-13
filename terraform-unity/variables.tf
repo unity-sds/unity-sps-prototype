@@ -32,7 +32,8 @@ variable "mozart_es" {
   })
   default = {
     volume_claim_template = {
-      storage_class_name = "microk8s-hostpath"
+#      storage_class_name = "microk8s-hostpath"
+      storage_class_name = "gp2"
     }
   }
 }
@@ -40,7 +41,8 @@ variable "mozart_es" {
 
 variable "service_type" {
   type    = string
-  default = "NodePort"
+#  default = "NodePort"
+  default = "LoadBalancer"
 }
 
 variable "node_port_map" {

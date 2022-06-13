@@ -33,7 +33,8 @@ variable "mozart_es" {
   })
   default = {
     volume_claim_template = {
-      storage_class_name = "microk8s-hostpath"
+#      storage_class_name = "microk8s-hostpath"
+      storage_class_name = "gp2"
     }
   }
 }
