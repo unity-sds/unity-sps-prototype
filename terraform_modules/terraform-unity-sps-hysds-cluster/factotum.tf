@@ -81,10 +81,6 @@ resource "kubernetes_deployment" "factotum-job-worker" {
           }
         }
 
-        image_pull_secrets {
-          name = kubernetes_secret.container-registry.metadata.0.name
-        }
-
         volume {
           name = "docker-sock"
           host_path {

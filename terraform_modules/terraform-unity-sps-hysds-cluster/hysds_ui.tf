@@ -49,9 +49,6 @@ resource "kubernetes_deployment" "hysds-ui" {
             container_port = 80
           }
         }
-        image_pull_secrets {
-          name = kubernetes_secret.container-registry.metadata.0.name
-        }
         restart_policy = "Always"
       }
     }

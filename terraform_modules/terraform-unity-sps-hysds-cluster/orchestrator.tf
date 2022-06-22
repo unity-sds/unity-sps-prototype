@@ -53,10 +53,6 @@ resource "kubernetes_deployment" "orchestrator" {
           }
         }
 
-        image_pull_secrets {
-          name = kubernetes_secret.container-registry.metadata.0.name
-        }
-
         volume {
           name = kubernetes_config_map.celeryconfig.metadata.0.name
           config_map {

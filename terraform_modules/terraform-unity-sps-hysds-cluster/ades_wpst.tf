@@ -79,9 +79,6 @@ resource "kubernetes_deployment" "ades-wpst-api" {
             mount_path = "/ades_wpst/sqlite"
           }
         }
-        image_pull_secrets {
-          name = kubernetes_secret.container-registry.metadata.0.name
-        }
         volume {
           name = "sqlite-db"
           persistent_volume_claim {

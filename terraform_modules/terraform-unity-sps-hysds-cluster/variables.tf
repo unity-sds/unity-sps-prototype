@@ -9,14 +9,6 @@ variable "namespace" {
   default     = "unity-sps"
 }
 
-variable "container_registry" {
-  type = object({
-    server   = string
-    username = string
-    password = string
-  })
-}
-
 variable "docker_images" {
   type = map(string)
   default = {

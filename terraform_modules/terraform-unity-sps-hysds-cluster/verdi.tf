@@ -104,9 +104,6 @@ resource "kubernetes_deployment" "verdi" {
             read_only  = false
           }
         }
-        image_pull_secrets {
-          name = kubernetes_secret.container-registry.metadata.0.name
-        }
         volume {
           name = "docker-graph-storage"
           empty_dir {}
