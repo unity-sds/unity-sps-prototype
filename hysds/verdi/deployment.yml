@@ -19,20 +19,49 @@ spec:
           image: k8s.gcr.io/busybox
           command: ["/bin/sh", "-c"]
           args:
-            - chmod 777 /var/run/docker.sock;
-              chown -R 1000:1000 /private/tmp/data;
+            - chown -R 1000:1000 /private/tmp/data;
           volumeMounts:
-            - name: docker-sock
-              mountPath: /var/run/docker.sock
             - name: data-work
               mountPath: /private/tmp/data
       containers:
+        # Docker container that runs a Docker engine ("Docker-IN-Docker" pattern)
+        # After starting, the Docker socket is made available to the Vedri container
+        # so that Verdi can execute Docker commands vs this engine
+        - name: dind-daemon
+          image: docker:20.10.17-dind
+          lifecycle:
+            postStart:
+              exec:
+                # Note: must wait a few seconds for the Docker engine to start and the file to be created
+                command: ["/bin/sh", "-c", "sleep 5; chmod 777 /var/run/docker.sock"]
+          resources:
+            requests:
+                cpu: 20m
+                memory: 512Mi
+          securityContext:
+            privileged: true
+          volumeMounts:
+            # Empty directory where the Docker engine indices the images
+            - name: docker-graph-storage
+              mountPath: /var/lib/docker
+            #- mountPath: /src
+            #  name: src-dir
+            # The Docker socket must be shared with Verdi container
+            - name: docker-sock-dir
+              mountPath: /var/run
+              subPath: docker.sock
+            # Note: the /tmp directory must be shared 
+            # because cwl-runner mounts it from the client into the container
+            - name: tmp-dir
+              mountPath: /tmp
         - name: verdi
           image: verdi:unity-v0.0.1
           command: ["supervisord", "--nodaemon"]
           volumeMounts:
-            - name: docker-sock
-              mountPath: /var/run/docker.sock
+            # The Docker socket use to communicate with the Docker engine
+            - name: docker-sock-dir
+              mountPath: /var/run
+              subPath: docker.sock
             - name: celeryconfig
               mountPath: /home/ops/hysds/celeryconfig.py
               subPath: celeryconfig.py
@@ -47,10 +76,17 @@ spec:
               subPath: aws-credentials
             - name: data-work
               mountPath: /private/tmp/data
+            # A persistent volume storing static data
+            - name: static-data
+              mountPath: /static-data
+            # Directory containing the Sounder Sips specific workflow
+            # TODO: remove and make it part of the deployment phase
+            - name: src-dir
+              mountPath: /src
+            # Temporary directory shared with the DIND container
+            - name: tmp-dir
+              mountPath: /tmp
       volumes:
-        - name: docker-sock
-          hostPath:
-            path: /var/run/docker.sock
         - name: celeryconfig
           configMap:
             name: celeryconfig
@@ -66,3 +102,21 @@ spec:
         - name: data-work
           hostPath:
             path: /private/tmp/data
+        # Shared direcrtory holding the Docker socket
+        - name: docker-sock-dir
+          emptyDir: {}
+        # TODO: replace with an independent persistent volume holding static data
+        - name: static-data
+          hostPath:
+            path: /Users/cinquini/data/SOUNDER_SIPS/STATIC_DATA
+        # TODO: remove and access the CWL workflow during the algorithm deployment
+        - name: src-dir
+          hostPath:
+            path: /Users/cinquini/eclipse-workspace-mars2020/unity-sps-workflows/sounder_sips
+        # Temporary directory shared between containers (used by CWL workflow)
+        - name: tmp-dir
+          emptyDir: {}
+        # Clean Docker storage
+        - name: docker-graph-storage
+          emptyDir: {}
+
