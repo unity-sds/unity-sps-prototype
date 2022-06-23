@@ -183,3 +183,44 @@ resource "kubernetes_config_map" "aws-credentials" {
     "aws-credentials" = "${file("${path.module}/../../hysds/configs/aws-credentials")}"
   }
 }
+
+
+# https://github.com/hashicorp/terraform-provider-kubernetes/issues/1329
+locals {
+  cwl_workflows_directory            = "/Users/drewm/Documents/projects/398G/Unity/unity-sps-workflows/sounder_sips"
+  cwl_workflow_utils_directory       = "/Users/drewm/Documents/projects/398G/Unity/unity-sps-workflows/sounder_sips/utils"
+  sounder_sips_static_data_directory = abspath("${path.module}/../../dev_data/SOUNDER_SIPS/STATIC_DATA")
+}
+
+resource "kubernetes_config_map" "cwl-workflows" {
+  metadata {
+    name      = "cwl-workflows"
+    namespace = kubernetes_namespace.unity-sps.metadata.0.name
+  }
+  data = {
+    for f in fileset(local.cwl_workflows_directory, "*") :
+    f => file(join("/", [local.cwl_workflows_directory, f]))
+  }
+}
+
+resource "kubernetes_config_map" "cwl-workflow-utils" {
+  metadata {
+    name      = "cwl-workflow-utils"
+    namespace = kubernetes_namespace.unity-sps.metadata.0.name
+  }
+  data = {
+    for f in fileset(local.cwl_workflow_utils_directory, "*") :
+    f => file(join("/", [local.cwl_workflow_utils_directory, f]))
+  }
+}
+
+resource "kubernetes_config_map" "sounder-sips-static-data" {
+  metadata {
+    name      = "sounder-sips-static-data"
+    namespace = kubernetes_namespace.unity-sps.metadata.0.name
+  }
+  data = {
+    for f in fileset(local.sounder_sips_static_data_directory, "*") :
+    f => filebase64sha256(join("/", [local.sounder_sips_static_data_directory, f]))
+  }
+}

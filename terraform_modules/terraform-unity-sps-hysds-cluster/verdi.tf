@@ -39,14 +39,24 @@ resource "kubernetes_deployment" "verdi" {
           #   chown -R 1000:1000 /private/tmp/data;
           #   EOT
           # ]
+          # https://stackoverflow.com/questions/56155495/how-do-i-copy-a-kubernetes-configmap-to-a-write-enabled-area-of-a-pod
           args = [
             <<-EOT
             chown -R 1000:1000 /private/tmp/data;
+            cp -r /cwl-src/. /src;
             EOT
           ]
           volume_mount {
             name       = "data-work"
             mount_path = "/private/tmp/data"
+          }
+          volume_mount {
+            name       = kubernetes_config_map.cwl-workflows.metadata.0.name
+            mount_path = "/cwl-src"
+          }
+          volume_mount {
+            name       = "src"
+            mount_path = "/src"
           }
         }
         container {
@@ -101,9 +111,10 @@ resource "kubernetes_deployment" "verdi" {
           }
         }
         container {
-          name    = "verdi"
-          image   = var.docker_images.hysds_verdi
-          command = ["supervisord", "--nodaemon"]
+          name              = "verdi"
+          image             = var.docker_images.hysds_verdi
+          image_pull_policy = "Always"
+          command           = ["supervisord", "--nodaemon"]
           env {
             name  = "DOCKER_HOST"
             value = "tcp://localhost:2375"
@@ -152,14 +163,19 @@ resource "kubernetes_deployment" "verdi" {
           }
           # A persistent volume storing static data
           volume_mount {
-            name       = "static-data"
+            name       = kubernetes_config_map.sounder-sips-static-data.metadata.0.name
             mount_path = "/static-data"
           }
           # Directory containing the Sounder Sips specific workflow
           # TODO: remove and make it part of the deployment phase
           volume_mount {
-            name       = "src-dir"
+            name       = "src"
             mount_path = "/src"
+            read_only  = false
+          }
+          volume_mount {
+            name       = kubernetes_config_map.cwl-workflow-utils.metadata.0.name
+            mount_path = "/src/utils"
           }
           # Temporary directory shared with the DIND container
           volume_mount {
@@ -209,18 +225,41 @@ resource "kubernetes_deployment" "verdi" {
           empty_dir {}
         }
         # TODO: replace with an independent persistent volume holding static data
+        # https://stackoverflow.com/questions/48150179/how-to-mount-entire-directory-in-kubernetes-using-configmap
+        # volume {
+        #   name = "static-data"
+        #   host_path {
+        #     path = abspath("${path.module}/../../dev_data/SOUNDER_SIPS/STATIC_DATA")
+        #   }
+        # }
         volume {
-          name = "static-data"
-          host_path {
-            path = abspath("${path.module}/../../dev_data/SOUNDER_SIPS/STATIC_DATA")
+          name = kubernetes_config_map.sounder-sips-static-data.metadata.0.name
+          config_map {
+            name = kubernetes_config_map.sounder-sips-static-data.metadata.0.name
           }
         }
         # TODO: remove and access the CWL workflow during the algorithm deployment
+        # volume {
+        #   name = "src-dir"
+        #   host_path {
+        #     path = "/Users/drewm/Documents/projects/398G/Unity/unity-sps-workflows/sounder_sips"
+        #   }
+        # }
         volume {
-          name = "src-dir"
-          host_path {
-            path = abspath("${path.module}/../../workflows/sounder_SIPS")
+          name = kubernetes_config_map.cwl-workflows.metadata.0.name
+          config_map {
+            name = kubernetes_config_map.cwl-workflows.metadata.0.name
           }
+        }
+        volume {
+          name = kubernetes_config_map.cwl-workflow-utils.metadata.0.name
+          config_map {
+            name = kubernetes_config_map.cwl-workflow-utils.metadata.0.name
+          }
+        }
+        volume {
+          name = "src"
+          empty_dir {}
         }
         # Temporary directory shared between containers (used by CWL workflow)
         volume {
