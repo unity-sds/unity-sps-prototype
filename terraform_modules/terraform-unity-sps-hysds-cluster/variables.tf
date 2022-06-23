@@ -81,7 +81,7 @@ variable "node_port_map" {
 
 variable "datasets_filename" {
   type    = string
-  default = "datasets.template.json"
+  default = "datasets.remote.template.json"
 }
 
 variable "celeryconfig_filename" {
