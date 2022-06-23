@@ -20,3 +20,30 @@ cd unity-sps-prototype/hysds
 ```
 
 Verify that the Docker image 'verdi:unity-v0.0.1' has just been build on your laptop.
+
+## Step 2: Start the HySDS cluster on local laptop
+```
+cd unity-sps-prototype/hysds
+./deploy.sh --all
+```
+
+## Step 3: Enter the Verdi container
+Wait untill the HySDS cluster is completely up, then identify and enter the Verdi pod.
+```
+kubectl get pods
+...
+verdi-5fc5645cb5-lkbp4                2/2     Running     0          61s
+...
+
+kubectl exec -it verdi-5fc5645cb5-lkbp4 -c verdi bash
+
+cd /src
+```
+
+## Step 4: Update the input parameters used by the CWL workflow
+
+Edit the parameter file ssips_L1b_workflow.yml, replace the values of:
+* aws_access_key_id
+* aws_secret_access_key
+* aws_session_token
+with the new values from the file ~/.aws/credentials on your laptop (from the 'saml-pub' profile).
