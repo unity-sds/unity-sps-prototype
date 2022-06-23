@@ -50,9 +50,11 @@ cd /src
 ## Step 4: Update the input parameters used by the CWL workflow
 
 Edit the parameter file ssips_L1b_workflow.yml, replace the values of:
+
 * aws_access_key_id
 * aws_secret_access_key
 * aws_session_token
+
 with the new values from the file ~/.aws/credentials on your laptop (from the 'saml-pub' profile).
 
 ## Step 5: Execute the L1B CWL workflow
