@@ -20,25 +20,10 @@ resource "kubernetes_deployment" "verdi" {
         }
       }
       spec {
-        # security_context {
-        #   run_as_user  = 1000
-        #   run_as_group = 3000
-        #   fs_group     = 2000
-        #   # fs_group        = 1000
-        #   # run_as_group    = 1000
-        #   # run_as_non_root = true
-        #   # run_as_user     = 1000
-        # }
         init_container {
           name    = "change-ownership"
           image   = var.docker_images.busybox
           command = ["/bin/sh", "-c"]
-          # args = [
-          #   <<-EOT
-          #   chmod 777 /var/run/docker.sock;
-          #   chown -R 1000:1000 /private/tmp/data;
-          #   EOT
-          # ]
           # https://stackoverflow.com/questions/56155495/how-do-i-copy-a-kubernetes-configmap-to-a-write-enabled-area-of-a-pod
           args = [
             <<-EOT
@@ -78,7 +63,6 @@ resource "kubernetes_deployment" "verdi" {
           }
           security_context {
             privileged = true
-            #allow_privilege_escalation = true
           }
           lifecycle {
             post_start {
@@ -226,12 +210,6 @@ resource "kubernetes_deployment" "verdi" {
         }
         # TODO: replace with an independent persistent volume holding static data
         # https://stackoverflow.com/questions/48150179/how-to-mount-entire-directory-in-kubernetes-using-configmap
-        # volume {
-        #   name = "static-data"
-        #   host_path {
-        #     path = abspath("${path.module}/../../dev_data/SOUNDER_SIPS/STATIC_DATA")
-        #   }
-        # }
         volume {
           name = kubernetes_config_map.sounder-sips-static-data.metadata.0.name
           config_map {
@@ -239,12 +217,6 @@ resource "kubernetes_deployment" "verdi" {
           }
         }
         # TODO: remove and access the CWL workflow during the algorithm deployment
-        # volume {
-        #   name = "src-dir"
-        #   host_path {
-        #     path = "/Users/drewm/Documents/projects/398G/Unity/unity-sps-workflows/sounder_sips"
-        #   }
-        # }
         volume {
           name = kubernetes_config_map.cwl-workflows.metadata.0.name
           config_map {
