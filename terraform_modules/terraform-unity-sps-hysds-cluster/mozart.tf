@@ -88,10 +88,6 @@ resource "kubernetes_deployment" "mozart" {
 
         }
 
-        image_pull_secrets {
-          name = kubernetes_secret.container-registry.metadata.0.name
-        }
-
         volume {
           name = kubernetes_config_map.mozart-settings.metadata.0.name
           config_map {
