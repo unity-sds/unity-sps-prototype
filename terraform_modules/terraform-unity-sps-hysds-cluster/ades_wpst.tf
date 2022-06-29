@@ -27,7 +27,7 @@ resource "kubernetes_service" "ades-wpst-api_service" {
     selector = {
       app = "ades-wpst-api"
     }
-    session_affinity = "ClientIP"
+    session_affinity = var.deployment_environment != "local" ? null : "ClientIP"
     type             = var.service_type
     port {
       protocol    = "TCP"

@@ -36,7 +36,7 @@ variable "mozart_es" {
   })
   default = {
     volume_claim_template = {
-      storage_class_name = "microk8s-hostpath"
+      storage_class_name = "gp2"
     }
   }
 }
@@ -49,14 +49,14 @@ variable "grq2_es" {
   })
   default = {
     volume_claim_template = {
-      storage_class_name = "microk8s-hostpath"
+      storage_class_name = "gp2"
     }
   }
 }
 
 variable "service_type" {
   type    = string
-  default = "NodePort"
+  default = "LoadBalancer"
 }
 
 
@@ -87,4 +87,9 @@ variable "datasets_filename" {
 variable "celeryconfig_filename" {
   type    = string
   default = "celeryconfig_remote.py"
+}
+
+variable "deployment_environment" {
+  type    = string
+  default = "mcp"
 }

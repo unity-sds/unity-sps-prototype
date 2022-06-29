@@ -8,13 +8,23 @@ locals {
     # Allocate smaller chunks of memory per pod.
     resources = {
       requests = {
-        cpu    = "1000m"
-        memory = "2Gi"
+        cpu    = "250m"
+        memory = "50Mi"
       }
       limits = {
-        cpu    = "1000m"
-        memory = "2Gi"
+        cpu    = "250m"
+        memory = "50Mi"
       }
+      # Scaling down resourcse since I'm getting this error:
+      # Warning  FailedScheduling  19s (x7 over 5m55s)  default-scheduler  0/1 nodes are available: 1 Insufficient cpu.
+      # requests = {
+      #   cpu    = "1000m"
+      #   memory = "2Gi"
+      # }
+      # limits = {
+      #   cpu    = "1000m"
+      #   memory = "2Gi"
+      # }
     }
     # Request smaller persistent volumes.
     volumeClaimTemplate = {
@@ -85,13 +95,23 @@ locals {
     # Allocate smaller chunks of memory per pod.
     resources = {
       requests = {
-        cpu    = "1000m"
-        memory = "2Gi"
+        cpu    = "250m"
+        memory = "50Mi"
       }
       limits = {
-        cpu    = "1000m"
-        memory = "2Gi"
+        cpu    = "250m"
+        memory = "50Mi"
       }
+      # Scaling down resourcse since I'm getting this error:
+      # Warning  FailedScheduling  19s (x7 over 5m55s)  default-scheduler  0/1 nodes are available: 1 Insufficient cpu.
+      # requests = {
+      #   cpu    = "1000m"
+      #   memory = "2Gi"
+      # }
+      # limits = {
+      #   cpu    = "1000m"
+      #   memory = "2Gi"
+      # }
     }
     # Request smaller persistent volumes.
     volumeClaimTemplate = {

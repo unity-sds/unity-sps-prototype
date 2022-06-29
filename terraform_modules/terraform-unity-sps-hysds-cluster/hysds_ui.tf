@@ -8,7 +8,7 @@ resource "kubernetes_service" "hysds-ui_service" {
     selector = {
       app = "hysds-ui"
     }
-    session_affinity = "ClientIP"
+    session_affinity = var.deployment_environment != "local" ? null : "ClientIP"
     port {
       protocol    = "TCP"
       port        = 3000
@@ -42,9 +42,9 @@ resource "kubernetes_deployment" "hysds-ui" {
 
       spec {
         container {
-          image = var.docker_images.hysds_ui
+          image             = var.docker_images.hysds_ui
           image_pull_policy = "Always"
-          name  = "hysds-ui"
+          name              = "hysds-ui"
           port {
             container_port = 80
           }

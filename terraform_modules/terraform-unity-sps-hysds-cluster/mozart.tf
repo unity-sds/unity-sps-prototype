@@ -8,7 +8,7 @@ resource "kubernetes_service" "mozart_service" {
     selector = {
       app = "mozart"
     }
-    session_affinity = "ClientIP"
+    session_affinity = var.deployment_environment != "local" ? null : "ClientIP"
     port {
       port        = 8888
       target_port = 8888

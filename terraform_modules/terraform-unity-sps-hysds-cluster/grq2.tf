@@ -9,7 +9,7 @@ resource "kubernetes_service" "grq2_service" {
     selector = {
       app = "grq2"
     }
-    session_affinity = "ClientIP"
+    session_affinity = var.deployment_environment != "local" ? null : "ClientIP"
     port {
       port        = 8878
       target_port = 8878

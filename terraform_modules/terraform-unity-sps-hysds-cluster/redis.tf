@@ -9,7 +9,7 @@ resource "kubernetes_service" "redis_service" {
     selector = {
       app = "redis"
     }
-    session_affinity = "ClientIP"
+    session_affinity = var.deployment_environment != "local" ? null : "ClientIP"
     port {
       port        = 6379
       target_port = 6379

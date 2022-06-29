@@ -9,7 +9,7 @@ resource "kubernetes_service" "rabbitmq_mgmt_service" {
       app = "rabbitmq"
     }
     # TODO - Check on this parameter
-    session_affinity = "ClientIP"
+    session_affinity = var.deployment_environment != "local" ? null : "ClientIP"
     port {
       name        = "cluster-rpc"
       port        = 15672
@@ -31,7 +31,7 @@ resource "kubernetes_service" "rabbitmq_service" {
     selector = {
       app = "rabbitmq"
     }
-    session_affinity = "ClientIP"
+    session_affinity = var.deployment_environment != "local" ? null : "ClientIP"
     port {
       name        = "epmd"
       protocol    = "TCP"
