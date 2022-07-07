@@ -36,7 +36,7 @@ variable "mozart_es" {
   })
   default = {
     volume_claim_template = {
-      storage_class_name = "gp2"
+      storage_class_name = "gp2-sps"
     }
   }
 }
@@ -49,7 +49,7 @@ variable "grq2_es" {
   })
   default = {
     volume_claim_template = {
-      storage_class_name = "gp2"
+      storage_class_name = "gp2-sps"
     }
   }
 }

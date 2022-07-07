@@ -9,18 +9,18 @@
       "type": "area_of_interest",
       "publish": {
         "s3-profile-name": "default",
-        "location": "s3://13.52.177.59:30007/datasets/products/{id}",
+        "location": "s3://minio:9000/datasets/products/{id}",
         "urls": [
-          "http://13.52.177.59:30008/buckets/datasets/browse/products/{id}",
-          "s3://13.52.177.59:30007/datasets/products/{id}"
+          "http://minio:9001/buckets/datasets/browse/products/{id}",
+          "s3://minio:9000/datasets/products/{id}"
         ]
       },
       "browse": {
         "s3-profile-name": "default",
-        "location": "s3://13.52.177.59:30007/datasets/browse/{id}",
+        "location": "s3://minio:9000/datasets/browse/{id}",
         "urls": [
-          "http://13.52.177.59:30008/buckets/datasets/browse/products/{id}",
-          "s3://13.52.177.59:30007/datasets/browse/{id}"
+          "http://minio:9001/buckets/datasets/browse/products/{id}",
+          "s3://minio:9000/datasets/browse/{id}"
         ]
       }
     },
@@ -33,18 +33,18 @@
       "extractor": null,
       "publish": {
         "s3-profile-name": "default",
-        "location": "s3://13.52.177.59:30007/datasets/products/hello_world/{version}/{year}/{month}/{day}/{id}",
+        "location": "s3://minio:9000/datasets/products/hello_world/{version}/{year}/{month}/{day}/{id}",
         "urls": [
-          "http://13.52.177.59:30008/buckets/datasets/browse/products/hello_world/{version}/{year}/{month}/{day}/{id}",
-          "s3://13.52.177.59:30007/datasets/products/hello_world/{version}/{year}/{month}/{day}/{id}"
+          "http://minio:9001/buckets/datasets/browse/products/hello_world/{version}/{year}/{month}/{day}/{id}",
+          "s3://minio:9000/datasets/products/hello_world/{version}/{year}/{month}/{day}/{id}"
         ]
       },
       "browse": {
         "s3-profile-name": "default",
-        "location": "s3://13.52.177.59:30007/datasets/browse/hello_world/{version}/{year}/{month}/{day}/{id}",
+        "location": "s3://minio:9000/datasets/browse/hello_world/{version}/{year}/{month}/{day}/{id}",
         "urls": [
-          "http://13.52.177.59:30008/buckets/datasets/browse/products/hello_world/{version}/{year}/{month}/{day}/{id}",
-          "s3://13.52.177.59:30007/datasets/browse/hello_world/{version}/{year}/{month}/{day}/{id}"
+          "http://minio:9001/buckets/datasets/browse/products/hello_world/{version}/{year}/{month}/{day}/{id}",
+          "s3://minio:9000/datasets/browse/hello_world/{version}/{year}/{month}/{day}/{id}"
         ]
       }
     }

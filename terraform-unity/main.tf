@@ -15,3 +15,7 @@ module "unity-sps-hysds-cluster" {
   node_port_map       = var.node_port_map
   mozart_es           = var.mozart_es
 }
+
+output "test" {
+  value = module.unity-sps-hysds-cluster.load_balancer_ip
+}

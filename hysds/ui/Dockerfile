@@ -3,7 +3,8 @@ FROM node:13 as build
 
 WORKDIR /root
 
-RUN git clone https://github.com/hysds/hysds_ui.git
+#RUN git clone https://github.com/hysds/hysds_ui.git
+RUN git clone https://github.com/unity-sds/hysds_ui_with_auth.git
 
 COPY index.js tosca.js figaro.js /root/hysds_ui/src/config/
 

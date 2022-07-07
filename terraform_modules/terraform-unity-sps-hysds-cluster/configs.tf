@@ -189,7 +189,7 @@ resource "kubernetes_config_map" "aws-credentials" {
 locals {
   cwl_workflows_directory            = "/Users/drewm/Documents/projects/398G/Unity/unity-sps-workflows/sounder_sips"
   cwl_workflow_utils_directory       = "/Users/drewm/Documents/projects/398G/Unity/unity-sps-workflows/sounder_sips/utils"
-  sounder_sips_static_data_directory = abspath("${path.module}/../../dev_data/SOUNDER_SIPS/STATIC_DATA")
+  sounder_sips_static_data_directory = abspath("${path.module}/../../dev_data/STATIC_DATA/SOUNDER_SIPS")
 }
 
 resource "kubernetes_config_map" "cwl-workflows" {

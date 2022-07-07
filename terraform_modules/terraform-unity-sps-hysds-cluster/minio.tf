@@ -24,7 +24,7 @@ resource "kubernetes_service" "minio_service" {
   }
 
   spec {
-    type = var.service_type
+    type             = var.service_type
     session_affinity = var.deployment_environment != "local" ? null : "ClientIP"
     port {
       name        = "minio-api"

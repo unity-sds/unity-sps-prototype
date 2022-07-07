@@ -15,3 +15,7 @@ provider "helm" {
     insecure    = true
   }
 }
+
+provider "aws" {
+  region = "us-west-2"
+}
