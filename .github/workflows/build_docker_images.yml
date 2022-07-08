@@ -10,6 +10,7 @@ env:
   UI_IMAGE_NAME: ${{ github.repository }}/hysds-ui
   LOCAL_UI_IMAGE_NAME: ${{ github.repository }}/hysds-ui-local
   REMOTE_UI_IMAGE_NAME: ${{ github.repository }}/hysds-ui-remote
+  REMOTE_UI_AUTH_IMAGE_NAME: ${{ github.repository }}/hysds-ui-remote-auth
   ADES_WPST_API_IMAGE_NAME: ${{ github.repository }}/ades-wpst-api
 
 on: workflow_dispatch
@@ -162,6 +163,30 @@ jobs:
           file: hysds/ui/remote.Dockerfile
           push: true
           tags: ${{ env.REGISTRY }}/${{ env.REMOTE_UI_IMAGE_NAME }}:${{ env.TAG }}
+          labels: ${{ steps.metauiremote.outputs.labels }}
+
+  build-hysds-ui-remote-auth:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Log in to the Container registry
+        uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Extract metadata (tags, labels) for HyDSDS Remote UI Docker image
+        id: metauiremote
+        uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.REMOTE_UI_AUTH_IMAGE_NAME }}
+      - name: Build and push HySDS Remote UI with Auth Docker image
+        uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
+        with:
+          context: hysds/ui/
+          file: hysds/ui/remote_auth.Dockerfile
+          push: true
+          tags: ${{ env.REGISTRY }}/${{ env.REMOTE_UI_AUTH_IMAGE_NAME }}:${{ env.TAG }}
           labels: ${{ steps.metauiremote.outputs.labels }}
 
   build-ades-wpst-api:
