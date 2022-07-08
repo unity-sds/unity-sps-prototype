@@ -5,7 +5,7 @@ WORKDIR /root
 
 RUN git clone https://github.com/unity-sds/hysds_ui_with_auth.git
 
-COPY index.remote.template.js /root/hysds_ui/src/config/index.js
+COPY index.remote.auth.template.js /root/hysds_ui/src/config/index.js
 COPY tosca.js figaro.js /root/hysds_ui/src/config/
 
 RUN cd hysds_ui && \
