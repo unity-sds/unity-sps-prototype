@@ -206,6 +206,16 @@ An example using the `hello-world` PGE:
 python build_container.py -i hello_world:develop -f pge/hello_world
 ```
 
+## Register HySDS System Maintenance PGE
+
+Use the `hysds/build_container.py` Python script shown above to register the [lightweight-jobs repo](https://github.com/hysds/lightweight-jobs.git).
+
+```bash
+git clone https://github.com/hysds/lightweight-jobs.git
+git checkout v1.0.5
+python build_container.py -i lightweight-jobs:v1.0.5 -f /path/to/lightweight-jobs
+```
+
 ## Navigate to Tosca's "On-Demand" Page
 
 <div>
