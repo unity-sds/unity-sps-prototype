@@ -15,7 +15,7 @@ on:
 
 jobs:
   terraform_validate:
-    name: Validates all Terraform configuration files.
+    name: terraform-validate - Validates all Terraform configuration files.
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -24,7 +24,6 @@ jobs:
             [
               "./terraform_modules/terraform-unity-sps-hysds-cluster",
               "./terraform-unity/",
-              "./hysds/",
             ],
         }
 
@@ -35,11 +34,11 @@ jobs:
       - name: Run Terraform validate
         uses: dflook/terraform-validate@v1
         with:
-          path: "${{ matrix.dir }}"
+          path: ${{ matrix.dir }}
           #path: "${{ env.working_directory }}"
 
   terraform_fmt:
-    name: Check Terraform files are formatted correctly.
+    name: terraform-fmt - Check Terraform files are formatted correctly.
     runs-on: ubuntu-latest
     strategy:
       matrix: { dir: ["./terraform_modules/", "./terraform_unity/"] }
@@ -51,10 +50,10 @@ jobs:
       - name: Run Terraform fmt
         uses: dflook/terraform-fmt-check@v1
         with:
-          path: ${{ env.working_directory }}
+          path: ${{ matrix.dir }}
 
   terraform_tflint:
-    name: Validates all Terraform configuration files with TFLint.
+    name: terraform-tflint - Validates all Terraform configuration files with TFLint.
     runs-on: ubuntu-latest
     strategy:
       matrix: { dir: ["./terraform_modules/", "./terraform_unity/"] }
@@ -78,10 +77,10 @@ jobs:
         run: tflint --init
 
       - name: Run TFLint
-        run: tflint -f compact ${{ env.working_directory }}
+        run: tflint -f compact ${{ matrix.dir }}
 
   terraform_tfsec:
-    name: Static analysis of Terraform templates to spot potential security issues.
+    name: terraform-tfsec - Static analysis of Terraform templates to spot potential security issues.
     runs-on: ubuntu-latest
     strategy:
       matrix: { dir: ["./terraform_modules/", "./terraform_unity/"] }
@@ -93,11 +92,11 @@ jobs:
       - name: Run tfsec
         uses: aquasecurity/tfsec-action@v1.0.0
         with:
-          working_directory: ${{ env.working_directory }}
+          working_directory: ${{ matrix.dir }}
           soft_fail: true
 
   checkov:
-    name: Static analysis of Terraform templates.
+    name: terraform-checkov - Static analysis of Terraform templates.
     runs-on: ubuntu-latest
     strategy:
       matrix: { dir: ["./terraform_modules/", "./terraform_unity/"] }
@@ -110,7 +109,7 @@ jobs:
         id: checkov
         uses: bridgecrewio/checkov-action@master
         with:
-          directory: ${{ env.working_directory }}
+          directory: ${{ matrix.dir }}
           quiet: true # optional: display only failed checks
           soft_fail: true # optional: do not return an error code if there are failed checks
           framework: terraform # optional: run only on a specific infrastructure {cloudformation,terraform,kubernetes,all}
