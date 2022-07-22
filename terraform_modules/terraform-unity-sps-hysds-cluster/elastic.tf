@@ -1,5 +1,5 @@
 locals {
-  mozart-es-values = {
+  mozart_es_values = {
     clusterName = "mozart-es"
     # Permit co-located instances for solitary minikube virtual machines.
     antiAffinity = "soft"
@@ -86,7 +86,7 @@ locals {
       }
     }
   }
-  grq2-es-values = {
+  grq2_es_values = {
     clusterName = "grq-es"
     # Permit co-located instances for solitary minikube virtual machines.
     antiAffinity = "soft"
@@ -174,7 +174,7 @@ necessary to run an application, tool, or service inside of a Kubernetes cluster
 */
 resource "helm_release" "mozart-es" {
   name       = "mozart-es"
-  namespace  = kubernetes_namespace.unity-sps.metadata.0.name
+  namespace  = kubernetes_namespace.unity-sps.metadata[0].name
   repository = "https://helm.elastic.co"
   chart      = "elasticsearch"
   version    = "7.9.3"
@@ -185,14 +185,14 @@ resource "helm_release" "mozart-es" {
   #   file("${path.module}/../../hysds/mozart/elasticsearch/values-override.yml")
   # ]
   values = [
-    yamlencode(local.mozart-es-values)
+    yamlencode(local.mozart_es_values)
   ]
   # depends_on = [kubernetes_namespace.unity-sps]
 }
 
 resource "helm_release" "grq2-es" {
   name       = "grq2-es"
-  namespace  = kubernetes_namespace.unity-sps.metadata.0.name
+  namespace  = kubernetes_namespace.unity-sps.metadata[0].name
   repository = "https://helm.elastic.co"
   chart      = "elasticsearch"
   version    = "7.9.3"
@@ -203,7 +203,7 @@ resource "helm_release" "grq2-es" {
   #   file("${path.module}/../../hysds/grq/elasticsearch/values-override.yml")
   # ]
   values = [
-    yamlencode(local.grq2-es-values)
+    yamlencode(local.grq2_es_values)
   ]
   # depends_on = [kubernetes_namespace.unity-sps]
 }

@@ -2,7 +2,7 @@
 resource "kubernetes_persistent_volume_claim" "ades-wpst-sqlite-pv-claim" {
   metadata {
     name      = "ades-wpst-sqlite-pv-claim"
-    namespace = kubernetes_namespace.unity-sps.metadata.0.name
+    namespace = kubernetes_namespace.unity-sps.metadata[0].name
     labels = {
       app = "ades-wpst-sqlite-storage-claim"
     }
@@ -21,7 +21,7 @@ resource "kubernetes_persistent_volume_claim" "ades-wpst-sqlite-pv-claim" {
 resource "kubernetes_service" "ades-wpst-api-service" {
   metadata {
     name      = "ades-wpst-api"
-    namespace = kubernetes_namespace.unity-sps.metadata.0.name
+    namespace = kubernetes_namespace.unity-sps.metadata[0].name
   }
   spec {
     selector = {
@@ -38,14 +38,10 @@ resource "kubernetes_service" "ades-wpst-api-service" {
   }
 }
 
-output "ades-wpst-api-load-balancer-hostname" {
-  value = kubernetes_service.ades-wpst-api-service.status[0].load_balancer[0].ingress[0].hostname
-}
-
 resource "kubernetes_deployment" "ades-wpst-api" {
   metadata {
     name      = "ades-wpst-api"
-    namespace = kubernetes_namespace.unity-sps.metadata.0.name
+    namespace = kubernetes_namespace.unity-sps.metadata[0].name
     labels = {
       app = "ades-wpst-api"
     }
@@ -86,7 +82,7 @@ resource "kubernetes_deployment" "ades-wpst-api" {
         volume {
           name = "sqlite-db"
           persistent_volume_claim {
-            claim_name = kubernetes_persistent_volume_claim.ades-wpst-sqlite-pv-claim.metadata.0.name
+            claim_name = kubernetes_persistent_volume_claim.ades-wpst-sqlite-pv-claim.metadata[0].name
           }
         }
         restart_policy = "Always"

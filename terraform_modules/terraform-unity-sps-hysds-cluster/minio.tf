@@ -1,7 +1,7 @@
 resource "kubernetes_persistent_volume_claim" "minio-pv-claim" {
   metadata {
     name      = "minio-pv-claim"
-    namespace = kubernetes_namespace.unity-sps.metadata.0.name
+    namespace = kubernetes_namespace.unity-sps.metadata[0].name
     labels = {
       app = "minio-storage-claim"
     }
@@ -20,7 +20,7 @@ resource "kubernetes_persistent_volume_claim" "minio-pv-claim" {
 resource "kubernetes_service" "minio-service" {
   metadata {
     name      = "minio"
-    namespace = kubernetes_namespace.unity-sps.metadata.0.name
+    namespace = kubernetes_namespace.unity-sps.metadata[0].name
   }
 
   spec {
@@ -45,14 +45,10 @@ resource "kubernetes_service" "minio-service" {
   }
 }
 
-output "minio-load-balancer-hostname" {
-  value = kubernetes_service.minio-service.status[0].load_balancer[0].ingress[0].hostname
-}
-
 resource "kubernetes_deployment" "minio" {
   metadata {
     name      = "minio"
-    namespace = kubernetes_namespace.unity-sps.metadata.0.name
+    namespace = kubernetes_namespace.unity-sps.metadata[0].name
     labels = {
       app = "minio"
     }
@@ -113,7 +109,7 @@ resource "kubernetes_deployment" "minio" {
         volume {
           name = "storage"
           persistent_volume_claim {
-            claim_name = kubernetes_persistent_volume_claim.minio-pv-claim.metadata.0.name
+            claim_name = kubernetes_persistent_volume_claim.minio-pv-claim.metadata[0].name
           }
         }
       }
@@ -124,7 +120,7 @@ resource "kubernetes_deployment" "minio" {
 resource "kubernetes_job" "mc" {
   metadata {
     name      = "mc"
-    namespace = kubernetes_namespace.unity-sps.metadata.0.name
+    namespace = kubernetes_namespace.unity-sps.metadata[0].name
   }
   spec {
     template {
@@ -178,40 +174,40 @@ resource "kubernetes_job" "mc" {
             EOT
           ]
           volume_mount {
-            name       = kubernetes_config_map.celeryconfig.metadata.0.name
+            name       = kubernetes_config_map.celeryconfig.metadata[0].name
             mount_path = "/home/ops/hysds/celeryconfig.py"
             sub_path   = "celeryconfig.py"
             read_only  = false
           }
           volume_mount {
-            name       = kubernetes_config_map.aws-credentials.metadata.0.name
+            name       = kubernetes_config_map.aws-credentials.metadata[0].name
             mount_path = "/home/ops/.aws/credentials"
             sub_path   = "aws-credentials"
             read_only  = false
           }
           volume_mount {
-            name       = kubernetes_config_map.datasets.metadata.0.name
+            name       = kubernetes_config_map.datasets.metadata[0].name
             mount_path = "/home/ops/datasets.json"
             sub_path   = "datasets.json"
             read_only  = false
           }
         }
         volume {
-          name = kubernetes_config_map.celeryconfig.metadata.0.name
+          name = kubernetes_config_map.celeryconfig.metadata[0].name
           config_map {
-            name = kubernetes_config_map.celeryconfig.metadata.0.name
+            name = kubernetes_config_map.celeryconfig.metadata[0].name
           }
         }
         volume {
-          name = kubernetes_config_map.aws-credentials.metadata.0.name
+          name = kubernetes_config_map.aws-credentials.metadata[0].name
           config_map {
-            name = kubernetes_config_map.aws-credentials.metadata.0.name
+            name = kubernetes_config_map.aws-credentials.metadata[0].name
           }
         }
         volume {
-          name = kubernetes_config_map.datasets.metadata.0.name
+          name = kubernetes_config_map.datasets.metadata[0].name
           config_map {
-            name = kubernetes_config_map.datasets.metadata.0.name
+            name = kubernetes_config_map.datasets.metadata[0].name
           }
         }
         restart_policy = "Never"

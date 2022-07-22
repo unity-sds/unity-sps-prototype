@@ -2,7 +2,7 @@
 resource "kubernetes_service" "hysds-ui-service" {
   metadata {
     name      = "hysds-ui"
-    namespace = kubernetes_namespace.unity-sps.metadata.0.name
+    namespace = kubernetes_namespace.unity-sps.metadata[0].name
   }
   spec {
     selector = {
@@ -19,14 +19,11 @@ resource "kubernetes_service" "hysds-ui-service" {
   }
 }
 
-output "hysds-ui-load-balancer-hostname" {
-  value = kubernetes_service.hysds-ui-service.status[0].load_balancer[0].ingress[0].hostname
-}
 
 resource "kubernetes_deployment" "hysds-ui" {
   metadata {
     name      = "hysds-ui"
-    namespace = kubernetes_namespace.unity-sps.metadata.0.name
+    namespace = kubernetes_namespace.unity-sps.metadata[0].name
   }
 
   spec {

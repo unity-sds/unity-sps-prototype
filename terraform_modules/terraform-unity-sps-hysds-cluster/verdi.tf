@@ -1,7 +1,7 @@
 resource "kubernetes_deployment" "verdi" {
   metadata {
     name      = "verdi"
-    namespace = kubernetes_namespace.unity-sps.metadata.0.name
+    namespace = kubernetes_namespace.unity-sps.metadata[0].name
     labels = {
       app = "verdi"
     }
@@ -36,7 +36,7 @@ resource "kubernetes_deployment" "verdi" {
             mount_path = "/private/tmp/data"
           }
           volume_mount {
-            name       = kubernetes_config_map.cwl-workflows.metadata.0.name
+            name       = kubernetes_config_map.cwl-workflows.metadata[0].name
             mount_path = "/cwl-src"
           }
           volume_mount {
@@ -116,26 +116,26 @@ resource "kubernetes_deployment" "verdi" {
             sub_path   = "docker.sock"
           }
           volume_mount {
-            name       = kubernetes_config_map.celeryconfig.metadata.0.name
+            name       = kubernetes_config_map.celeryconfig.metadata[0].name
             mount_path = "/home/ops/hysds/celeryconfig.py"
             sub_path   = "celeryconfig.py"
             read_only  = false
           }
           volume_mount {
-            name       = kubernetes_config_map.datasets.metadata.0.name
+            name       = kubernetes_config_map.datasets.metadata[0].name
             mount_path = "/home/ops/datasets.json"
             sub_path   = "datasets.json"
             read_only  = false
           }
 
           volume_mount {
-            name       = kubernetes_config_map.supervisord-verdi.metadata.0.name
+            name       = kubernetes_config_map.supervisord-verdi.metadata[0].name
             mount_path = "/etc/supervisord.conf"
             sub_path   = "supervisord.conf"
             read_only  = false
           }
           volume_mount {
-            name       = kubernetes_config_map.aws-credentials.metadata.0.name
+            name       = kubernetes_config_map.aws-credentials.metadata[0].name
             mount_path = "/home/ops/.aws/credentials"
             sub_path   = "aws-credentials"
             read_only  = false
@@ -147,7 +147,7 @@ resource "kubernetes_deployment" "verdi" {
           }
           # A persistent volume storing static data
           volume_mount {
-            name       = kubernetes_config_map.sounder-sips-static-data.metadata.0.name
+            name       = kubernetes_config_map.sounder-sips-static-data.metadata[0].name
             mount_path = "/static-data"
           }
           # Directory containing the Sounder Sips specific workflow
@@ -158,7 +158,7 @@ resource "kubernetes_deployment" "verdi" {
             read_only  = false
           }
           volume_mount {
-            name       = kubernetes_config_map.cwl-workflow-utils.metadata.0.name
+            name       = kubernetes_config_map.cwl-workflow-utils.metadata[0].name
             mount_path = "/src/utils"
           }
           # Temporary directory shared with the DIND container
@@ -174,27 +174,27 @@ resource "kubernetes_deployment" "verdi" {
         #   }
         # }
         volume {
-          name = kubernetes_config_map.celeryconfig.metadata.0.name
+          name = kubernetes_config_map.celeryconfig.metadata[0].name
           config_map {
-            name = kubernetes_config_map.celeryconfig.metadata.0.name
+            name = kubernetes_config_map.celeryconfig.metadata[0].name
           }
         }
         volume {
-          name = kubernetes_config_map.datasets.metadata.0.name
+          name = kubernetes_config_map.datasets.metadata[0].name
           config_map {
-            name = kubernetes_config_map.datasets.metadata.0.name
+            name = kubernetes_config_map.datasets.metadata[0].name
           }
         }
         volume {
-          name = kubernetes_config_map.supervisord-verdi.metadata.0.name
+          name = kubernetes_config_map.supervisord-verdi.metadata[0].name
           config_map {
-            name = kubernetes_config_map.supervisord-verdi.metadata.0.name
+            name = kubernetes_config_map.supervisord-verdi.metadata[0].name
           }
         }
         volume {
-          name = kubernetes_config_map.aws-credentials.metadata.0.name
+          name = kubernetes_config_map.aws-credentials.metadata[0].name
           config_map {
-            name = kubernetes_config_map.aws-credentials.metadata.0.name
+            name = kubernetes_config_map.aws-credentials.metadata[0].name
           }
         }
         volume {
@@ -211,22 +211,22 @@ resource "kubernetes_deployment" "verdi" {
         # TODO: replace with an independent persistent volume holding static data
         # https://stackoverflow.com/questions/48150179/how-to-mount-entire-directory-in-kubernetes-using-configmap
         volume {
-          name = kubernetes_config_map.sounder-sips-static-data.metadata.0.name
+          name = kubernetes_config_map.sounder-sips-static-data.metadata[0].name
           config_map {
-            name = kubernetes_config_map.sounder-sips-static-data.metadata.0.name
+            name = kubernetes_config_map.sounder-sips-static-data.metadata[0].name
           }
         }
         # TODO: remove and access the CWL workflow during the algorithm deployment
         volume {
-          name = kubernetes_config_map.cwl-workflows.metadata.0.name
+          name = kubernetes_config_map.cwl-workflows.metadata[0].name
           config_map {
-            name = kubernetes_config_map.cwl-workflows.metadata.0.name
+            name = kubernetes_config_map.cwl-workflows.metadata[0].name
           }
         }
         volume {
-          name = kubernetes_config_map.cwl-workflow-utils.metadata.0.name
+          name = kubernetes_config_map.cwl-workflow-utils.metadata[0].name
           config_map {
-            name = kubernetes_config_map.cwl-workflow-utils.metadata.0.name
+            name = kubernetes_config_map.cwl-workflow-utils.metadata[0].name
           }
         }
         volume {

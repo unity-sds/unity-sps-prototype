@@ -115,3 +115,13 @@ jobs:
           framework: terraform # optional: run only on a specific infrastructure {cloudformation,terraform,kubernetes,all}
           output_format: github_failed_only # optional: the output format, one of: cli, json, junitxml, github_failed_only, or sarif. Default: sarif
           download_external_modules: true # optional: download external terraform modules from public git repositories and terraform registry
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: terraform-linters/tflint-load-config-action@v0.1.0
+        with:
+          source-repo: unity-sds/unity-sps-prototype/.github/config
+      - uses: terraform-linters/setup-tflint@v2.0.0
+      - run: tflint --format compact ${{ matrix.dir }}

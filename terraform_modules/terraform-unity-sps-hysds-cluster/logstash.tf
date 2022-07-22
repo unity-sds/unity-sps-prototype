@@ -2,7 +2,7 @@
 resource "kubernetes_deployment" "logstash" {
   metadata {
     name      = "logstash"
-    namespace = kubernetes_namespace.unity-sps.metadata.0.name
+    namespace = kubernetes_namespace.unity-sps.metadata[0].name
     labels = {
       app = "logstash"
     }
@@ -75,51 +75,51 @@ resource "kubernetes_deployment" "logstash" {
           #   read_only  = false
           # }
           volume_mount {
-            name       = kubernetes_config_map.logstash-configs.metadata.0.name
+            name       = kubernetes_config_map.logstash-configs.metadata[0].name
             mount_path = "/usr/share/logstash/logstash.conf"
             sub_path   = "logstash-conf"
             read_only  = false
           }
 
           volume_mount {
-            name       = kubernetes_config_map.logstash-configs.metadata.0.name
+            name       = kubernetes_config_map.logstash-configs.metadata[0].name
             mount_path = "/usr/share/logstash/job_status.template.json"
             sub_path   = "job-status"
             read_only  = false
           }
 
           volume_mount {
-            name       = kubernetes_config_map.logstash-configs.metadata.0.name
+            name       = kubernetes_config_map.logstash-configs.metadata[0].name
             mount_path = "/usr/share/logstash/task_status.template.json"
             sub_path   = "task-status"
             read_only  = false
           }
 
           volume_mount {
-            name       = kubernetes_config_map.logstash-configs.metadata.0.name
+            name       = kubernetes_config_map.logstash-configs.metadata[0].name
             mount_path = "/usr/share/logstash/event_status.template.json"
             sub_path   = "event-status"
             read_only  = false
           }
 
           volume_mount {
-            name       = kubernetes_config_map.logstash-configs.metadata.0.name
+            name       = kubernetes_config_map.logstash-configs.metadata[0].name
             mount_path = "/usr/share/logstash/worker_status.template.json"
             sub_path   = "worker-status"
             read_only  = false
           }
 
           volume_mount {
-            name       = kubernetes_config_map.logstash-configs.metadata.0.name
+            name       = kubernetes_config_map.logstash-configs.metadata[0].name
             mount_path = "/usr/share/logstash/config/logstash.yml"
             sub_path   = "logstash-yml"
             read_only  = false
           }
         }
         volume {
-          name = kubernetes_config_map.logstash-configs.metadata.0.name
+          name = kubernetes_config_map.logstash-configs.metadata[0].name
           config_map {
-            name = kubernetes_config_map.logstash-configs.metadata.0.name
+            name = kubernetes_config_map.logstash-configs.metadata[0].name
           }
         }
 

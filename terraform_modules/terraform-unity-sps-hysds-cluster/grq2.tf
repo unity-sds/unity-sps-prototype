@@ -2,7 +2,7 @@
 resource "kubernetes_service" "grq2_service" {
   metadata {
     name      = "grq2"
-    namespace = kubernetes_namespace.unity-sps.metadata.0.name
+    namespace = kubernetes_namespace.unity-sps.metadata[0].name
   }
 
   spec {
@@ -19,17 +19,12 @@ resource "kubernetes_service" "grq2_service" {
   }
 }
 
-# https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/data-sources/ingress
-# https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/routing-to-elb-load-balancer.html
-output "grq-load-balancer-hostname" {
-  value = kubernetes_service.grq2_service.status[0].load_balancer[0].ingress[0].hostname
-}
 
 
 resource "kubernetes_deployment" "grq2" {
   metadata {
     name      = "grq2"
-    namespace = kubernetes_namespace.unity-sps.metadata.0.name
+    namespace = kubernetes_namespace.unity-sps.metadata[0].name
     labels = {
       app = "grq2"
     }
@@ -61,21 +56,21 @@ resource "kubernetes_deployment" "grq2" {
           }
 
           volume_mount {
-            name       = kubernetes_config_map.grq2-settings.metadata.0.name
+            name       = kubernetes_config_map.grq2-settings.metadata[0].name
             mount_path = "/home/ops/grq2/settings.cfg"
             sub_path   = "settings.cfg"
             read_only  = false
           }
 
           volume_mount {
-            name       = kubernetes_config_map.celeryconfig.metadata.0.name
+            name       = kubernetes_config_map.celeryconfig.metadata[0].name
             mount_path = "/home/ops/grq2/celeryconfig.py"
             sub_path   = "celeryconfig.py"
             read_only  = false
           }
 
           volume_mount {
-            name       = kubernetes_config_map.netrc.metadata.0.name
+            name       = kubernetes_config_map.netrc.metadata[0].name
             mount_path = "/home/ops/.netrc"
             sub_path   = ".netrc"
             read_only  = false
@@ -84,23 +79,23 @@ resource "kubernetes_deployment" "grq2" {
         }
 
         volume {
-          name = kubernetes_config_map.grq2-settings.metadata.0.name
+          name = kubernetes_config_map.grq2-settings.metadata[0].name
           config_map {
-            name = kubernetes_config_map.grq2-settings.metadata.0.name
+            name = kubernetes_config_map.grq2-settings.metadata[0].name
           }
         }
 
         volume {
-          name = kubernetes_config_map.celeryconfig.metadata.0.name
+          name = kubernetes_config_map.celeryconfig.metadata[0].name
           config_map {
-            name = kubernetes_config_map.celeryconfig.metadata.0.name
+            name = kubernetes_config_map.celeryconfig.metadata[0].name
           }
         }
 
         volume {
-          name = kubernetes_config_map.netrc.metadata.0.name
+          name = kubernetes_config_map.netrc.metadata[0].name
           config_map {
-            name = kubernetes_config_map.netrc.metadata.0.name
+            name = kubernetes_config_map.netrc.metadata[0].name
           }
         }
 

@@ -1,7 +1,7 @@
 resource "kubernetes_service" "mozart-service" {
   metadata {
     name      = "mozart"
-    namespace = kubernetes_namespace.unity-sps.metadata.0.name
+    namespace = kubernetes_namespace.unity-sps.metadata[0].name
   }
 
   spec {
@@ -18,14 +18,12 @@ resource "kubernetes_service" "mozart-service" {
   }
 }
 
-output "mozart-load-balancer-hostname" {
-  value = kubernetes_service.mozart-service.status[0].load_balancer[0].ingress[0].hostname
-}
+
 
 resource "kubernetes_deployment" "mozart" {
   metadata {
     name      = "mozart"
-    namespace = kubernetes_namespace.unity-sps.metadata.0.name
+    namespace = kubernetes_namespace.unity-sps.metadata[0].name
     labels = {
       app = "mozart"
     }
@@ -69,21 +67,21 @@ resource "kubernetes_deployment" "mozart" {
           }
 
           volume_mount {
-            name       = kubernetes_config_map.mozart-settings.metadata.0.name
+            name       = kubernetes_config_map.mozart-settings.metadata[0].name
             mount_path = "/home/ops/mozart/settings.cfg"
             sub_path   = "settings.cfg"
             read_only  = false
           }
 
           volume_mount {
-            name       = kubernetes_config_map.celeryconfig.metadata.0.name
+            name       = kubernetes_config_map.celeryconfig.metadata[0].name
             mount_path = "/home/ops/mozart/celeryconfig.py"
             sub_path   = "celeryconfig.py"
             read_only  = false
           }
 
           volume_mount {
-            name       = kubernetes_config_map.netrc.metadata.0.name
+            name       = kubernetes_config_map.netrc.metadata[0].name
             mount_path = "/home/ops/.netrc"
             sub_path   = ".netrc"
             read_only  = false
@@ -92,23 +90,23 @@ resource "kubernetes_deployment" "mozart" {
         }
 
         volume {
-          name = kubernetes_config_map.mozart-settings.metadata.0.name
+          name = kubernetes_config_map.mozart-settings.metadata[0].name
           config_map {
-            name = kubernetes_config_map.mozart-settings.metadata.0.name
+            name = kubernetes_config_map.mozart-settings.metadata[0].name
           }
         }
 
         volume {
-          name = kubernetes_config_map.celeryconfig.metadata.0.name
+          name = kubernetes_config_map.celeryconfig.metadata[0].name
           config_map {
-            name = kubernetes_config_map.celeryconfig.metadata.0.name
+            name = kubernetes_config_map.celeryconfig.metadata[0].name
           }
         }
 
         volume {
-          name = kubernetes_config_map.netrc.metadata.0.name
+          name = kubernetes_config_map.netrc.metadata[0].name
           config_map {
-            name = kubernetes_config_map.netrc.metadata.0.name
+            name = kubernetes_config_map.netrc.metadata[0].name
           }
         }
       }

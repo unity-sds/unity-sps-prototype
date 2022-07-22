@@ -2,7 +2,7 @@
 resource "kubernetes_service" "redis_service" {
   metadata {
     name      = "redis"
-    namespace = kubernetes_namespace.unity-sps.metadata.0.name
+    namespace = kubernetes_namespace.unity-sps.metadata[0].name
   }
 
   spec {
@@ -20,14 +20,12 @@ resource "kubernetes_service" "redis_service" {
 
 }
 
-output "redis-load-balancer-hostname" {
-  value = kubernetes_service.redis_service.status[0].load_balancer[0].ingress[0].hostname
-}
+
 
 resource "kubernetes_deployment" "redis" {
   metadata {
     name      = "redis"
-    namespace = kubernetes_namespace.unity-sps.metadata.0.name
+    namespace = kubernetes_namespace.unity-sps.metadata[0].name
     labels = {
       app = "redis"
     }
@@ -44,7 +42,7 @@ resource "kubernetes_deployment" "redis" {
 
     template {
       metadata {
-        namespace = kubernetes_namespace.unity-sps.metadata.0.name
+        namespace = kubernetes_namespace.unity-sps.metadata[0].name
         labels = {
           app = "redis"
         }

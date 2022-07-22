@@ -1,7 +1,7 @@
 resource "kubernetes_deployment" "orchestrator" {
   metadata {
     name      = "orchestrator"
-    namespace = kubernetes_namespace.unity-sps.metadata.0.name
+    namespace = kubernetes_namespace.unity-sps.metadata[0].name
     labels = {
       app = "orchestrator"
     }
@@ -33,14 +33,14 @@ resource "kubernetes_deployment" "orchestrator" {
           command = ["supervisord", "--nodaemon"]
 
           volume_mount {
-            name       = kubernetes_config_map.celeryconfig.metadata.0.name
+            name       = kubernetes_config_map.celeryconfig.metadata[0].name
             mount_path = "/home/ops/hysds/celeryconfig.py"
             sub_path   = "celeryconfig.py"
             read_only  = false
           }
 
           volume_mount {
-            name       = kubernetes_config_map.supervisord-orchestrator.metadata.0.name
+            name       = kubernetes_config_map.supervisord-orchestrator.metadata[0].name
             mount_path = "/etc/supervisord.conf"
             sub_path   = "supervisord.conf"
             read_only  = false
@@ -54,16 +54,16 @@ resource "kubernetes_deployment" "orchestrator" {
         }
 
         volume {
-          name = kubernetes_config_map.celeryconfig.metadata.0.name
+          name = kubernetes_config_map.celeryconfig.metadata[0].name
           config_map {
-            name = kubernetes_config_map.celeryconfig.metadata.0.name
+            name = kubernetes_config_map.celeryconfig.metadata[0].name
           }
         }
 
         volume {
-          name = kubernetes_config_map.supervisord-orchestrator.metadata.0.name
+          name = kubernetes_config_map.supervisord-orchestrator.metadata[0].name
           config_map {
-            name = kubernetes_config_map.supervisord-orchestrator.metadata.0.name
+            name = kubernetes_config_map.supervisord-orchestrator.metadata[0].name
           }
         }
 

@@ -10,7 +10,8 @@ variable "namespace" {
 }
 
 variable "docker_images" {
-  type = map(string)
+  description = "Docker images for the Unity SPS containers"
+  type        = map(string)
   default = {
     hysds_core     = "ghcr.io/unity-sds/unity-sps-prototype/hysds-core:unity-v0.0.1"
     hysds_ui       = "ghcr.io/unity-sds/unity-sps-prototype/hysds-ui-remote:unity-v0.0.1"
@@ -29,6 +30,7 @@ variable "docker_images" {
 }
 
 variable "mozart_es" {
+  description = "value"
   type = object({
     volume_claim_template = object({
       storage_class_name = string
@@ -42,6 +44,7 @@ variable "mozart_es" {
 }
 
 variable "grq2_es" {
+  description = "value"
   type = object({
     volume_claim_template = object({
       storage_class_name = string
@@ -55,13 +58,15 @@ variable "grq2_es" {
 }
 
 variable "service_type" {
-  type    = string
-  default = "LoadBalancer"
+  description = "value"
+  type        = string
+  default     = "LoadBalancer"
 }
 
 
 variable "node_port_map" {
-  type = map(number)
+  description = "value"
+  type        = map(number)
   default = {
     "mozart_service"                    = 30001
     "grq2_service"                      = 30002
@@ -80,16 +85,19 @@ variable "node_port_map" {
 }
 
 variable "datasets_filename" {
-  type    = string
-  default = "datasets.remote.template.json"
+  description = "value"
+  type        = string
+  default     = "datasets.remote.template.json"
 }
 
 variable "celeryconfig_filename" {
-  type    = string
-  default = "celeryconfig_remote.py"
+  description = "value"
+  type        = string
+  default     = "celeryconfig_remote.py"
 }
 
 variable "deployment_environment" {
-  type    = string
-  default = "mcp"
+  description = "value"
+  type        = string
+  default     = "mcp"
 }
