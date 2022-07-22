@@ -118,6 +118,9 @@ jobs:
 
   lint:
     runs-on: ubuntu-latest
+    strategy:
+      matrix: { dir: ["./terraform_modules/", "./terraform-unity/"] }
+
     steps:
       - uses: actions/checkout@v3
       - uses: terraform-linters/tflint-load-config-action@v0
