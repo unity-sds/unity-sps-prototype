@@ -22,7 +22,7 @@ jobs:
         {
           dir:
             [
-              "./terraform-modules/terraform-unity-sps-hysds-cluster",
+              "./terraform-modules/terraform-unity-sps-hysds-cluster/",
               "./terraform-unity/",
             ],
         }
@@ -41,7 +41,14 @@ jobs:
     name: terraform-fmt - Check Terraform files are formatted correctly.
     runs-on: ubuntu-latest
     strategy:
-      matrix: { dir: ["./terraform-modules/", "./terraform-unity/"] }
+      matrix:
+        {
+          dir:
+            [
+              "./terraform-modules/terraform-unity-sps-hysds-cluster/",
+              "./terraform-unity/",
+            ],
+        }
 
     steps:
       - name: Checkout
@@ -56,7 +63,14 @@ jobs:
     name: terraform-tflint - Validates all Terraform configuration files with TFLint.
     runs-on: ubuntu-latest
     strategy:
-      matrix: { dir: ["./terraform-modules/", "./terraform-unity/"] }
+      matrix:
+        {
+          dir:
+            [
+              "./terraform-modules/terraform-unity-sps-hysds-cluster/",
+              "./terraform-unity/",
+            ],
+        }
 
     steps:
       - name: Checkout
@@ -83,7 +97,14 @@ jobs:
     name: terraform-tfsec - Static analysis of Terraform templates to spot potential security issues.
     runs-on: ubuntu-latest
     strategy:
-      matrix: { dir: ["./terraform-modules/", "./terraform-unity/"] }
+      matrix:
+        {
+          dir:
+            [
+              "./terraform-modules/terraform-unity-sps-hysds-cluster/",
+              "./terraform-unity/",
+            ],
+        }
 
     steps:
       - name: Checkout
@@ -99,7 +120,14 @@ jobs:
     name: terraform-checkov - Static analysis of Terraform templates.
     runs-on: ubuntu-latest
     strategy:
-      matrix: { dir: ["./terraform-modules/", "./terraform-unity/"] }
+      matrix:
+        {
+          dir:
+            [
+              "./terraform-modules/terraform-unity-sps-hysds-cluster/",
+              "./terraform-unity/",
+            ],
+        }
 
     steps:
       - name: Checkout repo
@@ -120,7 +148,14 @@ jobs:
     name: terraform-lint-config - Static analysis of Terraform templates.
     runs-on: ubuntu-latest
     strategy:
-      matrix: { dir: ["./terraform-modules/", "./terraform-unity/"] }
+      matrix:
+        {
+          dir:
+            [
+              "./terraform-modules/terraform-unity-sps-hysds-cluster/",
+              "./terraform-unity/",
+            ],
+        }
 
     steps:
       - name: Checkout repo
