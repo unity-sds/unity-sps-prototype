@@ -117,13 +117,14 @@ jobs:
           download_external_modules: true # optional: download external terraform modules from public git repositories and terraform registry
 
   lint:
+    name: terraform-lint-config - Static analysis of Terraform templates.
     runs-on: ubuntu-latest
     strategy:
       matrix: { dir: ["./terraform_modules/", "./terraform-unity/"] }
 
     steps:
       - uses: actions/checkout@v3
-      - uses: terraform-linters/tflint-load-config-action@v0
+      - uses: terraform-linters/tflint-load-config-action@v0.1.0
         with:
           source-repo: unity-sds/unity-sps-prototype/.github/config
       - uses: terraform-linters/setup-tflint@v2.0.0
