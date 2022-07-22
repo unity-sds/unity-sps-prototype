@@ -123,10 +123,26 @@ jobs:
       matrix: { dir: ["./terraform_modules/", "./terraform-unity/"] }
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
       - uses: terraform-linters/tflint-load-config-action@v0.1.0
+        name: Load TFLint Config
         with:
           source-repo: unity-sds/unity-sps-prototype
+          source-ref: 16-deploy-eks-mcp
           source-path: .github/config/.tflint.hcl
-      - uses: terraform-linters/setup-tflint@v2.0.0
-      - run: tflint --format compact ${{ matrix.dir }}
+
+      - name: Setup TFLint
+        uses: terraform-linters/setup-tflint@v2.0.0
+        with:
+          tflint_version: v0.38.1
+
+      - name: Show version
+        run: tflint --version
+
+      - name: Init TFLint
+        run: tflint --init --config .github/config/.tflint.hcl
+
+      - name: Run TFLint
+        run: tflint --format compact ${{ matrix.dir }}
