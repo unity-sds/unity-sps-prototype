@@ -30,10 +30,10 @@ namespace                   = ""
 
    ```shell
    # Run all hooks:
-   $ pre-commit run --files terraform_modules/*
+   $ pre-commit run --files terraform-modules/*
 
    # Run specific hook:
-   $ pre-commit run <hook_id> --files terraform_modules/*
+   $ pre-commit run <hook_id> --files terraform-modules/*
    ```
 
 2. Run the Github Actions locally. These actions include similar checks to the pre-commit hooks, however, the actions not have the ability to perform reformatting or auto-generation of documentation. This step is meant to mimic the Github Actions which run on the remote CI/CD pipeline.
