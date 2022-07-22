@@ -6,8 +6,8 @@
 # https://www.terraform.io/language/modules/syntax
 
 module "unity-sps-hysds-cluster" {
-  source = "../terraform_modules/terraform-unity-sps-hysds-cluster"
-  # source                      = "git::https://github.com/unity-sds/unity-sps-prototype.git//terraform_modules/terraform-unity-sps-hysds-cluster?ref=main"
+  source = "../terraform-modules/terraform-unity-sps-hysds-cluster"
+  # source                      = "git::https://github.com/unity-sds/unity-sps-prototype.git//terraform-modules/terraform-unity-sps-hysds-cluster?ref=main"
   namespace              = var.namespace
   kubeconfig_filepath    = var.kubeconfig_filepath
   docker_images          = var.docker_images

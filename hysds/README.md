@@ -69,7 +69,7 @@ $ ./deploy.sh --all
 
 ## Method 2: Deploy via Terraform
 
-This method will use Terraform to deploy the Kubernetes cluster represented by the `~/.kube/config` file which is referenced in `terraform_modules/main.tf`. Terraform will deploy the resources in the Kubernetes namespace named in `terrafrom/variables.tf` (defaults to `unity-sps`). Additional variables (including secrets) can be set in `terraform.tfvars`, a template is shown below. For instructions on how to auto-generate this file, see the [terraform_modules/README.md](../terraform_modules/README.md#auto-generate-a-terraform.tfvars-template-file:).
+This method will use Terraform to deploy the Kubernetes cluster represented by the `~/.kube/config` file which is referenced in `terraform-modules/main.tf`. Terraform will deploy the resources in the Kubernetes namespace named in `terrafrom/variables.tf` (defaults to `unity-sps`). Additional variables (including secrets) can be set in `terraform.tfvars`, a template is shown below. For instructions on how to auto-generate this file, see the [terraform-modules/README.md](../terraform-modules/README.md#auto-generate-a-terraform.tfvars-template-file:).
 
 ```HCL
 namespace = "unity-sps"
@@ -79,10 +79,10 @@ container_registry_username = "*Insert GitHub username*"
 container_registry_password = "*Insert GitHub PAT*"
 ```
 
-From within the Terraform root module directory (`terraform_modules/terraform-unity-sps-root-module/`), run the following commands to initialize, and apply the Terraform module:
+From within the Terraform root module directory (`terraform-modules/terraform-unity-sps-root-module/`), run the following commands to initialize, and apply the Terraform module:
 
 ```bash
-$ cd terraform_modules/terraform-unity-sps-root-module
+$ cd terraform-modules/terraform-unity-sps-root-module
 $ terraform init
 $ terraform apply
 ```
@@ -242,7 +242,7 @@ $ ./destroy.sh --all
 
 ## Method 2: Destroy via Terraform
 
-From within the Terraform module directory (terraform_modules/), run the following command to destroy the SPS cluster:
+From within the Terraform module directory (terraform-modules/), run the following command to destroy the SPS cluster:
 
 ```
 $ terraform destroy
