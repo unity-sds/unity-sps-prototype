@@ -13,12 +13,14 @@ repos:
       - id: requirements-txt-fixer #sorts entries in requirements.txt.
 
   - repo: https://github.com/antonbabenko/pre-commit-terraform
-    rev: 48bc03ca3f0f2f782d2f430069868019a6892062
+    rev: v1.74.1
     hooks:
       - id: terraform_validate #Validates all Terraform configuration files.
       - id: terraform_fmt #Rewrites all Terraform configuration files to a canonical format.
       - id: terraform_tflint #Validates all Terraform configuration files with TFLint.
       - id: terraform_tfsec #Static analysis of Terraform templates to spot potential security issues.
+        args:
+          - --args=--tfvars-file="/Users/drewm/Documents/projects/398G/Unity/unity-sps-prototype/terraform-unity/terraform.tfvars"
       - id: terrascan #Detect compliance and security violations of Terraform templates.
       - id: terraform_docs
         args:

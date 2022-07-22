@@ -1,4 +1,4 @@
-resource "kubernetes_service" "mozart_service" {
+resource "kubernetes_service" "mozart-service" {
   metadata {
     name      = "mozart"
     namespace = kubernetes_namespace.unity-sps.metadata.0.name
@@ -18,6 +18,9 @@ resource "kubernetes_service" "mozart_service" {
   }
 }
 
+output "mozart-load-balancer-hostname" {
+  value = kubernetes_service.mozart-service.status[0].load_balancer[0].ingress[0].hostname
+}
 
 resource "kubernetes_deployment" "mozart" {
   metadata {

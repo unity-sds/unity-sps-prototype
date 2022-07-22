@@ -18,7 +18,7 @@ resource "kubernetes_persistent_volume_claim" "ades-wpst-sqlite-pv-claim" {
 }
 
 
-resource "kubernetes_service" "ades-wpst-api_service" {
+resource "kubernetes_service" "ades-wpst-api-service" {
   metadata {
     name      = "ades-wpst-api"
     namespace = kubernetes_namespace.unity-sps.metadata.0.name
@@ -38,6 +38,9 @@ resource "kubernetes_service" "ades-wpst-api_service" {
   }
 }
 
+output "ades-wpst-api-load-balancer-hostname" {
+  value = kubernetes_service.ades-wpst-api-service.status[0].load_balancer[0].ingress[0].hostname
+}
 
 resource "kubernetes_deployment" "ades-wpst-api" {
   metadata {
@@ -65,18 +68,19 @@ resource "kubernetes_deployment" "ades-wpst-api" {
 
       spec {
         container {
-          image = var.docker_images.ades_wpst_api
-          name  = "ades-wpst-api"
+          image             = var.docker_images.ades_wpst_api
+          image_pull_policy = "Always"
+          name              = "ades-wpst-api"
           env {
             name  = "ADES_PLATFORM"
-            value = "Generic"
+            value = "HYSDS"
           }
           port {
             container_port = 5000
           }
           volume_mount {
             name       = "sqlite-db"
-            mount_path = "/ades_wpst/sqlite"
+            mount_path = "/flask_ades_wpst/sqlite"
           }
         }
         volume {

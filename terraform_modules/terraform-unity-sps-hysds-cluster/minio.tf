@@ -17,7 +17,7 @@ resource "kubernetes_persistent_volume_claim" "minio-pv-claim" {
 }
 
 
-resource "kubernetes_service" "minio_service" {
+resource "kubernetes_service" "minio-service" {
   metadata {
     name      = "minio"
     namespace = kubernetes_namespace.unity-sps.metadata.0.name
@@ -45,6 +45,9 @@ resource "kubernetes_service" "minio_service" {
   }
 }
 
+output "minio-load-balancer-hostname" {
+  value = kubernetes_service.minio-service.status[0].load_balancer[0].ingress[0].hostname
+}
 
 resource "kubernetes_deployment" "minio" {
   metadata {

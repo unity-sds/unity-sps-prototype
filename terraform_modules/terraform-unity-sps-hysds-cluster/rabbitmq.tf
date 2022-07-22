@@ -1,4 +1,4 @@
-resource "kubernetes_service" "rabbitmq_mgmt_service" {
+resource "kubernetes_service" "rabbitmq-mgmt-service" {
   metadata {
     name      = "rabbitmq-mgmt"
     namespace = kubernetes_namespace.unity-sps.metadata.0.name
@@ -20,14 +20,18 @@ resource "kubernetes_service" "rabbitmq_mgmt_service" {
   }
 }
 
-resource "kubernetes_service" "rabbitmq_service" {
+output "rabbitmq-mgmt-load-balancer-hostname" {
+  value = kubernetes_service.rabbitmq-mgmt-service.status[0].load_balancer[0].ingress[0].hostname
+}
+
+resource "kubernetes_service" "rabbitmq-service" {
   metadata {
     name      = "rabbitmq"
     namespace = kubernetes_namespace.unity-sps.metadata.0.name
   }
 
   spec {
-    type = "NodePort"
+    type = var.service_type
     selector = {
       app = "rabbitmq"
     }
@@ -55,6 +59,10 @@ resource "kubernetes_service" "rabbitmq_service" {
     }
   }
 
+}
+
+output "rabbitmq-load-balancer-hostname" {
+  value = kubernetes_service.rabbitmq-service.status[0].load_balancer[0].ingress[0].hostname
 }
 
 resource "kubernetes_stateful_set" "rabbitmq_statefulset" {

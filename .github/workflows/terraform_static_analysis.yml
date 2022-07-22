@@ -1,12 +1,15 @@
 name: Terraform Static Analysis
 
-env:
-  working_directory: "./terraform_modules/"
+# env:
+#   #directory_matrix: ["./terraform_modules/", "./terraform_unity/"]
+#   working_directory: "./terraform_modules/"
 
 on:
   push:
     paths:
       - "terraform_modules/"
+      # - ["./terraform_modules/", "./terraform_unity/"][0]
+      # - ["./terraform_modules/", "./terraform_unity/"][1]
 
   workflow_dispatch:
 
@@ -14,47 +17,62 @@ jobs:
   terraform_validate:
     name: Validates all Terraform configuration files.
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        {
+          dir:
+            [
+              "./terraform_modules/terraform-unity-sps-hysds-cluster",
+              "./terraform-unity/",
+              "./hysds/",
+            ],
+        }
 
     steps:
       - name: Checkout
-        uses: actions/checkout@master
+        uses: actions/checkout@v3
 
       - name: Run Terraform validate
-        uses: dflook/terraform-validate@master
+        uses: dflook/terraform-validate@v1
         with:
-          path: "${{ env.working_directory }}"
+          path: "${{ matrix.dir }}"
+          #path: "${{ env.working_directory }}"
 
   terraform_fmt:
     name: Check Terraform files are formatted correctly.
     runs-on: ubuntu-latest
+    strategy:
+      matrix: { dir: ["./terraform_modules/", "./terraform_unity/"] }
 
     steps:
       - name: Checkout
-        uses: actions/checkout@master
+        uses: actions/checkout@v3
 
       - name: Run Terraform fmt
-        uses: dflook/terraform-fmt-check@master
+        uses: dflook/terraform-fmt-check@v1
         with:
           path: ${{ env.working_directory }}
 
   terraform_tflint:
     name: Validates all Terraform configuration files with TFLint.
     runs-on: ubuntu-latest
+    strategy:
+      matrix: { dir: ["./terraform_modules/", "./terraform_unity/"] }
 
     steps:
       - name: Checkout
-        uses: actions/checkout@master
+        uses: actions/checkout@v3
 
       - name: Cache plugin dir
-        uses: actions/cache@master
+        uses: actions/cache@v3
         with:
           path: ~/.tflint.d/plugins
           key: ${{ matrix.os }}-tflint-${{ hashFiles('.tflint.hcl') }}
 
       - name: Setup TFLint
-        uses: terraform-linters/setup-tflint@master
+        uses: terraform-linters/setup-tflint@v2
         with:
-          tflint_version: v0.29.0
+          tflint_version: v0.38.1
 
       - name: Init TFLint
         run: tflint --init
@@ -65,23 +83,28 @@ jobs:
   terraform_tfsec:
     name: Static analysis of Terraform templates to spot potential security issues.
     runs-on: ubuntu-latest
+    strategy:
+      matrix: { dir: ["./terraform_modules/", "./terraform_unity/"] }
 
     steps:
       - name: Checkout
-        uses: actions/checkout@master
+        uses: actions/checkout@v3
 
       - name: Run tfsec
-        uses: aquasecurity/tfsec-action@master
+        uses: aquasecurity/tfsec-action@v1.0.0
         with:
           working_directory: ${{ env.working_directory }}
           soft_fail: true
 
   checkov:
-    runs-on: ubuntu-latest
     name: Static analysis of Terraform templates.
+    runs-on: ubuntu-latest
+    strategy:
+      matrix: { dir: ["./terraform_modules/", "./terraform_unity/"] }
+
     steps:
       - name: Checkout repo
-        uses: actions/checkout@master
+        uses: actions/checkout@v3
 
       - name: Run Checkov
         id: checkov

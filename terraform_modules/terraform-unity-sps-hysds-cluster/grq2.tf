@@ -21,7 +21,7 @@ resource "kubernetes_service" "grq2_service" {
 
 # https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/data-sources/ingress
 # https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/routing-to-elb-load-balancer.html
-output "load_balancer_ip" {
+output "grq-load-balancer-hostname" {
   value = kubernetes_service.grq2_service.status[0].load_balancer[0].ingress[0].hostname
 }
 

@@ -190,7 +190,6 @@ resource "helm_release" "mozart-es" {
   # depends_on = [kubernetes_namespace.unity-sps]
 }
 
-
 resource "helm_release" "grq2-es" {
   name       = "grq2-es"
   namespace  = kubernetes_namespace.unity-sps.metadata.0.name

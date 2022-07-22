@@ -44,77 +44,16 @@ namespace                   = ""
 
    # Run specific action:
    $ act -j "<job_name>"
+   $ act -j terraform_validate
+   $ act -j terraform_fmt
+   $ act -j terraform_tflint
+   $ act -j terraform_tfsec
+   $ act -j checkov
+
+   # You may need to authenticate with Docker hub in order to successfully pull some of the associated images.
+   $ act -j terraform_validate -s DOCKER_USERNAME=<insert-username> -s DOCKER_PASSWORD=<insert-password>
    ```
 
-# Auto-generated Documentation of the Terraform Module
+# Auto-generated Documentation of Terraform Modules
 
-<!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
-
-## Requirements
-
-No requirements.
-
-## Providers
-
-| Name                                                                  | Version |
-| --------------------------------------------------------------------- | ------- |
-| <a name="provider_helm"></a> [helm](#provider_helm)                   | 2.4.1   |
-| <a name="provider_kubernetes"></a> [kubernetes](#provider_kubernetes) | 2.8.0   |
-
-## Modules
-
-No modules.
-
-## Resources
-
-| Name                                                                                                                                                                       | Type     |
-| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- |
-| [helm_release.grq2-es](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release)                                                               | resource |
-| [helm_release.mozart-es](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release)                                                             | resource |
-| [kubernetes_config_map.aws-credentials](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/config_map)                                     | resource |
-| [kubernetes_config_map.celeryconfig](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/config_map)                                        | resource |
-| [kubernetes_config_map.datasets](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/config_map)                                            | resource |
-| [kubernetes_config_map.grq2-settings](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/config_map)                                       | resource |
-| [kubernetes_config_map.logstash-configs](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/config_map)                                    | resource |
-| [kubernetes_config_map.mozart-settings](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/config_map)                                     | resource |
-| [kubernetes_config_map.netrc](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/config_map)                                               | resource |
-| [kubernetes_config_map.supervisord-job-worker](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/config_map)                              | resource |
-| [kubernetes_config_map.supervisord-orchestrator](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/config_map)                            | resource |
-| [kubernetes_config_map.supervisord-user-rules](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/config_map)                              | resource |
-| [kubernetes_config_map.supervisord-verdi](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/config_map)                                   | resource |
-| [kubernetes_deployment.ades-wpst-api](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/deployment)                                       | resource |
-| [kubernetes_deployment.factotum-job-worker](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/deployment)                                 | resource |
-| [kubernetes_deployment.grq2](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/deployment)                                                | resource |
-| [kubernetes_deployment.hysds-ui](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/deployment)                                            | resource |
-| [kubernetes_deployment.logstash](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/deployment)                                            | resource |
-| [kubernetes_deployment.minio](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/deployment)                                               | resource |
-| [kubernetes_deployment.mozart](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/deployment)                                              | resource |
-| [kubernetes_deployment.orchestrator](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/deployment)                                        | resource |
-| [kubernetes_deployment.redis](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/deployment)                                               | resource |
-| [kubernetes_deployment.user-rules](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/deployment)                                          | resource |
-| [kubernetes_deployment.verdi](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/deployment)                                               | resource |
-| [kubernetes_job.mc](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/job)                                                                | resource |
-| [kubernetes_namespace.unity-sps](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/namespace)                                             | resource |
-| [kubernetes_persistent_volume_claim.ades-wpst-sqlite-pv-claim](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/persistent_volume_claim) | resource |
-| [kubernetes_persistent_volume_claim.minio-pv-claim](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/persistent_volume_claim)            | resource |
-| [kubernetes_service.ades-wpst-api_service](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/service)                                     | resource |
-| [kubernetes_service.grq2_service](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/service)                                              | resource |
-| [kubernetes_service.hysds-ui_service](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/service)                                          | resource |
-| [kubernetes_service.minio_service](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/service)                                             | resource |
-| [kubernetes_service.mozart_service](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/service)                                            | resource |
-| [kubernetes_service.rabbitmq_mgmt_service](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/service)                                     | resource |
-| [kubernetes_service.rabbitmq_service](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/service)                                          | resource |
-| [kubernetes_service.redis_service](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/service)                                             | resource |
-| [kubernetes_stateful_set.rabbitmq_statefulset](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/stateful_set)                            | resource |
-
-## Inputs
-
-| Name                                                         | Description | Type     | Default       | Required |
-| ------------------------------------------------------------ | ----------- | -------- | ------------- | :------: |
-| <a name="input_namespace"></a> [namespace](#input_namespace) | unity-sps   | `string` | `"unity-sps"` |    no    |
-
-## Outputs
-
-No outputs.
-
-<!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+Each module contained in this directory contains its own auto-generated documentation.

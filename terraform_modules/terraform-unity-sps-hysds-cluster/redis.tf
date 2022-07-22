@@ -20,6 +20,9 @@ resource "kubernetes_service" "redis_service" {
 
 }
 
+output "redis-load-balancer-hostname" {
+  value = kubernetes_service.redis_service.status[0].load_balancer[0].ingress[0].hostname
+}
 
 resource "kubernetes_deployment" "redis" {
   metadata {

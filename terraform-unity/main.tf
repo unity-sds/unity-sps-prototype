@@ -16,6 +16,16 @@ module "unity-sps-hysds-cluster" {
   mozart_es           = var.mozart_es
 }
 
-output "test" {
-  value = module.unity-sps-hysds-cluster.load_balancer_ip
+output "load_balancer_hostnames" {
+  value = <<-EOT
+    Load Balancer Ingress Hostnames:
+    HySDS UI: ${module.unity-sps-hysds-cluster.hysds-ui-load-balancer-hostname}
+    Mozart: ${module.unity-sps-hysds-cluster.mozart-load-balancer-hostname}
+    GRQ:  ${module.unity-sps-hysds-cluster.grq-load-balancer-hostname}
+    ADES WPST API:  ${module.unity-sps-hysds-cluster.ades-wpst-api-load-balancer-hostname}
+    RabbitMQ MGMT: ${module.unity-sps-hysds-cluster.rabbitmq-mgmt-load-balancer-hostname}
+    RabbitMQ:  ${module.unity-sps-hysds-cluster.rabbitmq-load-balancer-hostname}
+    Redis: ${module.unity-sps-hysds-cluster.redis-load-balancer-hostname}
+    Minio: ${module.unity-sps-hysds-cluster.minio-load-balancer-hostname}
+    EOT
 }
