@@ -1,15 +1,11 @@
 name: Terraform Static Analysis
 
-# env:
-#   #directory_matrix: ["./terraform-modules/", "./terraform-unity/"]
-#   working_directory: "./terraform-modules/"
-
 on:
   push:
     paths:
-      - "terraform-modules/"
-      # - ["./terraform-modules/", "./terraform-unity/"][0]
-      # - ["./terraform-modules/", "./terraform-unity/"][1]
+      - ".github/workflows/terraform_static_analysis.yml"
+      - "terraform-modules/**.tf"
+      - "terraform-unity/*.tf"
 
   workflow_dispatch:
 
@@ -22,8 +18,8 @@ jobs:
         {
           dir:
             [
-              "./terraform-modules/terraform-unity-sps-hysds-cluster/",
-              "./terraform-unity/",
+              "terraform-modules/terraform-unity-sps-hysds-cluster/",
+              "terraform-unity/",
             ],
         }
 
@@ -35,7 +31,6 @@ jobs:
         uses: dflook/terraform-validate@v1
         with:
           path: ${{ matrix.dir }}
-          #path: "${{ env.working_directory }}"
 
   terraform_fmt:
     name: terraform-fmt - Check Terraform files are formatted correctly.
@@ -45,8 +40,8 @@ jobs:
         {
           dir:
             [
-              "./terraform-modules/terraform-unity-sps-hysds-cluster/",
-              "./terraform-unity/",
+              "terraform-modules/terraform-unity-sps-hysds-cluster/",
+              "terraform-unity/",
             ],
         }
 
@@ -101,8 +96,8 @@ jobs:
         {
           dir:
             [
-              "./terraform-modules/terraform-unity-sps-hysds-cluster/",
-              "./terraform-unity/",
+              "terraform-modules/terraform-unity-sps-hysds-cluster/",
+              "terraform-unity/",
             ],
         }
 
@@ -124,8 +119,8 @@ jobs:
         {
           dir:
             [
-              "./terraform-modules/terraform-unity-sps-hysds-cluster/",
-              "./terraform-unity/",
+              "terraform-modules/terraform-unity-sps-hysds-cluster/",
+              "terraform-unity/",
             ],
         }
 
@@ -152,8 +147,8 @@ jobs:
         {
           dir:
             [
-              "./terraform-modules/terraform-unity-sps-hysds-cluster/",
-              "./terraform-unity/",
+              "terraform-modules/terraform-unity-sps-hysds-cluster/",
+              "terraform-unity/",
             ],
         }
 
