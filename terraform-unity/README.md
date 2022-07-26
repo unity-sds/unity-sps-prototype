@@ -11,17 +11,57 @@
 - [terrascan](https://github.com/accurics/terrascan) - Static code analyzer for Infrastructure as Code.
 - [tfsec](https://github.com/aquasecurity/tfsec) - Security scanner for Terraform code.
 - [terraform-docs](https://github.com/terraform-docs/terraform-docs) - Generate documentation from Terraform modules.
+- [Terratest](https://terratest.gruntwork.io) - Go library that provides patterns and helper functions for testing infrastructure, with 1st-class support for Terraform.
 
 ### Auto-generate a terraform.tfvars template file:
 
 ```shell
-$ cd terraform-unity-sps-root-module
+$ cd terraform-unity
 $ terraform-docs tfvars hcl .
-container_registry_password = ""
-container_registry_server   = ""
-container_registry_username = ""
-kubeconfig_filepath         = ""
-namespace                   = ""
+```
+
+```json
+celeryconfig_filename  = "celeryconfig_remote.py"
+datasets_filename      = "datasets.remote.template.json"
+deployment_environment = "mcp"
+docker_images = {
+  "ades_wpst_api": "ghcr.io/unity-sds/unity-sps-prototype/ades-wpst-api:unity-v0.0.1",
+  "busybox": "k8s.gcr.io/busybox",
+  "hysds_core": "ghcr.io/unity-sds/unity-sps-prototype/hysds-core:unity-v0.0.1",
+  "hysds_factotum": "ghcr.io/unity-sds/unity-sps-prototype/hysds-factotum:unity-v0.0.1",
+  "hysds_grq2": "ghcr.io/unity-sds/unity-sps-prototype/hysds-grq2:unity-v0.0.1",
+  "hysds_mozart": "ghcr.io/unity-sds/unity-sps-prototype/hysds-mozart:unity-v0.0.1",
+  "hysds_ui": "ghcr.io/unity-sds/unity-sps-prototype/hysds-ui-remote:unity-v0.0.1",
+  "hysds_verdi": "ghcr.io/unity-sds/unity-sps-prototype/hysds-verdi:unity-v0.0.1",
+  "logstash": "docker.elastic.co/logstash/logstash:7.10.2",
+  "mc": "minio/mc:RELEASE.2022-03-13T22-34-00Z",
+  "minio": "minio/minio:RELEASE.2022-03-17T06-34-49Z",
+  "rabbitmq": "rabbitmq:3-management",
+  "redis": "redis:latest"
+}
+kubeconfig_filepath = ""
+mozart_es = {
+  "volume_claim_template": {
+    "storage_class_name": "gp2-sps"
+  }
+}
+namespace = ""
+node_port_map = {
+  "ades_wpst_api_service": 30011,
+  "grq2_es": 30012,
+  "grq2_service": 30002,
+  "hysds_ui_service": 30009,
+  "minio_service_api": 30007,
+  "minio_service_interface": 30008,
+  "mozart_es": 30013,
+  "mozart_service": 30001,
+  "rabbitmq_mgmt_service_cluster_rpc": 30003,
+  "rabbitmq_service_cluster_rpc": 30006,
+  "rabbitmq_service_epmd": 30004,
+  "rabbitmq_service_listener": 30005,
+  "redis_service": 30010
+}
+service_type = "LoadBalancer"
 ```
 
 ### Prior to pushing to the repo, please ensure that you done have the following and the checks have passed:
@@ -31,9 +71,11 @@ namespace                   = ""
    ```shell
    # Run all hooks:
    $ pre-commit run --files terraform-modules/*
+   $ pre-commit run --files terraform-unity/*
 
    # Run specific hook:
-   $ pre-commit run <hook_id> --files terraform-modules/*
+   $ pre-commit run <hook_id> --files terraform-modules/terraform-unity-sps-hysds-cluster/*.tf
+   $ pre-commit run <hook_id> --files terraform-unity/*.tf
    ```
 
 2. Run the Github Actions locally. These actions include similar checks to the pre-commit hooks, however, the actions not have the ability to perform reformatting or auto-generation of documentation. This step is meant to mimic the Github Actions which run on the remote CI/CD pipeline.
@@ -52,6 +94,13 @@ namespace                   = ""
 
    # You may need to authenticate with Docker hub in order to successfully pull some of the associated images.
    $ act -j terraform_validate -s DOCKER_USERNAME=<insert-username> -s DOCKER_PASSWORD=<insert-password>
+   ```
+
+3. Run the Terratest smoke test. At the moment, this represents a **_very_** basic smoke test for our deployment which simply checks the endpoints of the various services.
+
+   ```shell
+   $ cd terraform-test
+   $ go test -v -run TestTerraformUnity -timeout 30m | tee terratest_output.txt
    ```
 
 # Auto-generated Documentation of the Unity SPS Terraform Root Module
