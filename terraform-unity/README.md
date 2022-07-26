@@ -4,6 +4,7 @@
 
 ### Dev Requirements:
 
+- [Terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli)
 - [tfenv](https://github.com/tfutils/tfenv) - Terraform version manager.
 - [Pre-commit](https://pre-commit.com/) - Framework for managing and maintaining multi-language pre-commit hooks.
 - [act](https://github.com/nektos/act) - Run Github Actions locally.
@@ -64,7 +65,27 @@ node_port_map = {
 service_type = "LoadBalancer"
 ```
 
-### Prior to pushing to the repo, please ensure that you done have the following and the checks have passed:
+## Deploy the Cluster
+
+This method will use Terraform to deploy the Kubernetes cluster represented by the `~/.kube/config` file which is referenced in `terraform-unity/main.tf`. Terraform will deploy the resources in the Kubernetes namespace named in `terrafrom/variables.tf` (defaults to `unity-sps`). Additional variables (including secrets) can be set in `terraform.tfvars`, a template is shown below.
+
+From within the Terraform root module directory (`terraform-unity/`), run the following commands to initialize, and apply the Terraform module:
+
+```bash
+$ cd terraform-unity/
+$ terraform init
+$ terraform apply
+```
+
+## Teardown the Cluster
+
+From within the Terraform root module directory (terraform-unity/), run the following command to destroy the SPS cluster:
+
+```
+$ terraform destroy
+```
+
+## Prior to pushing new changes to the repo, please ensure that you done have the following and the checks have passed:
 
 1. Run the pre-commit hooks. These hooks will perform static analysis, linting, security checks. The hooks will also reformat the code to conform to the style guide, and produce the auto-generated documentation of the Terraform module.
 
@@ -102,6 +123,42 @@ service_type = "LoadBalancer"
    $ cd terraform-test
    $ go test -v -run TestTerraformUnity -timeout 30m | tee terratest_output.txt
    ```
+
+## Debugging a Terraform Deployment
+
+It is often useful to modify the level of TF_LOG environment variable when debugging
+a Terraform deployment. The levels include: `TRACE`, `DEBUG`, `INFO`, `WARN`, and `ERROR`.
+
+An example of setting the `TF_LOG` environment variable to `INFO`:
+
+```bash
+$ export TF_LOG=INFO
+```
+
+Additionally, it is also often useful to pipe the output of a Terraform deployment into a log file.
+
+An example of piping the `terraform apply` output into a file named apply_output.txt:
+
+```bash
+$ terraform apply -no-color 2>&1 | tee apply_output.txt
+```
+
+Occasionally, a Terraform deployment goes awry and Terraform loses track of existing resources. When this happens, `terraform destroy` is unable to clean up the resources and you'll likely end up with existing resource errors when attempting your next `terraform apply`. This requires some manual garbage collection of the lingering orphan resources. It also sometimes requires nuking the existing Terraform-related state tracking files/directory.
+
+The following commands are useful for manually ensuring all orphan resources are destroyed:
+
+```bash
+$ helm uninstall mozart-es
+$ helm uninstall grq-es
+$ kubectl delete all --all -n unity-sps
+$ kubectl delete cm --all -n unity-sps # deletes ConfigMap(s)
+$ kubectl delete pvc --all -n unity-sps # deletes PersistentVolumeClaim(s)
+$ kubectl delete pv --all -n unity-sps # deletes PersistentVolume(s)
+$ kubectl delete namespaces unity-sps
+$ rm -rf .terraform
+$ rm terraform.tfstate
+$ rm terraform.tf.backup
+```
 
 # Auto-generated Documentation of the Unity SPS Terraform Root Module
 
