@@ -153,6 +153,7 @@ def publish_container(path, repository, version="develop", dry_run=False):
     print("container: ", json.dumps(metadata, indent=2))
     if dry_run is False:
         add_container_endpoint = os.path.join(__MOZART_REST_API, "container/add")
+        print(add_container_endpoint)
         r = requests.post(add_container_endpoint, data=metadata, verify=False)
         print(r.text)
         r.raise_for_status()
@@ -223,6 +224,10 @@ if __name__ == "__main__":
     parser.add_argument(
         "-e", "--environment", choices=["local", "remote"], default="local"
     )
+    parser.add_argument(
+        "--mozart-rest-ip", default="localhost", help="mozart ip address"
+    )
+    parser.add_argument("--grq-rest-ip", default="localhost", help="grq ip address")
     parser.add_argument("--dry-run", action="store_true", default=False)
 
     args = parser.parse_args()
@@ -236,19 +241,16 @@ if __name__ == "__main__":
     if not image.startswith("container-"):
         image = "container-%s" % image
 
-    if environment == "local":
-        ip = "localhost"
-        mozart_rest_port = 8888
-        grq_rest_port = 8878
+    mozart_rest_ip = args.mozart_rest_ip
+    grq_rest_ip = args.grq_rest_ip
+    mozart_rest_port = 8888
+    grq_rest_port = 8878
 
-    elif environment == "remote":
-        ip = "13.52.177.59"
-        mozart_rest_port = 30001
-        grq_rest_port = 30002
+    if environment == "remote":
         authenticate_container_registry()
 
-    __MOZART_REST_API = f"http://{ip}:{mozart_rest_port}/api/v0.1/"
-    __GRQ_REST_API = f"http://{ip}:{grq_rest_port}/api/v0.1/"
+    __MOZART_REST_API = f"http://{mozart_rest_ip}:{mozart_rest_port}/api/v0.1/"
+    __GRQ_REST_API = f"http://{grq_rest_ip}:{grq_rest_port}/api/v0.1/"
 
     pwd = os.getcwd()
     os.chdir(file_path)

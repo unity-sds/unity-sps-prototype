@@ -9,6 +9,16 @@ variable "namespace" {
   default     = "unity-sps"
 }
 
+variable "venue" {
+  description = "The MCP venue in which the cluster will be deployed (dev, test, prod)"
+  type        = string
+}
+
+variable "counter" {
+  description = "value"
+  type        = number
+}
+
 variable "docker_images" {
   description = "Docker images for the Unity SPS containers"
   type        = map(string)

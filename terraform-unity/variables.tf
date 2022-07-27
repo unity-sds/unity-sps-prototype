@@ -3,6 +3,16 @@ variable "namespace" {
   type        = string
 }
 
+variable "venue" {
+  description = "The MCP venue in which the cluster will be deployed (dev, test, prod)"
+  type        = string
+}
+
+variable "counter" {
+  description = "value"
+  type        = number
+}
+
 variable "kubeconfig_filepath" {
   description = "Path to the kubeconfig file for the Kubernetes cluster"
   type        = string
