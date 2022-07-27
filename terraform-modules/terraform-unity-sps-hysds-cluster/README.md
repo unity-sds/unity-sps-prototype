@@ -9,6 +9,7 @@
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | 4.23.0 |
 | <a name="requirement_helm"></a> [helm](#requirement\_helm) | 2.6.0 |
 | <a name="requirement_kubernetes"></a> [kubernetes](#requirement\_kubernetes) | 2.12.1 |
+| <a name="requirement_null"></a> [null](#requirement\_null) | 3.1.1 |
 
 ## Providers
 
@@ -70,8 +71,8 @@ No modules.
 | [kubernetes_service.rabbitmq-service](https://registry.terraform.io/providers/hashicorp/kubernetes/2.12.1/docs/resources/service) | resource |
 | [kubernetes_service.redis_service](https://registry.terraform.io/providers/hashicorp/kubernetes/2.12.1/docs/resources/service) | resource |
 | [kubernetes_stateful_set.rabbitmq_statefulset](https://registry.terraform.io/providers/hashicorp/kubernetes/2.12.1/docs/resources/stateful_set) | resource |
-| [null_resource.build_container](https://registry.terraform.io/providers/hashicorp/null/latest/docs/resources/resource) | resource |
-| [null_resource.update_api_gateway_stage](https://registry.terraform.io/providers/hashicorp/null/latest/docs/resources/resource) | resource |
+| [null_resource.build_container](https://registry.terraform.io/providers/hashicorp/null/3.1.1/docs/resources/resource) | resource |
+| [null_resource.update_api_gateway_stage](https://registry.terraform.io/providers/hashicorp/null/3.1.1/docs/resources/resource) | resource |
 | [kubernetes_service.grq-es](https://registry.terraform.io/providers/hashicorp/kubernetes/2.12.1/docs/data-sources/service) | data source |
 | [kubernetes_service.mozart-es](https://registry.terraform.io/providers/hashicorp/kubernetes/2.12.1/docs/data-sources/service) | data source |
 
