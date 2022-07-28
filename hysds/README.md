@@ -6,7 +6,6 @@
 - [kubectl](https://kubernetes.io/docs/reference/kubectl/) - kubernetes command line tool.
 - [Helm](https://helm.sh/docs/intro/install/)
   - `brew install helm`, if on Mac.
-- [Terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli)
 
 > :warning: if you're a Linux user, you can create a directory called `/private`
 
@@ -47,9 +46,7 @@ Follow the directions described in the README of the [unity-sds/ades_wpst](https
 
 # Deploying the SPS Cluster Locally
 
-The cluster can be deployed with two different methods which are described in the following subsections.
-
-## Method 1: Deploy via Bash Script
+## Deploy via Bash Script
 
 Use the `hysds/deploy.sh` script to deploy all resources at once.
 
@@ -65,26 +62,6 @@ $ ./deploy.sh --help
 #     factotum : deploy factotum
 
 $ ./deploy.sh --all
-```
-
-## Method 2: Deploy via Terraform
-
-This method will use Terraform to deploy the Kubernetes cluster represented by the `~/.kube/config` file which is referenced in `terraform_modules/main.tf`. Terraform will deploy the resources in the Kubernetes namespace named in `terrafrom/variables.tf` (defaults to `unity-sps`). Additional variables (including secrets) can be set in `terraform.tfvars`, a template is shown below. For instructions on how to auto-generate this file, see the [terraform_modules/README.md](../terraform_modules/README.md#auto-generate-a-terraform.tfvars-template-file:).
-
-```HCL
-namespace = "unity-sps"
-kubeconfig_filepath = "~/.kube/config"
-container_registry_server = "ghcr.io"
-container_registry_username = "*Insert GitHub username*"
-container_registry_password = "*Insert GitHub PAT*"
-```
-
-From within the Terraform root module directory (`terraform_modules/terraform-unity-sps-root-module/`), run the following commands to initialize, and apply the Terraform module:
-
-```bash
-$ cd terraform_modules/terraform-unity-sps-root-module
-$ terraform init
-$ terraform apply
 ```
 
 # HySDS Resources
@@ -189,21 +166,22 @@ Use the `hysds/build_container.py` Python script to build your PGE and publish t
 
 ```bash
 $ python build_container.py --help
-# usage: build_container.py [-h] [-f FILE_PATH] -i IMAGE [--dry-run]
+# usage: build_container.py [-h] [-f FILE_PATH] -i IMAGE [-e {local,remote}] [--dry-run]
 
 # optional arguments:
 #   -h, --help            show this help message and exit
 #   -f FILE_PATH, --file-path FILE_PATH
 #   -i IMAGE, --image IMAGE
+#   -e {local,remote}, --environment {local,remote}
 #   --dry-run
 
-$ python build_container.py -i <pge_name>:<tag> -f ~/path/to/project
+$ python build_container.py -e <deployment_environment> -i <pge_name>:<tag> -f ~/path/to/project
 ```
 
 An example using the `hello-world` PGE:
 
 ```bash
-python build_container.py -i hello_world:develop -f pge/hello_world
+python build_container.py -e local -i hello_world:develop -f pge/hello_world
 ```
 
 ## Register HySDS System Maintenance PGE
@@ -228,9 +206,7 @@ python build_container.py -i lightweight-jobs:v1.0.5 -f /path/to/lightweight-job
 
 # Tear Down the SPS Cluster
 
-The cluster can be destroyed with two different methods which are described in the following subsections. The method to destroy the cluster should match the method chosen to create the cluster.
-
-## Method 1: Destroy via Bash script
+## Destroy via Bash script
 
 Use the `hysds/destroy.sh` script to tear down your HySDS cluster:
 
@@ -247,14 +223,6 @@ $ ./destroy.sh --help
 #     factotum : destroy factotum
 
 $ ./destroy.sh --all
-```
-
-## Method 2: Destroy via Terraform
-
-From within the Terraform module directory (terraform_modules/), run the following command to destroy the SPS cluster:
-
-```
-$ terraform destroy
 ```
 
 # Commands used:
@@ -306,40 +274,4 @@ Delete `/tmp/data` and restart your Docker/Kubernetes if you run into this issue
 
 ```bash
 Cannot start service factotum: error while creating mount source path '/host_mnt/d/project/c/test/docker': mkdir /private: file exists
-```
-
-## Debugging a Terraform Deployment
-
-It is often useful to modify the level of TF_LOG environment variable when debugging
-a Terraform deployment. The levels include: `TRACE`, `DEBUG`, `INFO`, `WARN`, and `ERROR`.
-
-An example of setting the `TF_LOG` environment variable to `INFO`:
-
-```bash
-$ export TF_LOG=INFO
-```
-
-Additionally, it is also often useful to pipe the output of a Terraform deployment into a log file.
-
-An example of piping the `terraform apply` output into a file named apply_output.txt:
-
-```bash
-$ terraform apply -no-color 2>&1 | tee apply_output.txt
-```
-
-Occasionally, a Terraform deployment goes awry and Terraform loses track of existing resources. When this happens, `terraform destroy` is unable to clean up the resources and you'll likely end up with existing resource errors when attempting your next `terraform apply`. This requires some manual garbage collection of the lingering orphan resources. It also sometimes requires nuking the existing Terraform-related state tracking files/directory.
-
-The following commands are useful for manually ensuring all orphan resources are destroyed:
-
-```bash
-$ helm uninstall mozart-es
-$ helm uninstall grq-es
-$ kubectl delete all --all -n unity-sps
-$ kubectl delete cm --all -n unity-sps # deletes ConfigMap(s)
-$ kubectl delete pvc --all -n unity-sps # deletes PersistentVolumeClaim(s)
-$ kubectl delete pv --all -n unity-sps # deletes PersistentVolume(s)
-$ kubectl delete namespaces unity-sps
-$ rm -rf .terraform
-$ rm terraform.tfstate
-$ rm terraform.tf.backup
 ```
