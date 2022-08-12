@@ -27,11 +27,11 @@ resource "kubernetes_deployment" "factotum-job-worker" {
           name    = "changeume-ownership"
           image   = var.docker_images.busybox
           command = ["/bin/sh", "-c"]
-          args = [
-            <<-EOT
-            chown -R 1000:1000 /tmp/data;
-            EOT
-          ]
+          # args = [
+          #   <<-EOT
+          #   chown -R 1000:1000 /tmp/data;
+          #   EOT
+          # ]
           # command = ["/bin/sh", "-c", "chmod 777 /var/run/docker.sock; chown -R 1000:1000 /tmp/data;"]
           # volume_mount {
           #   name       = "docker-sock"
