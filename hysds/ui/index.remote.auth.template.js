@@ -5,7 +5,7 @@ exports.LOCAL_DEV = true;
 exports.AUTH = true;
 
 exports.API_GATEWAY_BASE_URL =
-  "http://https://1gp9st60gd.execute-api.us-west-2.amazonaws.com/dev";
+  "https://1gp9st60gd.execute-api.us-west-2.amazonaws.com/dev";
 
 // GRQ's ES url
 exports.GRQ_ES_URL = `${this.API_GATEWAY_BASE_URL}/grq-es/`;
