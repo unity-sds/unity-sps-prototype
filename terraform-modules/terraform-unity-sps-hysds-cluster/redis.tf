@@ -17,10 +17,7 @@ resource "kubernetes_service" "redis_service" {
     }
     type = var.service_type
   }
-
 }
-
-
 
 resource "kubernetes_deployment" "redis" {
   metadata {

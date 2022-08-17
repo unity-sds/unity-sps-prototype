@@ -23,25 +23,25 @@ resource "kubernetes_deployment" "factotum-job-worker" {
       }
 
       spec {
-        init_container {
-          name    = "changeume-ownership"
-          image   = var.docker_images.busybox
-          command = ["/bin/sh", "-c"]
-          # args = [
-          #   <<-EOT
-          #   chown -R 1000:1000 /tmp/data;
-          #   EOT
-          # ]
-          # command = ["/bin/sh", "-c", "chmod 777 /var/run/docker.sock; chown -R 1000:1000 /tmp/data;"]
-          # volume_mount {
-          #   name       = "docker-sock"
-          #   mount_path = "/var/run/docker.sock"
-          # }
-          # volume_mount {
-          #   name       = "data-work"
-          #   mount_path = "/tmp/data"
-          # }
-        }
+        # init_container {
+        #   name    = "changeume-ownership"
+        #   image   = var.docker_images.busybox
+        #   command = ["/bin/sh", "-c"]
+        #   # args = [
+        #   #   <<-EOT
+        #   #   chown -R 1000:1000 /tmp/data;
+        #   #   EOT
+        #   # ]
+        #   # command = ["/bin/sh", "-c", "chmod 777 /var/run/docker.sock; chown -R 1000:1000 /tmp/data;"]
+        #   # volume_mount {
+        #   #   name       = "docker-sock"
+        #   #   mount_path = "/var/run/docker.sock"
+        #   # }
+        #   # volume_mount {
+        #   #   name       = "data-work"
+        #   #   mount_path = "/tmp/data"
+        #   # }
+        # }
 
         container {
           # Docker container that runs a Docker engine ("Docker-IN-Docker" pattern)

@@ -37,7 +37,7 @@ exports.RABBIT_MQ_PORT = 15672;
 
 // root path for app
 // set to "/" if you are developing locally
-exports.ROOT_PATH = "/dev/hysds-ui";
+exports.ROOT_PATH = "/dev/hysds-ui/";
 
 // OAuth2 configs
 exports.OAUTH2_CLIENT_ID = "71g0c73jl77gsqhtlfg2ht388c";
