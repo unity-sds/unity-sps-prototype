@@ -10,7 +10,7 @@ ENV THREADS 1
 # RUN pip3 install 'Flask<2.0.0' && \
 #   pip3 install 'Werkzeug<2.0.0' && \
 
-RUN pip3 install `werkzeug==2.1.2`
+RUN pip3 install 'werkzeug==2.1.2'
 
 RUN pip3 install 'flask-cors' && \
   # Cartopy isn't used in GRQ2, --no-deps to minimize the size of image
