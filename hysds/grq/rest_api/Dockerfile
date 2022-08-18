@@ -9,15 +9,12 @@ ENV THREADS 1
 
 # RUN pip3 install 'Flask<2.0.0' && \
 #   pip3 install 'Werkzeug<2.0.0' && \
-
-RUN pip3 install 'werkzeug==2.1.2'
-
 RUN pip3 install 'flask-cors' && \
   # Cartopy isn't used in GRQ2, --no-deps to minimize the size of image
   conda install -y --no-deps 'Cartopy>=0.13.1' && \
   conda clean --all
 
-RUN git clone --branch optional_geonames https://github.com/hysds/grq2.git && \
+RUN git clone --branch develop https://github.com/hysds/grq2.git && \
   cd grq2/ && \
   pip3 install -e .
 
