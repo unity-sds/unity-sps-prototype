@@ -1,3 +1,11 @@
+resource "aws_ssm_parameter" "update_ades_wpst_url_stage_variable_of_api_gateway" {
+  name       = format("/unity/dev/%s-%s/api-gateway/stage-variables/ades-wpst-url", var.namespace, var.counter)
+  type       = "String"
+  value      = "${kubernetes_service.ades-wpst-api-service[0].load_balancer[0].ingress[0].hostname}:5001"
+  overwrite  = true
+  depends_on = [kubernetes_service.ades-wpst-api-service]
+}
+
 resource "aws_ssm_parameter" "update_grq_es_url_stage_variable_of_api_gateway" {
   name       = format("/unity/dev/%s-%s/api-gateway/stage-variables/grq-es-url", var.namespace, var.counter)
   type       = "String"
