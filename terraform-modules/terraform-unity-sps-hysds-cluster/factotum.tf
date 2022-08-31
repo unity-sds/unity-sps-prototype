@@ -131,12 +131,6 @@ resource "kubernetes_deployment" "factotum-job-worker" {
             sub_path   = "supervisord.conf"
             read_only  = false
           }
-          volume_mount {
-            name       = kubernetes_config_map.aws-credentials.metadata[0].name
-            mount_path = "/home/ops/.aws/credentials"
-            sub_path   = "aws-credentials"
-            read_only  = false
-          }
           # volume_mount {
           #   name       = "data-work"
           #   mount_path = "/tmp/data"
@@ -168,13 +162,6 @@ resource "kubernetes_deployment" "factotum-job-worker" {
           name = kubernetes_config_map.supervisord-job-worker.metadata[0].name
           config_map {
             name = kubernetes_config_map.supervisord-job-worker.metadata[0].name
-          }
-        }
-
-        volume {
-          name = kubernetes_config_map.aws-credentials.metadata[0].name
-          config_map {
-            name = kubernetes_config_map.aws-credentials.metadata[0].name
           }
         }
 

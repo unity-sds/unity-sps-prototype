@@ -18,7 +18,6 @@
 | <a name="provider_aws"></a> [aws](#provider\_aws) | 4.23.0 |
 | <a name="provider_helm"></a> [helm](#provider\_helm) | 2.6.0 |
 | <a name="provider_kubernetes"></a> [kubernetes](#provider\_kubernetes) | 2.12.1 |
-| <a name="provider_null"></a> [null](#provider\_null) | 3.1.1 |
 
 ## Modules
 
@@ -31,6 +30,12 @@ No modules.
 | [aws_s3_bucket.s3_bucket](https://registry.terraform.io/providers/hashicorp/aws/4.23.0/docs/resources/s3_bucket) | resource |
 | [aws_s3_bucket_acl.s3_bucket_acl](https://registry.terraform.io/providers/hashicorp/aws/4.23.0/docs/resources/s3_bucket_acl) | resource |
 | [aws_s3_object.source_files](https://registry.terraform.io/providers/hashicorp/aws/4.23.0/docs/resources/s3_object) | resource |
+| [aws_ssm_parameter.update_ades_wpst_url_stage_variable_of_api_gateway](https://registry.terraform.io/providers/hashicorp/aws/4.23.0/docs/resources/ssm_parameter) | resource |
+| [aws_ssm_parameter.update_grq_es_url_stage_variable_of_api_gateway](https://registry.terraform.io/providers/hashicorp/aws/4.23.0/docs/resources/ssm_parameter) | resource |
+| [aws_ssm_parameter.update_grq_rest_api_url_stage_variable_of_api_gateway](https://registry.terraform.io/providers/hashicorp/aws/4.23.0/docs/resources/ssm_parameter) | resource |
+| [aws_ssm_parameter.update_hysds_ui_url_stage_variable_of_api_gateway](https://registry.terraform.io/providers/hashicorp/aws/4.23.0/docs/resources/ssm_parameter) | resource |
+| [aws_ssm_parameter.update_mozart_es_url_stage_variable_of_api_gateway](https://registry.terraform.io/providers/hashicorp/aws/4.23.0/docs/resources/ssm_parameter) | resource |
+| [aws_ssm_parameter.update_mozart_rest_api_url_stage_variable_of_api_gateway](https://registry.terraform.io/providers/hashicorp/aws/4.23.0/docs/resources/ssm_parameter) | resource |
 | [helm_release.grq2-es](https://registry.terraform.io/providers/hashicorp/helm/2.6.0/docs/resources/release) | resource |
 | [helm_release.mozart-es](https://registry.terraform.io/providers/hashicorp/helm/2.6.0/docs/resources/release) | resource |
 | [kubernetes_config_map.aws-credentials](https://registry.terraform.io/providers/hashicorp/kubernetes/2.12.1/docs/resources/config_map) | resource |
@@ -71,8 +76,6 @@ No modules.
 | [kubernetes_service.rabbitmq-service](https://registry.terraform.io/providers/hashicorp/kubernetes/2.12.1/docs/resources/service) | resource |
 | [kubernetes_service.redis_service](https://registry.terraform.io/providers/hashicorp/kubernetes/2.12.1/docs/resources/service) | resource |
 | [kubernetes_stateful_set.rabbitmq_statefulset](https://registry.terraform.io/providers/hashicorp/kubernetes/2.12.1/docs/resources/stateful_set) | resource |
-| [null_resource.build_container](https://registry.terraform.io/providers/hashicorp/null/3.1.1/docs/resources/resource) | resource |
-| [null_resource.update_api_gateway_stage](https://registry.terraform.io/providers/hashicorp/null/3.1.1/docs/resources/resource) | resource |
 | [kubernetes_service.grq-es](https://registry.terraform.io/providers/hashicorp/kubernetes/2.12.1/docs/data-sources/service) | data source |
 | [kubernetes_service.mozart-es](https://registry.terraform.io/providers/hashicorp/kubernetes/2.12.1/docs/data-sources/service) | data source |
 

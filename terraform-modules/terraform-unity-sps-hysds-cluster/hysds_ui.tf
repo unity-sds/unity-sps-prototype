@@ -1,4 +1,3 @@
-
 resource "kubernetes_service" "hysds-ui-service" {
   metadata {
     name      = "hysds-ui"

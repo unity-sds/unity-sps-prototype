@@ -50,11 +50,18 @@ resource "kubernetes_deployment" "redis" {
           image             = var.docker_images.redis
           name              = "redis"
           image_pull_policy = "IfNotPresent"
-
           port {
             container_port = 6379
           }
+          liveness_probe {
+            exec {
+              command = ["cat", "/tmp/healthy"]
+            }
+            initial_delay_seconds = 43200
+            period_seconds        = 43200
+          }
         }
+        restart_policy = "Always"
       }
     }
   }

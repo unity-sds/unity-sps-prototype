@@ -1,4 +1,3 @@
-
 resource "kubernetes_deployment" "logstash" {
   metadata {
     name      = "logstash"
