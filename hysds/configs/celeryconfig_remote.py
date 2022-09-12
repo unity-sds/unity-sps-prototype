@@ -1,5 +1,6 @@
 broker_url = "amqp://guest:guest@rabbitmq:5672//"
 result_backend = "redis://redis:6379"
+# result_backend = "redis://:{{ MOZART_REDIS_PASSWORD }}@{{ MOZART_REDIS_PVT_IP }}"
 
 task_serializer = "msgpack"
 result_serializer = "msgpack"

@@ -53,7 +53,7 @@ resource "kubernetes_deployment" "redis" {
               command = ["invalid"]
             }
             initial_delay_seconds = 0
-            period_seconds        = 43200
+            period_seconds        = 21600
             failure_threshold     = 1
           }
         }
