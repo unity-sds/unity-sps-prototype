@@ -48,7 +48,7 @@ resource "kubernetes_deployment" "user-rules" {
 
           volume_mount {
             name       = "data-work"
-            mount_path = "/private/tmp/data"
+            mount_path = "/tmp/data"
             read_only  = false
           }
         }
@@ -70,7 +70,7 @@ resource "kubernetes_deployment" "user-rules" {
         volume {
           name = "data-work"
           host_path {
-            path = "/private/tmp/data"
+            path = "/tmp/data"
           }
         }
       }

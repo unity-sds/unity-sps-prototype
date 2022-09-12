@@ -14,7 +14,7 @@ RUN pip3 install 'flask-cors' && \
   conda install -y --no-deps 'Cartopy>=0.13.1' && \
   conda clean --all
 
-RUN git clone --branch optional_geonames https://github.com/hysds/grq2.git && \
+RUN git clone --branch develop https://github.com/hysds/grq2.git && \
   cd grq2/ && \
   pip3 install -e .
 

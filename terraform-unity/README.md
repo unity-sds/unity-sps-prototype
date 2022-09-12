@@ -67,6 +67,10 @@ service_type = "LoadBalancer"
 
 ## Deploy the Cluster
 
+### Deploying in into Different MCP Venues
+
+### Deploying into Different EKS Clusters
+
 This method will use Terraform to deploy the Kubernetes cluster represented by the `~/.kube/config` file which is referenced in `terraform-unity/main.tf`. Terraform will deploy the resources in the Kubernetes namespace named in `terrafrom/variables.tf` (defaults to `unity-sps`). Additional variables (including secrets) can be set in `terraform.tfvars`, a template is shown below.
 
 From within the Terraform root module directory (`terraform-unity/`), run the following commands to initialize, and apply the Terraform module:

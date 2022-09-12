@@ -27,13 +27,13 @@ resource "kubernetes_deployment" "verdi" {
           # https://stackoverflow.com/questions/56155495/how-do-i-copy-a-kubernetes-configmap-to-a-write-enabled-area-of-a-pod
           args = [
             <<-EOT
-            chown -R 1000:1000 /private/tmp/data;
+            chown -R 1000:1000 /tmp/data;
             cp -r /cwl-src/. /src;
             EOT
           ]
           volume_mount {
             name       = "data-work"
-            mount_path = "/private/tmp/data"
+            mount_path = "/tmp/data"
           }
           volume_mount {
             name       = kubernetes_config_map.cwl-workflows.metadata[0].name
@@ -135,14 +135,8 @@ resource "kubernetes_deployment" "verdi" {
             read_only  = false
           }
           volume_mount {
-            name       = kubernetes_config_map.aws-credentials.metadata[0].name
-            mount_path = "/home/ops/.aws/credentials"
-            sub_path   = "aws-credentials"
-            read_only  = false
-          }
-          volume_mount {
             name       = "data-work"
-            mount_path = "/private/tmp/data"
+            mount_path = "/tmp/data"
             read_only  = false
           }
           # A persistent volume storing static data
@@ -192,15 +186,9 @@ resource "kubernetes_deployment" "verdi" {
           }
         }
         volume {
-          name = kubernetes_config_map.aws-credentials.metadata[0].name
-          config_map {
-            name = kubernetes_config_map.aws-credentials.metadata[0].name
-          }
-        }
-        volume {
           name = "data-work"
           host_path {
-            path = "/private/tmp/data"
+            path = "/tmp/data"
           }
         }
         # Shared direcrtory holding the Docker socket

@@ -1,5 +1,6 @@
 broker_url = "amqp://guest:guest@rabbitmq:5672//"
 result_backend = "redis://redis:6379"
+# result_backend = "redis://:{{ MOZART_REDIS_PASSWORD }}@{{ MOZART_REDIS_PVT_IP }}"
 
 task_serializer = "msgpack"
 result_serializer = "msgpack"
@@ -108,7 +109,7 @@ WORKER_CONTIGUOUS_FAILURE_THRESHOLD = 10
 WORKER_CONTIGUOUS_FAILURE_TIME = 5.0
 
 # ROOT_WORK_DIR = "/data/work"
-ROOT_WORK_DIR = "/private/tmp/data/work"
+ROOT_WORK_DIR = "/tmp/data/work"
 WEBDAV_URL = None
 WEBDAV_PORT = 8085
 

@@ -4,7 +4,6 @@ resource "kubernetes_service" "redis_service" {
     name      = "redis"
     namespace = kubernetes_namespace.unity-sps.metadata[0].name
   }
-
   spec {
     selector = {
       app = "redis"
@@ -17,10 +16,7 @@ resource "kubernetes_service" "redis_service" {
     }
     type = var.service_type
   }
-
 }
-
-
 
 resource "kubernetes_deployment" "redis" {
   metadata {
@@ -30,16 +26,13 @@ resource "kubernetes_deployment" "redis" {
       app = "redis"
     }
   }
-
   spec {
     # replicas = 3
-
     selector {
       match_labels = {
         app = "redis"
       }
     }
-
     template {
       metadata {
         namespace = kubernetes_namespace.unity-sps.metadata[0].name
@@ -47,17 +40,24 @@ resource "kubernetes_deployment" "redis" {
           app = "redis"
         }
       }
-
       spec {
         container {
           image             = var.docker_images.redis
           name              = "redis"
           image_pull_policy = "IfNotPresent"
-
           port {
             container_port = 6379
           }
+          liveness_probe {
+            exec {
+              command = ["invalid"]
+            }
+            initial_delay_seconds = 0
+            period_seconds        = 21600
+            failure_threshold     = 1
+          }
         }
+        restart_policy = "Always"
       }
     }
   }
