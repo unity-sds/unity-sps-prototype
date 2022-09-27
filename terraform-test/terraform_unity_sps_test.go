@@ -64,8 +64,4 @@ func TestTerraformUnity(t *testing.T) {
 	minio_url := fmt.Sprintf("http://%s:9001", loadBalancerHostnames["minio"])
 	statusCode, _ = http_helper.HttpGet(t, minio_url, nil)
 	assert.Equal(t, statusCode, 200)
-
-	rabbitmq_mgmt_url := fmt.Sprintf("http://%s:15672", loadBalancerHostnames["rabbitmq_mgmt"])
-	statusCode, _ = http_helper.HttpGet(t, rabbitmq_mgmt_url, nil)
-	assert.Equal(t, statusCode, 200)
 }
