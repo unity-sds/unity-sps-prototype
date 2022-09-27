@@ -65,7 +65,6 @@ variable "node_port_map" {
   default = {
     "mozart_service"                    = 30001
     "grq2_service"                      = 30002
-    "rabbitmq_mgmt_service_cluster_rpc" = 30003
     "minio_service_api"                 = 30007
     "minio_service_interface"           = 30008
     "hysds_ui_service"                  = 30009
