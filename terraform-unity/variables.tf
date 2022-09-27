@@ -66,13 +66,9 @@ variable "node_port_map" {
     "mozart_service"                    = 30001
     "grq2_service"                      = 30002
     "rabbitmq_mgmt_service_cluster_rpc" = 30003
-    "rabbitmq_service_epmd"             = 30004
-    "rabbitmq_service_listener"         = 30005
-    "rabbitmq_service_cluster_rpc"      = 30006
     "minio_service_api"                 = 30007
     "minio_service_interface"           = 30008
     "hysds_ui_service"                  = 30009
-    "redis_service"                     = 30010
     "ades_wpst_api_service"             = 30011
     "grq2_es"                           = 30012
     "mozart_es"                         = 30013
