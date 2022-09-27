@@ -78,14 +78,14 @@ variable "node_port_map" {
   description = "value"
   type        = map(number)
   default = {
-    "mozart_service"                    = 30001
-    "grq2_service"                      = 30002
-    "minio_service_api"                 = 30007
-    "minio_service_interface"           = 30008
-    "hysds_ui_service"                  = 30009
-    "ades_wpst_api_service"             = 30011
-    "grq2_es"                           = 30012
-    "mozart_es"                         = 30013
+    "mozart_service"          = 30001
+    "grq2_service"            = 30002
+    "minio_service_api"       = 30007
+    "minio_service_interface" = 30008
+    "hysds_ui_service"        = 30009
+    "ades_wpst_api_service"   = 30011
+    "grq2_es"                 = 30012
+    "mozart_es"               = 30013
   }
 }
 
