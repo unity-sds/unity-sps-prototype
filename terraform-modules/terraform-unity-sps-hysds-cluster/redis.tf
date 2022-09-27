@@ -8,13 +8,10 @@ resource "kubernetes_service" "redis_service" {
     selector = {
       app = "redis"
     }
-    session_affinity = var.deployment_environment != "local" ? null : "ClientIP"
     port {
       port        = 6379
       target_port = 6379
-      node_port   = var.service_type != "NodePort" ? null : var.node_port_map.redis_service
     }
-    type = var.service_type
   }
 }
 
@@ -47,14 +44,6 @@ resource "kubernetes_deployment" "redis" {
           image_pull_policy = "IfNotPresent"
           port {
             container_port = 6379
-          }
-          liveness_probe {
-            exec {
-              command = ["invalid"]
-            }
-            initial_delay_seconds = 0
-            period_seconds        = 21600
-            failure_threshold     = 1
           }
         }
         restart_policy = "Always"

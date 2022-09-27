@@ -26,7 +26,6 @@ output "load_balancer_hostnames" {
     ades_wpst_api   = kubernetes_service.ades-wpst-api-service.status[0].load_balancer[0].ingress[0].hostname,
     rabbitmq_mgmt   = kubernetes_service.rabbitmq-mgmt-service.status[0].load_balancer[0].ingress[0].hostname,
     rabbitmq        = kubernetes_service.rabbitmq-service.status[0].load_balancer[0].ingress[0].hostname,
-    redis           = kubernetes_service.redis_service.status[0].load_balancer[0].ingress[0].hostname,
     minio           = kubernetes_service.minio-service.status[0].load_balancer[0].ingress[0].hostname
   }
 }
