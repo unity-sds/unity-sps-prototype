@@ -1,7 +1,7 @@
 
 resource "kubernetes_service" "grq2-service" {
   metadata {
-    name      = "grq2"
+    name      = "grq2-rest-api"
     namespace = kubernetes_namespace.unity-sps.metadata[0].name
   }
 

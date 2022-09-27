@@ -56,8 +56,8 @@ PYMONITOREDRUNNER_CFG = {
     "StreamObserverMessenger": {"send_interval": 1},
 }
 
-MOZART_URL = "https://mozart:8888/mozart/"
-MOZART_REST_URL = "http://mozart:8888/api/v0.1"
+MOZART_URL = "https://mozart-rest-api:8888/mozart/"
+MOZART_REST_URL = "http://mozart-rest-api:8888/api/v0.1"
 JOBS_ES_URL = "http://mozart-es:9200"
 JOBS_PROCESSED_QUEUE = "jobs_processed"
 USER_RULES_JOB_QUEUE = "user_rules_job"
@@ -66,9 +66,9 @@ USER_RULES_JOB_INDEX = "user_rules-mozart"
 STATUS_ALIAS = "job_status"
 
 TOSCA_URL = "https://{{ GRQ_PVT_IP }}/search/"
-GRQ_URL = "http://grq2:8878"
-GRQ_REST_URL = "http://grq2:8878/api/v0.1"
-GRQ_UPDATE_URL = "http://grq2:8878/api/v0.1/grq/dataset/index"
+GRQ_URL = "http://grq2-rest-api:8878"
+GRQ_REST_URL = "http://grq2-rest-api:8878/api/v0.1"
+GRQ_UPDATE_URL = "http://grq2-rest-api:8878/api/v0.1/grq/dataset/index"
 
 
 GRQ_AWS_ES = False

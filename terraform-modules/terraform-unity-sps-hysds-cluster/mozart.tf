@@ -1,6 +1,6 @@
 resource "kubernetes_service" "mozart-service" {
   metadata {
-    name      = "mozart"
+    name      = "mozart-rest-api"
     namespace = kubernetes_namespace.unity-sps.metadata[0].name
   }
 

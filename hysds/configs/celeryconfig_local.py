@@ -55,8 +55,8 @@ PYMONITOREDRUNNER_CFG = {
     "StreamObserverMessenger": {"send_interval": 1},
 }
 
-MOZART_URL = "https://mozart:8888/mozart/"
-MOZART_REST_URL = "http://mozart:8888/api/v0.1"
+MOZART_URL = "https://mozart-rest-api:8888/mozart/"
+MOZART_REST_URL = "http://mozart-rest-api:8888/api/v0.1"
 JOBS_ES_URL = "http://mozart-es:9200"
 JOBS_PROCESSED_QUEUE = "jobs_processed"
 USER_RULES_JOB_QUEUE = "user_rules_job"
