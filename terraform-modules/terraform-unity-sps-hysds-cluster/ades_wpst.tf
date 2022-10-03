@@ -61,34 +61,7 @@ resource "kubernetes_deployment" "ades-wpst-api" {
           app = "ades-wpst-api"
         }
       }
-
       spec {
-        container {
-          image             = var.docker_images.ades_wpst_api
-          image_pull_policy = "Always"
-          name              = "ades-wpst-api"
-          env {
-            name  = "ADES_PLATFORM"
-            value = "HYSDS"
-          }
-          env {
-            name  = "DOCKER_HOST"
-            value = "tcp://localhost:2375"
-          }
-          port {
-            container_port = 5000
-          }
-          volume_mount {
-            name       = "sqlite-db"
-            mount_path = "/flask_ades_wpst/sqlite"
-          }
-          # The Docker socket use to communicate with the Docker engine
-          volume_mount {
-            name       = "docker-sock-dir"
-            mount_path = "/var/run"
-            sub_path   = "docker.sock"
-          }
-        }
         container {
           name  = "dind-daemon"
           image = "docker:dind"
@@ -123,6 +96,32 @@ resource "kubernetes_deployment" "ades-wpst-api" {
             mount_path = "/var/lib/docker"
           }
           # The Docker socket must be shared with Verdi container
+          volume_mount {
+            name       = "docker-sock-dir"
+            mount_path = "/var/run"
+            sub_path   = "docker.sock"
+          }
+        }
+        container {
+          image             = var.docker_images.ades_wpst_api
+          image_pull_policy = "Always"
+          name              = "ades-wpst-api"
+          env {
+            name  = "ADES_PLATFORM"
+            value = "HYSDS"
+          }
+          env {
+            name  = "DOCKER_HOST"
+            value = "tcp://localhost:2375"
+          }
+          port {
+            container_port = 5000
+          }
+          volume_mount {
+            name       = "sqlite-db"
+            mount_path = "/flask_ades_wpst/sqlite"
+          }
+          # The Docker socket use to communicate with the Docker engine
           volume_mount {
             name       = "docker-sock-dir"
             mount_path = "/var/run"
