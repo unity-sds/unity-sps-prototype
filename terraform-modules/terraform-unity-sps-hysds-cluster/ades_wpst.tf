@@ -63,8 +63,9 @@ resource "kubernetes_deployment" "ades-wpst-api" {
       }
       spec {
         container {
-          name  = "dind-daemon"
-          image = "docker:dind"
+          name              = "dind-daemon"
+          image             = "docker:dind"
+          image_pull_policy = "Always"
           env {
             name  = "DOCKER_TLS_CERTDIR"
             value = ""
@@ -109,6 +110,22 @@ resource "kubernetes_deployment" "ades-wpst-api" {
           env {
             name  = "ADES_PLATFORM"
             value = "HYSDS"
+          }
+          env {
+            name  = "CR_SERVER"
+            value = var.container_registry_server
+          }
+          env {
+            name  = "CR_USERNAME"
+            value = var.container_registry_username
+          }
+          env {
+            name  = "CR_PAT"
+            value = var.container_registry_PAT
+          }
+          env {
+            name  = "CR_OWNER"
+            value = var.container_registry_owner
           }
           env {
             name  = "DOCKER_HOST"

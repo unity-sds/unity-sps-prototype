@@ -91,3 +91,23 @@ variable "deployment_environment" {
   type        = string
   default     = "mcp"
 }
+
+variable "container_registry_server" {
+  description = "value"
+  type        = string
+}
+
+variable "container_registry_username" {
+  description = "value"
+  type        = string
+}
+
+variable "container_registry_PAT" {
+  description = "value"
+  type        = string
+}
+
+variable "container_registry_owner" {
+  description = "value"
+  type        = string
+}
