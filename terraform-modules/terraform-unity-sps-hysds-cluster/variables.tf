@@ -117,7 +117,7 @@ variable "container_registry_username" {
   type        = string
 }
 
-variable "container_registry_PAT" {
+variable "container_registry_pat" {
   description = "value"
   type        = string
 }

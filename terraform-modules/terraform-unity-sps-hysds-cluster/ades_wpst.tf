@@ -121,7 +121,7 @@ resource "kubernetes_deployment" "ades-wpst-api" {
           }
           env {
             name  = "CR_PAT"
-            value = var.container_registry_PAT
+            value = var.container_registry_pat
           }
           env {
             name  = "CR_OWNER"
