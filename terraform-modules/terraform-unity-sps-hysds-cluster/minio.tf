@@ -152,7 +152,7 @@ resource "kubernetes_job" "mc" {
             set -x;
 
             curl -XGET "http://grq-es:9201/_cluster/health?pretty=true&wait_for_status=yellow&timeout=30s";
-            while [ $$(curl -ILs http://grq2-rest-api:8878/api/v0.1/doc | tac | grep -m1 HTTP/1.1 | awk {'print $2'}) -ne 200 ]; do
+            while [ $$(curl -ILs http://grq2:8878/api/v0.1/doc | tac | grep -m1 HTTP/1.1 | awk {'print $2'}) -ne 200 ]; do
               echo "Waiting for GRQ2 to be ready..." && sleep 5;
             done;
 
@@ -161,7 +161,7 @@ resource "kubernetes_job" "mc" {
             done;
 
             curl -XGET "http://mozart-es:9200/_cluster/health?pretty=true&wait_for_status=yellow&timeout=30s";
-            while [ $$(curl -ILs http://mozart-rest-api:8888/api/v0.1/doc | tac | grep -m1 HTTP/1.1 | awk {'print $2'}) -ne 200 ]; do
+            while [ $$(curl -ILs http://mozart:8888/api/v0.1/doc | tac | grep -m1 HTTP/1.1 | awk {'print $2'}) -ne 200 ]; do
               echo "Waiting for mozart to be ready..." && sleep 5;
             done;
 
