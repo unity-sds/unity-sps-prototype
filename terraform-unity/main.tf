@@ -23,4 +23,7 @@ module "unity-sps-hysds-cluster" {
   container_registry_username = var.container_registry_username
   container_registry_pat      = var.container_registry_pat
   container_registry_owner    = var.container_registry_owner
+  uds_staging_bucket          = var.uds_staging_bucket
+  uds_client_id               = var.uds_client_id
+  uds_dapa_api                = var.uds_dapa_api
 }

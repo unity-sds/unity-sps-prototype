@@ -111,3 +111,18 @@ variable "container_registry_owner" {
   description = "value"
   type        = string
 }
+
+variable "uds_staging_bucket" {
+  description = "value"
+  type        = string
+}
+
+variable "uds_client_id" {
+  description = "value"
+  type        = string
+}
+
+variable "uds_dapa_api" {
+  description = "value"
+  type        = string
+}

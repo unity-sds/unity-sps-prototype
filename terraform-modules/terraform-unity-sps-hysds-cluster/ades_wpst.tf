@@ -128,6 +128,18 @@ resource "kubernetes_deployment" "ades-wpst-api" {
             value = var.container_registry_owner
           }
           env {
+            name  = "STAGING_BUCKET"
+            value = var.uds_staging_bucket
+          }
+          env {
+            name  = "CLIENT_ID"
+            value = var.uds_client_id
+          }
+          env {
+            name  = "DAPA_API"
+            value = var.uds_dapa_api
+          }
+          env {
             name  = "DOCKER_HOST"
             value = "tcp://localhost:2375"
           }
