@@ -1,3 +1,8 @@
+variable "project" {
+  description = "The project or mission deploying Unity SPS"
+  type        = string
+}
+
 variable "namespace" {
   description = "Namespace for the Unity SPS HySDS-related Kubernetes resources"
   type        = string

@@ -4,7 +4,7 @@ locals {
 
 
 resource "aws_s3_bucket" "s3_bucket" {
-  bucket        = "usps-${var.venue}-${var.counter}-staging"
+  bucket        = "${var.project}-${var.venue}-${var.counter}-staging"
   force_destroy = true
   #   tags = {
   #     Name        = "My bucket"

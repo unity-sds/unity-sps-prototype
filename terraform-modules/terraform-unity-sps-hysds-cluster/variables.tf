@@ -3,6 +3,12 @@ variable "kubeconfig_filepath" {
   type        = string
 }
 
+variable "project" {
+  description = "The project or mission deploying Unity SPS"
+  type        = string
+  default     = "unity"
+}
+
 variable "namespace" {
   description = "Namespace for the Unity SPS HySDS-related Kubernetes resources"
   type        = string
