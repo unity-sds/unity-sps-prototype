@@ -69,6 +69,7 @@ TOSCA_URL = "https://{{ GRQ_PVT_IP }}/search/"
 GRQ_URL = "http://grq2:8878"
 GRQ_REST_URL = "http://grq2:8878/api/v0.1"
 GRQ_UPDATE_URL = "http://grq2:8878/api/v0.1/grq/dataset/index"
+GRQ_UPDATE_URL_BULK = "http://grq2:8878/api/v0.2/grq/dataset/index"
 
 
 GRQ_AWS_ES = False
