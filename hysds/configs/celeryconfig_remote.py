@@ -1,5 +1,5 @@
-broker_url = "amqp://guest:guest@rabbitmq:5672//"
-result_backend = "redis://redis:6379"
+broker_url = "amqp://guest:guest@rabbitmq:${rabbitmq_service_port}//"
+result_backend = "redis://redis:${redis_service_port}"
 # result_backend = "redis://:{{ MOZART_REDIS_PASSWORD }}@{{ MOZART_REDIS_PVT_IP }}"
 
 task_serializer = "msgpack"
@@ -46,7 +46,7 @@ HARD_TIME_LIMIT_GAP = 300
 PYMONITOREDRUNNER_CFG = {
     "rabbitmq": {
         "hostname": "{{ MOZART_RABBIT_PVT_IP }}",
-        "port": 5672,
+        "port": ${rabbitmq_service_port},
         "queue": "stdouterr",
     },
     "StreamObserverFileWriter": {
@@ -56,9 +56,9 @@ PYMONITOREDRUNNER_CFG = {
     "StreamObserverMessenger": {"send_interval": 1},
 }
 
-MOZART_URL = "https://mozart:8888/mozart/"
-MOZART_REST_URL = "http://mozart:8888/api/v0.1"
-JOBS_ES_URL = "http://mozart-es:9200"
+MOZART_URL = "https://mozart:${mozart_service_port}/mozart/"
+MOZART_REST_URL = "http://mozart:${mozart_service_port}/api/v0.1"
+JOBS_ES_URL = "http://mozart-es:${mozart_es_port}"
 JOBS_PROCESSED_QUEUE = "jobs_processed"
 USER_RULES_JOB_QUEUE = "user_rules_job"
 ON_DEMAND_JOB_QUEUE = "on_demand_job"
@@ -66,14 +66,14 @@ USER_RULES_JOB_INDEX = "user_rules-mozart"
 STATUS_ALIAS = "job_status"
 
 TOSCA_URL = "https://{{ GRQ_PVT_IP }}/search/"
-GRQ_URL = "http://grq2:8878"
-GRQ_REST_URL = "http://grq2:8878/api/v0.1"
-GRQ_UPDATE_URL = "http://grq2:8878/api/v0.1/grq/dataset/index"
+GRQ_URL = "http://grq2:${grq2_service_port}"
+GRQ_REST_URL = "http://grq2:${grq2_service_port}/api/v0.1"
+GRQ_UPDATE_URL = "http://grq2:${grq2_service_port}/api/v0.1/grq/dataset/index"
 
 
 GRQ_AWS_ES = False
 GRQ_ES_HOST = "grq-es"
-GRQ_ES_PORT = 9201
+GRQ_ES_PORT = ${grq2_es_port}
 GRQ_ES_PROTOCOL = "http"
 GRQ_ES_URL = "%s://%s:%d" % (GRQ_ES_PROTOCOL, GRQ_ES_HOST, GRQ_ES_PORT)
 
@@ -91,12 +91,12 @@ USER_RULES_TRIGGER_QUEUE = "user_rules_trigger"
 
 PROCESS_EVENTS_TASKS_QUEUE = "process_events_tasks"
 
-METRICS_ES_URL = "http://{{ METRICS_ES_PVT_IP }}:9200"
+METRICS_ES_URL = "http://{{ METRICS_ES_PVT_IP }}:${mozart_es_port}"
 
 # REDIS_JOB_STATUS_URL = "redis://:{{ MOZART_REDIS_PASSWORD }}@{{ MOZART_REDIS_PVT_IP }}"
-REDIS_JOB_STATUS_URL = "redis://redis:6379"
+REDIS_JOB_STATUS_URL = "redis://redis:${redis_service_port}"
 REDIS_JOB_STATUS_KEY = "logstash"
-REDIS_JOB_INFO_URL = "redis://redis:6379"
+REDIS_JOB_INFO_URL = "redis://redis:${redis_service_port}"
 REDIS_JOB_INFO_KEY = "logstash"
 REDIS_INSTANCE_METRICS_URL = (
     "redis://:{{ METRICS_REDIS_PASSWORD }}@{{ METRICS_REDIS_PVT_IP }}"
