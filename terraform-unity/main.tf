@@ -15,6 +15,7 @@ module "unity-sps-hysds-cluster" {
   kubeconfig_filepath    = var.kubeconfig_filepath
   docker_images          = var.docker_images
   service_type           = var.service_type
+  service_port_map       = var.service_port_map
   node_port_map          = var.node_port_map
   mozart_es              = var.mozart_es
   celeryconfig_filename  = var.celeryconfig_filename
