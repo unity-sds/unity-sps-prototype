@@ -52,6 +52,7 @@ locals {
       "elasticsearch.yml" = <<-EOT
       http.cors.enabled : true
       http.cors.allow-origin: "*"
+      http.port: ${var.service_port_map.mozart_es}
       EOT
     }
     lifecycle = {
@@ -131,7 +132,6 @@ locals {
     replicas                 = 1
     service = {
       type     = var.service_type
-      port     = var.service_port_map.grq2_es
       nodePort = var.service_type != "NodePort" ? null : var.node_port_map.grq2_es
     }
     httpPort      = var.service_port_map.grq2_es
@@ -141,7 +141,7 @@ locals {
       "elasticsearch.yml" = <<-EOT
         http.cors.enabled : true
         http.cors.allow-origin: "*"
-        http.port: var.service_port_map.grq2_es
+        http.port: ${var.service_port_map.grq2_es}
         EOT
     }
     lifecycle = {
