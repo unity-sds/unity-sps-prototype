@@ -151,12 +151,12 @@ resource "kubernetes_job" "mc" {
             <<-EOT
             set -x;
 
-            curl -XGET "http://grq-es:${var.service_port_map.grq_es}/_cluster/health?pretty=true&wait_for_status=yellow&timeout=30s";
+            curl -XGET "http://grq-es:${var.service_port_map.grq2_es}/_cluster/health?pretty=true&wait_for_status=yellow&timeout=30s";
             while [ $$(curl -ILs http://grq2:${var.service_port_map.grq2_service}/api/v0.1/doc | tac | grep -m1 HTTP/1.1 | awk {'print $2'}) -ne 200 ]; do
               echo "Waiting for GRQ2 to be ready..." && sleep 5;
             done;
 
-            while [ $$(curl -sw '%%{http_code}' "http://grq-es:${var.service_port_map.grq_es}" -o /dev/null) -ne 200 ]; do
+            while [ $$(curl -sw '%%{http_code}' "http://grq-es:${var.service_port_map.grq2_es}" -o /dev/null) -ne 200 ]; do
               echo "Waiting for grq-es to be ready..." && sleep 5;
             done;
 
