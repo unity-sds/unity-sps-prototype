@@ -8,11 +8,11 @@ resource "kubernetes_storage_class" "gp2-sps" {
   storage_provisioner = "kubernetes.io/aws-ebs"
   reclaim_policy      = "Delete"
   parameters = {
-    type = "gp2"
+    type   = "gp2"
     fsType = "ext4"
   }
   allow_volume_expansion = true
-  mount_options = ["debug"]
+  mount_options          = ["debug"]
 }
 
 resource "null_resource" "unset_default" {
