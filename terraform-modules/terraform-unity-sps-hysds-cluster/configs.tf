@@ -3,7 +3,7 @@ data "template_file" "mozart-settings" {
   vars = {
     rabbitmq_admin_port = var.service_port_map.rabbitmq_mgmt_service_cluster_rpc
     mozart_service_port = var.service_port_map.mozart_service
-    mozart_es_port = var.service_port_map.mozart_es
+    mozart_es_port      = var.service_port_map.mozart_es
   }
 }
 
@@ -20,9 +20,9 @@ resource "kubernetes_config_map" "mozart-settings" {
 data "template_file" "grq2-settings" {
   template = "${file("${path.module}/../../hysds/grq/rest_api/settings.cfg")}"
   vars = {
-    mozart_es_port = var.service_port_map.mozart_es
+    mozart_es_port     = var.service_port_map.mozart_es
     redis_service_port = var.service_port_map.redis_service
-    grq2_es_port = var.service_port_map.grq2_es
+    grq2_es_port       = var.service_port_map.grq2_es
   }
 }
 
@@ -40,11 +40,11 @@ data "template_file" "celeryconfig" {
   template = "${file("${path.module}/../../hysds/configs/${var.celeryconfig_filename}")}"
   vars = {
     rabbitmq_service_port = var.service_port_map.rabbitmq_service_listener
-    redis_service_port = var.service_port_map.redis_service
-    mozart_service_port = var.service_port_map.mozart_service
-    mozart_es_port = var.service_port_map.mozart_es
-    grq2_service_port = var.service_port_map.grq2_service
-    grq2_es_port = var.service_port_map.grq2_es
+    redis_service_port    = var.service_port_map.redis_service
+    mozart_service_port   = var.service_port_map.mozart_service
+    mozart_es_port        = var.service_port_map.mozart_es
+    grq2_service_port     = var.service_port_map.grq2_service
+    grq2_es_port          = var.service_port_map.grq2_es
   }
 }
 
@@ -93,7 +93,7 @@ resource "kubernetes_config_map" "logstash-configs" {
     "worker-status" = "${file("${path.module}/../../hysds/mozart/logstash/worker_status.template.json")}"
     "task-status"   = "${file("${path.module}/../../hysds/mozart/logstash/task_status.template.json")}"
     "logstash-conf" = "${chomp(data.template_file.logstash-conf.rendered)}"
-    "logstash-yml" = "${chomp(data.template_file.logstash-yml.rendered)}"
+    "logstash-yml"  = "${chomp(data.template_file.logstash-yml.rendered)}"
   }
 }
 
@@ -174,7 +174,7 @@ resource "kubernetes_config_map" "supervisord-orchestrator" {
 data "template_file" "datasets" {
   template = "${file("${path.module}/../../hysds/configs/${var.datasets_filename}")}"
   vars = {
-    minio_service_api_port = var.service_port_map.minio_service_api
+    minio_service_api_port       = var.service_port_map.minio_service_api
     minio_service_interface_port = var.service_port_map.minio_service_interface
   }
 }
