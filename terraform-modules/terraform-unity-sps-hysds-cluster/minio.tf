@@ -37,6 +37,7 @@ resource "kubernetes_service" "minio-service" {
       name      = "minio-interface"
       protocol  = "TCP"
       port      = var.service_port_map.minio_service_interface
+      target_port = 9001
       node_port = var.service_type != "NodePort" ? null : var.node_port_map.minio_service_interface
     }
     selector = {

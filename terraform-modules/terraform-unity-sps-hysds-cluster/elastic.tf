@@ -46,7 +46,7 @@ locals {
       port     = var.service_port_map.mozart_es
       nodePort = var.service_type != "NodePort" ? null : var.node_port_map.mozart_es
     }
-    httpPort      = 9200
+    httpPort      = ${var.service_port_map.mozart_es}
     transportPort = 9300
     esConfig = {
       "elasticsearch.yml" = <<-EOT
@@ -62,7 +62,7 @@ locals {
             "-c",
             <<-EOT
             #!/bin/bash
-            ES_URL=http://localhost:9200
+            ES_URL=http://localhost:${var.service_port_map.mozart_es}
             while [[ "$(curl -s -o /dev/null -w '%%{http_code}\n' $ES_URL)" != "200" ]]; do sleep 1; done
             mozart_es_template=$(curl -s https://raw.githubusercontent.com/hysds/mozart/develop/configs/es_template.json)
             for idx in "containers" "job_specs" "hysds_io"; do
@@ -134,14 +134,14 @@ locals {
       port     = var.service_port_map.grq2_es
       nodePort = var.service_type != "NodePort" ? null : var.node_port_map.grq2_es
     }
-    httpPort      = 9201
+    httpPort      = ${var.service_port_map.grq2_es}
     transportPort = 9301
 
     esConfig = {
       "elasticsearch.yml" = <<-EOT
         http.cors.enabled : true
         http.cors.allow-origin: "*"
-        http.port: 9201
+        http.port: ${var.service_port_map.grq2_es}
         EOT
     }
     lifecycle = {
@@ -152,7 +152,7 @@ locals {
             "-c",
             <<-EOT
             #!/bin/bash
-            ES_URL=http://localhost:9201
+            ES_URL=http://localhost:${var.service_port_map.grq2_es}
             while [[ "$(curl -s -o /dev/null -w '%%{http_code}\n' $ES_URL)" != "200" ]]; do sleep 1; done
 
             grq_es_template=$(curl -s https://raw.githubusercontent.com/hysds/grq2/develop/config/es_template.json)
