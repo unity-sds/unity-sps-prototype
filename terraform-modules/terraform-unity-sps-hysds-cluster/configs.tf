@@ -1,5 +1,5 @@
 data "template_file" "mozart-settings" {
-  template = "${file("${path.module}/../../hysds/mozart/rest_api/settings.cfg")}"
+  template = file("${path.module}/../../hysds/mozart/rest_api/settings.cfg")
   vars = {
     rabbitmq_admin_port = var.service_port_map.rabbitmq_mgmt_service_cluster_rpc
     mozart_service_port = var.service_port_map.mozart_service
@@ -18,7 +18,7 @@ resource "kubernetes_config_map" "mozart-settings" {
 }
 
 data "template_file" "grq2-settings" {
-  template = "${file("${path.module}/../../hysds/grq/rest_api/settings.cfg")}"
+  template = file("${path.module}/../../hysds/grq/rest_api/settings.cfg")
   vars = {
     mozart_es_port     = var.service_port_map.mozart_es
     redis_service_port = var.service_port_map.redis_service
@@ -37,7 +37,7 @@ resource "kubernetes_config_map" "grq2-settings" {
 }
 
 data "template_file" "celeryconfig" {
-  template = "${file("${path.module}/../../hysds/configs/${var.celeryconfig_filename}")}"
+  template = file("${path.module}/../../hysds/configs/${var.celeryconfig_filename}")
   vars = {
     rabbitmq_service_port = var.service_port_map.rabbitmq_service_listener
     redis_service_port    = var.service_port_map.redis_service
@@ -69,14 +69,14 @@ resource "kubernetes_config_map" "netrc" {
 }
 
 data "template_file" "logstash-conf" {
-  template = "${file("${path.module}/../../hysds/mozart/logstash/logstash.conf")}"
+  template = file("${path.module}/../../hysds/mozart/logstash/logstash.conf")
   vars = {
     mozart_es_port = var.service_port_map.mozart_es
   }
 }
 
 data "template_file" "logstash-yml" {
-  template = "${file("${path.module}/../../hysds/mozart/logstash/logstash.yml")}"
+  template = file("${path.module}/../../hysds/mozart/logstash/logstash.yml")
   vars = {
     mozart_es_port = var.service_port_map.mozart_es
   }
@@ -172,7 +172,7 @@ resource "kubernetes_config_map" "supervisord-orchestrator" {
 }
 
 data "template_file" "datasets" {
-  template = "${file("${path.module}/../../hysds/configs/${var.datasets_filename}")}"
+  template = file("${path.module}/../../hysds/configs/${var.datasets_filename}")
   vars = {
     minio_service_api_port       = var.service_port_map.minio_service_api
     minio_service_interface_port = var.service_port_map.minio_service_interface
