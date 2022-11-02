@@ -46,7 +46,7 @@ locals {
       port     = var.service_port_map.mozart_es
       nodePort = var.service_type != "NodePort" ? null : var.node_port_map.mozart_es
     }
-    httpPort      = ${var.service_port_map.mozart_es}
+    httpPort      = var.service_port_map.mozart_es
     transportPort = 9300
     esConfig = {
       "elasticsearch.yml" = <<-EOT
@@ -134,14 +134,14 @@ locals {
       port     = var.service_port_map.grq2_es
       nodePort = var.service_type != "NodePort" ? null : var.node_port_map.grq2_es
     }
-    httpPort      = ${var.service_port_map.grq2_es}
+    httpPort      = var.service_port_map.grq2_es
     transportPort = 9301
 
     esConfig = {
       "elasticsearch.yml" = <<-EOT
         http.cors.enabled : true
         http.cors.allow-origin: "*"
-        http.port: ${var.service_port_map.grq2_es}
+        http.port: var.service_port_map.grq2_es
         EOT
     }
     lifecycle = {
