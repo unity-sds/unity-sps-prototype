@@ -31,7 +31,7 @@ resource "kubernetes_service" "ades-wpst-api-service" {
     type             = var.service_type
     port {
       protocol    = "TCP"
-      port        = 5001
+      port        = var.service_port_map.ades_wpst_api_service
       target_port = 5000
       node_port   = var.service_type != "NodePort" ? null : var.node_port_map.ades_wpst_api_service
     }

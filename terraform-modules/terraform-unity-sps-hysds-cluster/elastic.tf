@@ -43,6 +43,7 @@ locals {
     replicas                 = 1
     service = {
       type     = var.service_type
+      port     = var.service_port_map.mozart_es
       nodePort = var.service_type != "NodePort" ? null : var.node_port_map.mozart_es
     }
     httpPort      = 9200
@@ -130,6 +131,7 @@ locals {
     replicas                 = 1
     service = {
       type     = var.service_type
+      port     = var.service_port_map.grq2_es
       nodePort = var.service_type != "NodePort" ? null : var.node_port_map.grq2_es
     }
     httpPort      = 9201

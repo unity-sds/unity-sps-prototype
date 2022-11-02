@@ -29,14 +29,14 @@ resource "kubernetes_service" "minio-service" {
     port {
       name        = "minio-api"
       protocol    = "TCP"
-      port        = 9000
+      port        = var.service_port_map.minio_service_api
       target_port = 9000
       node_port   = var.service_type != "NodePort" ? null : var.node_port_map.minio_service_api
     }
     port {
       name      = "minio-interface"
       protocol  = "TCP"
-      port      = 9001
+      port      = var.service_port_map.minio_service_interface
       node_port = var.service_type != "NodePort" ? null : var.node_port_map.minio_service_interface
     }
     selector = {

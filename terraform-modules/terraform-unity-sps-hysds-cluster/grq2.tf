@@ -11,7 +11,7 @@ resource "kubernetes_service" "grq2-service" {
     }
     session_affinity = var.deployment_environment != "local" ? null : "ClientIP"
     port {
-      port        = 8878
+      port        = var.service_port_map.grq2_service
       target_port = 8878
       node_port   = var.service_type != "NodePort" ? null : var.node_port_map.grq2_service
     }

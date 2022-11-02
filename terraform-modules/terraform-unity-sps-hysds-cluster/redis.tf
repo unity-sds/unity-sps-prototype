@@ -10,7 +10,7 @@ resource "kubernetes_service" "redis_service" {
     }
     session_affinity = var.deployment_environment != "local" ? null : "ClientIP"
     port {
-      port        = 6379
+      port        = var.service_port_map.redis_service
       target_port = 6379
       node_port   = var.service_type != "NodePort" ? null : var.node_port_map.redis_service
     }

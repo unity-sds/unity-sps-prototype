@@ -12,7 +12,7 @@ resource "kubernetes_service" "rabbitmq-mgmt-service" {
     session_affinity = var.deployment_environment != "local" ? null : "ClientIP"
     port {
       name        = "cluster-rpc"
-      port        = 15672
+      port        = var.service_port_map.rabbitmq_mgmt_service_cluster_rpc
       target_port = 15672
       node_port   = var.service_type != "NodePort" ? null : var.node_port_map.rabbitmq_mgmt_service_cluster_rpc
     }
@@ -37,21 +37,21 @@ resource "kubernetes_service" "rabbitmq-service" {
     port {
       name        = "epmd"
       protocol    = "TCP"
-      port        = 4369
+      port        = var.service_port_map.rabbitmq_service_epmd
       target_port = 4369
       node_port   = var.service_type != "NodePort" ? null : var.node_port_map.rabbitmq_service_epmd
     }
     port {
       name        = "listener"
       protocol    = "TCP"
-      port        = 5672
+      port        = var.service_port_map.rabbitmq_service_listener
       target_port = 5672
       node_port   = var.service_type != "NodePort" ? null : var.node_port_map.rabbitmq_service_listener
     }
     port {
       name        = "cluster-rpc"
       protocol    = "TCP"
-      port        = 15672
+      port        = var.service_port_map.rabbitmq_service_cluster_rpc
       target_port = 15672
       node_port   = var.service_type != "NodePort" ? null : var.node_port_map.rabbitmq_service_cluster_rpc
     }

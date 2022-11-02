@@ -10,7 +10,7 @@ resource "kubernetes_service" "mozart-service" {
     }
     session_affinity = var.deployment_environment != "local" ? null : "ClientIP"
     port {
-      port        = 8888
+      port        = var.service_port_map.mozart_service
       target_port = 8888
       node_port   = var.service_type != "NodePort" ? null : var.node_port_map.mozart_service
     }

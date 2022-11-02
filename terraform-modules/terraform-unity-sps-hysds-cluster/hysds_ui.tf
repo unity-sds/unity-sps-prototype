@@ -10,7 +10,7 @@ resource "kubernetes_service" "hysds-ui-service" {
     session_affinity = var.deployment_environment != "local" ? null : "ClientIP"
     port {
       protocol    = "TCP"
-      port        = 3000
+      port        = var.service_port_map.hysds_ui_service
       target_port = 80
       node_port   = var.service_type != "NodePort" ? null : var.node_port_map.hysds_ui_service
     }
