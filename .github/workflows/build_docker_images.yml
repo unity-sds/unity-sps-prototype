@@ -12,7 +12,7 @@ env:
   REMOTE_UI_IMAGE_NAME: ${{ github.repository }}/hysds-ui-remote
   REMOTE_UI_AUTH_IMAGE_NAME: ${{ github.repository }}/hysds-ui-remote-auth
   ADES_WPST_API_IMAGE_NAME: ${{ github.repository }}/ades-wpst-api
-  ADES_WPST_API_DEVELOP_IMAGE_NAME: ${{ github.repository }}/ades-wpst-api-develop
+  ADES_WPST_API_DEPLOY_IMAGE_NAME: ${{ github.repository }}/ades-wpst-api-deploy
   ADES_WPST_API_FORK_IMAGE_NAME: ${{ github.repository }}/ades-wpst-api-fork
 
 on: workflow_dispatch
@@ -218,32 +218,32 @@ jobs:
           tags: ${{ env.REGISTRY }}/${{ env.ADES_WPST_API_IMAGE_NAME }}:${{ env.TAG }}
           labels: ${{ steps.metaades.outputs.labels }}
 
-  build-ades-wpst-api-develop:
+  build-ades-wpst-api-deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
           repository: unity-sds/ades_wpst
-          ref: develop
+          ref: deploy
       - name: Log in to the container registry
         uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Extract metadata (tags, labels) for ADES WPST API Development Docker image
+      - name: Extract metadata (tags, labels) for ADES WPST API Deploy Docker image
         id: metaades
         uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
         with:
-          images: ${{ env.REGISTRY }}/${{ env.ADES_WPST_API_DEVELOP_IMAGE_NAME }}
-      - name: Build and push ADES WPST API Development Docker image
+          images: ${{ env.REGISTRY }}/${{ env.ADES_WPST_API_DEPLOY_IMAGE_NAME }}
+      - name: Build and push ADES WPST API Deploy Docker image
         uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
         with:
           context: .
           file: docker/Dockerfile
           push: true
-          tags: ${{ env.REGISTRY }}/${{ env.ADES_WPST_API_DEVELOP_IMAGE_NAME }}:${{ env.TAG }}
+          tags: ${{ env.REGISTRY }}/${{ env.ADES_WPST_API_DEPLOY_IMAGE_NAME }}:${{ env.TAG }}
           labels: ${{ steps.metaades.outputs.labels }}
 
   build-ades-wpst-api-fork:
