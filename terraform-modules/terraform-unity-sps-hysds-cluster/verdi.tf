@@ -27,13 +27,13 @@ resource "kubernetes_deployment" "verdi" {
           # https://stackoverflow.com/questions/56155495/how-do-i-copy-a-kubernetes-configmap-to-a-write-enabled-area-of-a-pod
           args = [
             <<-EOT
-            chown -R 1000:1000 /tmp/data;
+            chown -R 1000:1000 /tmp;
             cp -r /cwl-src/. /src;
             EOT
           ]
           volume_mount {
-            name       = "data-work"
-            mount_path = "/tmp/data"
+            name       = "tmp-dir"
+            mount_path = "/tmp"
           }
           volume_mount {
             name       = kubernetes_config_map.cwl-workflows.metadata[0].name
@@ -146,11 +146,11 @@ resource "kubernetes_deployment" "verdi" {
             sub_path   = "supervisord.conf"
             read_only  = false
           }
-          volume_mount {
-            name       = "data-work"
-            mount_path = "/tmp/data"
-            read_only  = false
-          }
+          # volume_mount {
+          #   name       = "data-work"
+          #   mount_path = "/tmp/data"
+          #   read_only  = false
+          # }
           # A persistent volume storing static data
           volume_mount {
             name       = kubernetes_config_map.sounder-sips-static-data.metadata[0].name
@@ -197,12 +197,12 @@ resource "kubernetes_deployment" "verdi" {
             name = kubernetes_config_map.supervisord-verdi.metadata[0].name
           }
         }
-        volume {
-          name = "data-work"
-          host_path {
-            path = "/tmp/data"
-          }
-        }
+        # volume {
+        #   name = "data-work"
+        #   host_path {
+        #     path = "/tmp/data"
+        #   }
+        # }
         # Shared direcrtory holding the Docker socket
         volume {
           name = "docker-sock-dir"
