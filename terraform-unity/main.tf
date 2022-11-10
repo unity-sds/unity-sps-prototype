@@ -8,15 +8,22 @@
 module "unity-sps-hysds-cluster" {
   source = "../terraform-modules/terraform-unity-sps-hysds-cluster"
   # source                      = "git::https://github.com/unity-sds/unity-sps-prototype.git//terraform-modules/terraform-unity-sps-hysds-cluster?ref=main"
-  namespace              = var.namespace
-  venue                  = var.venue
-  counter                = var.counter
-  kubeconfig_filepath    = var.kubeconfig_filepath
-  docker_images          = var.docker_images
-  service_type           = var.service_type
-  node_port_map          = var.node_port_map
-  mozart_es              = var.mozart_es
-  celeryconfig_filename  = var.celeryconfig_filename
-  datasets_filename      = var.datasets_filename
-  deployment_environment = var.deployment_environment
+  namespace                   = var.namespace
+  venue                       = var.venue
+  counter                     = var.counter
+  kubeconfig_filepath         = var.kubeconfig_filepath
+  docker_images               = var.docker_images
+  service_type                = var.service_type
+  node_port_map               = var.node_port_map
+  mozart_es                   = var.mozart_es
+  celeryconfig_filename       = var.celeryconfig_filename
+  datasets_filename           = var.datasets_filename
+  deployment_environment      = var.deployment_environment
+  container_registry_server   = var.container_registry_server
+  container_registry_username = var.container_registry_username
+  container_registry_pat      = var.container_registry_pat
+  container_registry_owner    = var.container_registry_owner
+  uds_staging_bucket          = var.uds_staging_bucket
+  uds_client_id               = var.uds_client_id
+  uds_dapa_api                = var.uds_dapa_api
 }
