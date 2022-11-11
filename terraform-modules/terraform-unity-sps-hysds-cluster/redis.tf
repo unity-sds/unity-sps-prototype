@@ -9,7 +9,7 @@ resource "kubernetes_service" "redis_service" {
       app = "redis"
     }
     port {
-      port        = 6379
+      port        = var.service_port_map.redis_service
       target_port = 6379
     }
   }

@@ -10,7 +10,7 @@ resource "kubernetes_service" "rabbitmq-mgmt-service" {
     }
     port {
       name        = "cluster-rpc"
-      port        = 15672
+      port        = var.service_port_map.rabbitmq_mgmt_service_cluster_rpc
       target_port = 15672
     }
   }
@@ -31,19 +31,19 @@ resource "kubernetes_service" "rabbitmq-service" {
     port {
       name        = "epmd"
       protocol    = "TCP"
-      port        = 4369
+      port        = var.service_port_map.rabbitmq_service_epmd
       target_port = 4369
     }
     port {
       name        = "listener"
       protocol    = "TCP"
-      port        = 5672
+      port        = var.service_port_map.rabbitmq_service_listener
       target_port = 5672
     }
     port {
       name        = "cluster-rpc"
       protocol    = "TCP"
-      port        = 15672
+      port        = var.service_port_map.rabbitmq_service_cluster_rpc
       target_port = 15672
     }
   }

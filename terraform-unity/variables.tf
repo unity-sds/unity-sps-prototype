@@ -1,3 +1,8 @@
+variable "project" {
+  description = "The project or mission deploying Unity SPS"
+  type        = string
+}
+
 variable "namespace" {
   description = "Namespace for the Unity SPS HySDS-related Kubernetes resources"
   type        = string
@@ -57,6 +62,26 @@ variable "service_type" {
   description = "value"
   type        = string
   default     = "LoadBalancer"
+}
+
+variable "service_port_map" {
+  description = "value"
+  type        = map(number)
+  default = {
+    "mozart_service"                    = 8888
+    "grq2_service"                      = 8878
+    "rabbitmq_mgmt_service_cluster_rpc" = 15672
+    "rabbitmq_service_epmd"             = 4369
+    "rabbitmq_service_listener"         = 5672
+    "rabbitmq_service_cluster_rpc"      = 15672
+    "minio_service_api"                 = 9000
+    "minio_service_interface"           = 9001
+    "hysds_ui_service"                  = 3000
+    "redis_service"                     = 6379
+    "ades_wpst_api_service"             = 5001
+    "grq2_es"                           = 9201
+    "mozart_es"                         = 9200
+  }
 }
 
 variable "node_port_map" {

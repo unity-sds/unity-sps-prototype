@@ -29,15 +29,16 @@ resource "kubernetes_service" "minio-service" {
     port {
       name        = "minio-api"
       protocol    = "TCP"
-      port        = 9000
+      port        = var.service_port_map.minio_service_api
       target_port = 9000
       node_port   = var.service_type != "NodePort" ? null : var.node_port_map.minio_service_api
     }
     port {
-      name      = "minio-interface"
-      protocol  = "TCP"
-      port      = 9001
-      node_port = var.service_type != "NodePort" ? null : var.node_port_map.minio_service_interface
+      name        = "minio-interface"
+      protocol    = "TCP"
+      port        = var.service_port_map.minio_service_interface
+      target_port = 9001
+      node_port   = var.service_type != "NodePort" ? null : var.node_port_map.minio_service_interface
     }
     selector = {
       app = "minio"
@@ -132,12 +133,12 @@ resource "kubernetes_job" "mc" {
           command = ["/bin/sh", "-c"]
           args = [
             <<-EOT
-            until curl -s -I http://minio:9000; do echo "(Minio server) waiting..."; sleep 2; done;
-            until curl -s -I http://minio:9001; do echo "(Minio client) waiting..."; sleep 2; done;
-            while [ $$(curl -sw '%%{http_code}' "http://minio:9000/minio/health/live" -o /dev/null) -ne 200 ]; do
+            until curl -s -I http://minio:${var.service_port_map.minio_service_api}; do echo "(Minio server) waiting..."; sleep 2; done;
+            until curl -s -I http://minio:${var.service_port_map.minio_service_interface}; do echo "(Minio client) waiting..."; sleep 2; done;
+            while [ $$(curl -sw '%%{http_code}' "http://minio:${var.service_port_map.minio_service_api}/minio/health/live" -o /dev/null) -ne 200 ]; do
               echo "Waiting for minio health live to be ready..." && sleep 5;
             done;
-            mc alias set s3 http://minio:9000 hysds password;
+            mc alias set s3 http://minio:${var.service_port_map.minio_service_api} hysds password;
             mc mb s3/datasets;
             mc policy set public s3/datasets;
             EOT
@@ -151,21 +152,21 @@ resource "kubernetes_job" "mc" {
             <<-EOT
             set -x;
 
-            curl -XGET "http://grq-es:9201/_cluster/health?pretty=true&wait_for_status=yellow&timeout=30s";
-            while [ $$(curl -ILs http://grq2:8878/api/v0.1/doc | tac | grep -m1 HTTP/1.1 | awk {'print $2'}) -ne 200 ]; do
+            curl -XGET "http://grq-es:${var.service_port_map.grq2_es}/_cluster/health?pretty=true&wait_for_status=yellow&timeout=30s";
+            while [ $$(curl -ILs http://grq2:${var.service_port_map.grq2_service}/api/v0.1/doc | tac | grep -m1 HTTP/1.1 | awk {'print $2'}) -ne 200 ]; do
               echo "Waiting for GRQ2 to be ready..." && sleep 5;
             done;
 
-            while [ $$(curl -sw '%%{http_code}' "http://grq-es:9201" -o /dev/null) -ne 200 ]; do
+            while [ $$(curl -sw '%%{http_code}' "http://grq-es:${var.service_port_map.grq2_es}" -o /dev/null) -ne 200 ]; do
               echo "Waiting for grq-es to be ready..." && sleep 5;
             done;
 
-            curl -XGET "http://mozart-es:9200/_cluster/health?pretty=true&wait_for_status=yellow&timeout=30s";
-            while [ $$(curl -ILs http://mozart:8888/api/v0.1/doc | tac | grep -m1 HTTP/1.1 | awk {'print $2'}) -ne 200 ]; do
+            curl -XGET "http://mozart-es:${var.service_port_map.mozart_es}/_cluster/health?pretty=true&wait_for_status=yellow&timeout=30s";
+            while [ $$(curl -ILs http://mozart:${var.service_port_map.mozart_service}/api/v0.1/doc | tac | grep -m1 HTTP/1.1 | awk {'print $2'}) -ne 200 ]; do
               echo "Waiting for mozart to be ready..." && sleep 5;
             done;
 
-            while [ $$(curl -sw '%%{http_code}' "http://mozart-es:9200" -o /dev/null) -ne 200 ]; do
+            while [ $$(curl -sw '%%{http_code}' "http://mozart-es:${var.service_port_map.mozart_es}" -o /dev/null) -ne 200 ]; do
               echo "Waiting for mozart-es to be ready..." && sleep 5;
             done;
 

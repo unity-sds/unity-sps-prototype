@@ -8,12 +8,14 @@
 module "unity-sps-hysds-cluster" {
   source = "../terraform-modules/terraform-unity-sps-hysds-cluster"
   # source                      = "git::https://github.com/unity-sds/unity-sps-prototype.git//terraform-modules/terraform-unity-sps-hysds-cluster?ref=main"
+  project                     = var.project
   namespace                   = var.namespace
   venue                       = var.venue
   counter                     = var.counter
   kubeconfig_filepath         = var.kubeconfig_filepath
   docker_images               = var.docker_images
   service_type                = var.service_type
+  service_port_map            = var.service_port_map
   node_port_map               = var.node_port_map
   mozart_es                   = var.mozart_es
   celeryconfig_filename       = var.celeryconfig_filename
