@@ -118,12 +118,12 @@ resource "kubernetes_deployment" "factotum-job-worker" {
             read_only  = false
           }
 
-          # volume_mount {
-          #   name       = kubernetes_config_map.datasets.metadata[0].name
-          #   mount_path = "/home/ops/datasets.json"
-          #   sub_path   = "datasets.json"
-          #   read_only  = false
-          # }
+          volume_mount {
+            name       = kubernetes_config_map.datasets.metadata[0].name
+            mount_path = "/home/ops/datasets.json"
+            sub_path   = "datasets.json"
+            read_only  = false
+          }
 
           volume_mount {
             name       = kubernetes_config_map.supervisord-job-worker.metadata[0].name
@@ -151,12 +151,12 @@ resource "kubernetes_deployment" "factotum-job-worker" {
           }
         }
 
-        # volume {
-        #   name = kubernetes_config_map.datasets.metadata[0].name
-        #   config_map {
-        #     name = kubernetes_config_map.datasets.metadata[0].name
-        #   }
-        # }
+        volume {
+          name = kubernetes_config_map.datasets.metadata[0].name
+          config_map {
+            name = kubernetes_config_map.datasets.metadata[0].name
+          }
+        }
 
         volume {
           name = kubernetes_config_map.supervisord-job-worker.metadata[0].name

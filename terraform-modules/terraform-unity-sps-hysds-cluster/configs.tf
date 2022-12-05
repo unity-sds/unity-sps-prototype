@@ -71,14 +71,14 @@ resource "kubernetes_config_map" "celeryconfig" {
   #   "celeryconfig.py" = "${chomp(data.template_file.celeryconfig.rendered)}"
   # }
   data = {
-    "celeryconfig.py" = "${chomp("${chomp(templatefile("${path.module}/../../hysds/configs/${var.celeryconfig_filename}", {
+    "celeryconfig.py" = "${chomp(templatefile("${path.module}/../../hysds/configs/${var.celeryconfig_filename}", {
       rabbitmq_service_port = var.service_port_map.rabbitmq_service_listener
       redis_service_port    = var.service_port_map.redis_service
       mozart_service_port   = var.service_port_map.mozart_service
       mozart_es_port        = var.service_port_map.mozart_es
       grq2_service_port     = var.service_port_map.grq2_service
       grq2_es_port          = var.service_port_map.grq2_es
-    }))}")}"
+    }))}"
   }
 }
 
@@ -209,18 +209,18 @@ resource "kubernetes_config_map" "supervisord-orchestrator" {
 #   }
 # }
 
-# resource "kubernetes_config_map" "datasets" {
-#   metadata {
-#     name      = "datasets"
-#     namespace = kubernetes_namespace.unity-sps.metadata[0].name
-#   }
-#   # TODO - Using this template file is temporary. A more sophisticated method for generating
-#   # custom config files will be added in the future. This could take the form of a Terraform
-#   # resource that generates all the custom config files.
-#   data = {
-#     "datasets.json" = "${chomp(data.template_file.datasets.rendered)}"
-#   }
-# }
+resource "kubernetes_config_map" "datasets" {
+  metadata {
+    name      = "datasets"
+    namespace = kubernetes_namespace.unity-sps.metadata[0].name
+  }
+  # TODO - Using this template file is temporary. A more sophisticated method for generating
+  # custom config files will be added in the future. This could take the form of a Terraform
+  # resource that generates all the custom config files.
+  data = {
+    "datasets.json" = "${file("${path.module}/../../hysds/configs/${var.datasets_filename}")}"
+  }
+}
 
 resource "kubernetes_config_map" "supervisord-job-worker" {
   metadata {
