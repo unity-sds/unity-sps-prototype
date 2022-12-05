@@ -1,16 +1,16 @@
-data "kubernetes_service" "grq-es" {
-  metadata {
-    namespace = kubernetes_namespace.unity-sps.metadata[0].name
-    name      = jsondecode(helm_release.grq2-es.metadata[0].values).masterService
-  }
-}
+# data "kubernetes_service" "grq-es" {
+#   metadata {
+#     namespace = kubernetes_namespace.unity-sps.metadata[0].name
+#     name      = jsondecode(helm_release.grq2-es.metadata[0].values).masterService
+#   }
+# }
 
-data "kubernetes_service" "mozart-es" {
-  metadata {
-    namespace = kubernetes_namespace.unity-sps.metadata[0].name
-    name      = jsondecode(helm_release.mozart-es.metadata[0].values).masterService
-  }
-}
+# data "kubernetes_service" "mozart-es" {
+#   metadata {
+#     namespace = kubernetes_namespace.unity-sps.metadata[0].name
+#     name      = jsondecode(helm_release.mozart-es.metadata[0].values).masterService
+#   }
+# }
 
 # https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/data-sources/ingress
 # https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/routing-to-elb-load-balancer.html
