@@ -35,11 +35,11 @@ variable "docker_images" {
     hysds_factotum = "ghcr.io/unity-sds/unity-sps-prototype/hysds-factotum:unity-v0.0.1"
     ades_wpst_api  = "ghcr.io/unity-sds/unity-sps-prototype/ades-wpst-api:unity-v0.0.1"
     logstash       = "docker.elastic.co/logstash/logstash:7.10.2"
+    rabbitmq       = "rabbitmq:3-management"
+    busybox        = "k8s.gcr.io/busybox"
+    redis          = "redis:latest"
     # minio          = "minio/minio:RELEASE.2022-03-17T06-34-49Z"
     # mc             = "minio/mc:RELEASE.2022-03-13T22-34-00Z"
-    rabbitmq = "rabbitmq:3-management"
-    busybox  = "k8s.gcr.io/busybox"
-    redis    = "redis:latest"
   }
 }
 
@@ -74,13 +74,13 @@ variable "service_port_map" {
     "rabbitmq_service_epmd"             = 4369
     "rabbitmq_service_listener"         = 5672
     "rabbitmq_service_cluster_rpc"      = 15672
+    "hysds_ui_service"                  = 3000
+    "redis_service"                     = 6379
+    "ades_wpst_api_service"             = 5001
+    "grq2_es"                           = 9201
+    "mozart_es"                         = 9200
     # "minio_service_api"                 = 9000
     # "minio_service_interface"           = 9001
-    "hysds_ui_service"      = 3000
-    "redis_service"         = 6379
-    "ades_wpst_api_service" = 5001
-    "grq2_es"               = 9201
-    "mozart_es"             = 9200
   }
 }
 
@@ -88,14 +88,14 @@ variable "node_port_map" {
   description = "value"
   type        = map(number)
   default = {
-    "mozart_service" = 30001
-    "grq2_service"   = 30002
-    # "minio_service_api"       = 30007
-    # "minio_service_interface" = 30008
+    "mozart_service"        = 30001
+    "grq2_service"          = 30002
     "hysds_ui_service"      = 30009
     "ades_wpst_api_service" = 30011
     "grq2_es"               = 30012
     "mozart_es"             = 30013
+    # "minio_service_api"       = 30007
+    # "minio_service_interface" = 30008
   }
 }
 
