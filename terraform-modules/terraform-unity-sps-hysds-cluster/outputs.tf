@@ -18,12 +18,12 @@ data "kubernetes_service" "mozart-es" {
 output "load_balancer_hostnames" {
   description = "Load Balancer Ingress Hostnames"
   value = {
-    hysds_ui        = kubernetes_service.hysds-ui-service.status[0].load_balancer[0].ingress[0].hostname,
-    mozart_rest_api = kubernetes_service.mozart-service.status[0].load_balancer[0].ingress[0].hostname,
-    grq_rest_api    = kubernetes_service.grq2-service.status[0].load_balancer[0].ingress[0].hostname,
-    mozart_es       = data.kubernetes_service.mozart-es.status[0].load_balancer[0].ingress[0].hostname,
-    grq_es          = data.kubernetes_service.grq-es.status[0].load_balancer[0].ingress[0].hostname,
-    ades_wpst_api   = kubernetes_service.ades-wpst-api-service.status[0].load_balancer[0].ingress[0].hostname,
+    # hysds_ui        = kubernetes_service.hysds-ui-service.status[0].load_balancer[0].ingress[0].hostname,
+    # mozart_rest_api = kubernetes_service.mozart-service.status[0].load_balancer[0].ingress[0].hostname,
+    # grq_rest_api    = kubernetes_service.grq2-service.status[0].load_balancer[0].ingress[0].hostname,
+    # mozart_es       = data.kubernetes_service.mozart-es.status[0].load_balancer[0].ingress[0].hostname,
+    # grq_es          = data.kubernetes_service.grq-es.status[0].load_balancer[0].ingress[0].hostname,
+    ades_wpst_api = kubernetes_service.ades-wpst-api-service.status[0].load_balancer[0].ingress[0].hostname,
     # minio           = kubernetes_service.minio-service.status[0].load_balancer[0].ingress[0].hostname
   }
 }
