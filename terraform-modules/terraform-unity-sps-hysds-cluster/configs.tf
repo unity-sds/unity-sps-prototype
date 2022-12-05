@@ -42,11 +42,12 @@ resource "kubernetes_config_map" "grq2-settings" {
   #   "settings.cfg" = "${chomp(data.template_file.grq2-settings.rendered)}"
   # }
   data = {
-      "settings.cfg" = "${chomp(templatefile("${path.module}/../../hysds/grq/rest_api/settings.cfg", {
-        mozart_es_port     = var.service_port_map.mozart_es
-        redis_service_port = var.service_port_map.redis_service
-        grq2_es_port       = var.service_port_map.grq2_es
-      }))}"
+    "settings.cfg" = "${chomp(templatefile("${path.module}/../../hysds/grq/rest_api/settings.cfg", {
+      mozart_es_port     = var.service_port_map.mozart_es
+      redis_service_port = var.service_port_map.redis_service
+      grq2_es_port       = var.service_port_map.grq2_es
+    }))}"
+  }
 }
 
 # data "template_file" "celeryconfig" {
@@ -120,7 +121,7 @@ resource "kubernetes_config_map" "logstash-configs" {
     "logstash-conf" = "${chomp(templatefile("${path.module}/../../hysds/mozart/logstash/logstash.conf", {
       mozart_es_port = var.service_port_map.mozart_es
     }))}"
-    "logstash-yml"  = "${chomp(templatefile("${path.module}/../../hysds/mozart/logstash/logstash.yml", {
+    "logstash-yml" = "${chomp(templatefile("${path.module}/../../hysds/mozart/logstash/logstash.yml", {
       mozart_es_port = var.service_port_map.mozart_es
     }))}"
   }

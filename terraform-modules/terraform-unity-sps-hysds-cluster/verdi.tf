@@ -191,7 +191,7 @@ resource "kubernetes_deployment" "verdi" {
         #     name = kubernetes_config_map.datasets.metadata[0].name
         #   }
         # }
-        # volume {
+        volume {
           name = kubernetes_config_map.supervisord-verdi.metadata[0].name
           config_map {
             name = kubernetes_config_map.supervisord-verdi.metadata[0].name
