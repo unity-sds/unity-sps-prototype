@@ -38,8 +38,6 @@ variable "docker_images" {
     rabbitmq       = "rabbitmq:3-management"
     busybox        = "k8s.gcr.io/busybox"
     redis          = "redis:latest"
-    # minio          = "minio/minio:RELEASE.2022-03-17T06-34-49Z"
-    # mc             = "minio/mc:RELEASE.2022-03-13T22-34-00Z"
   }
 }
 
@@ -79,8 +77,6 @@ variable "service_port_map" {
     "ades_wpst_api_service"             = 5001
     "grq2_es"                           = 9201
     "mozart_es"                         = 9200
-    # "minio_service_api"                 = 9000
-    # "minio_service_interface"           = 9001
   }
 }
 
@@ -94,8 +90,6 @@ variable "node_port_map" {
     "ades_wpst_api_service" = 30011
     "grq2_es"               = 30012
     "mozart_es"             = 30013
-    # "minio_service_api"       = 30007
-    # "minio_service_interface" = 30008
   }
 }
 
