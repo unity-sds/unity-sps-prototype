@@ -1,60 +1,83 @@
-data "template_file" "mozart-settings" {
-  template = file("${path.module}/../../hysds/mozart/rest_api/settings.cfg")
-  vars = {
-    rabbitmq_admin_port = var.service_port_map.rabbitmq_mgmt_service_cluster_rpc
-    mozart_service_port = var.service_port_map.mozart_service
-    mozart_es_port      = var.service_port_map.mozart_es
-  }
-}
+# data "template_file" "mozart-settings" {
+#   template = file("${path.module}/../../hysds/mozart/rest_api/settings.cfg")
+#   vars = {
+#     rabbitmq_admin_port = var.service_port_map.rabbitmq_mgmt_service_cluster_rpc
+#     mozart_service_port = var.service_port_map.mozart_service
+#     mozart_es_port      = var.service_port_map.mozart_es
+#   }
+# }
 
 resource "kubernetes_config_map" "mozart-settings" {
   metadata {
     name      = "mozart-settings"
     namespace = kubernetes_namespace.unity-sps.metadata[0].name
   }
+  # data = {
+  #   "settings.cfg" = "${chomp(data.template_file.mozart-settings.rendered)}"
+  # }
   data = {
-    "settings.cfg" = "${chomp(data.template_file.mozart-settings.rendered)}"
+    "settings.cfg" = "${chomp(templatefile("${path.module}/../../hysds/mozart/rest_api/settings.cfg", {
+      rabbitmq_admin_port = var.service_port_map.rabbitmq_mgmt_service_cluster_rpc
+      mozart_service_port = var.service_port_map.mozart_service
+      mozart_es_port      = var.service_port_map.mozart_es
+    }))}"
   }
 }
 
-data "template_file" "grq2-settings" {
-  template = file("${path.module}/../../hysds/grq/rest_api/settings.cfg")
-  vars = {
-    mozart_es_port     = var.service_port_map.mozart_es
-    redis_service_port = var.service_port_map.redis_service
-    grq2_es_port       = var.service_port_map.grq2_es
-  }
-}
+# data "template_file" "grq2-settings" {
+#   template = file("${path.module}/../../hysds/grq/rest_api/settings.cfg")
+#   vars = {
+#     mozart_es_port     = var.service_port_map.mozart_es
+#     redis_service_port = var.service_port_map.redis_service
+#     grq2_es_port       = var.service_port_map.grq2_es
+#   }
+# }
 
 resource "kubernetes_config_map" "grq2-settings" {
   metadata {
     name      = "grq2-settings"
     namespace = kubernetes_namespace.unity-sps.metadata[0].name
   }
+  # data = {
+  #   "settings.cfg" = "${chomp(data.template_file.grq2-settings.rendered)}"
+  # }
   data = {
-    "settings.cfg" = "${chomp(data.template_file.grq2-settings.rendered)}"
-  }
+      "settings.cfg" = "${chomp(templatefile("${path.module}/../../hysds/grq/rest_api/settings.cfg", {
+        mozart_es_port     = var.service_port_map.mozart_es
+        redis_service_port = var.service_port_map.redis_service
+        grq2_es_port       = var.service_port_map.grq2_es
+      }))}"
 }
 
-data "template_file" "celeryconfig" {
-  template = file("${path.module}/../../hysds/configs/${var.celeryconfig_filename}")
-  vars = {
-    rabbitmq_service_port = var.service_port_map.rabbitmq_service_listener
-    redis_service_port    = var.service_port_map.redis_service
-    mozart_service_port   = var.service_port_map.mozart_service
-    mozart_es_port        = var.service_port_map.mozart_es
-    grq2_service_port     = var.service_port_map.grq2_service
-    grq2_es_port          = var.service_port_map.grq2_es
-  }
-}
+# data "template_file" "celeryconfig" {
+#   template = file("${path.module}/../../hysds/configs/${var.celeryconfig_filename}")
+#   vars = {
+#     rabbitmq_service_port = var.service_port_map.rabbitmq_service_listener
+#     redis_service_port    = var.service_port_map.redis_service
+#     mozart_service_port   = var.service_port_map.mozart_service
+#     mozart_es_port        = var.service_port_map.mozart_es
+#     grq2_service_port     = var.service_port_map.grq2_service
+#     grq2_es_port          = var.service_port_map.grq2_es
+#   }
+# }
 
 resource "kubernetes_config_map" "celeryconfig" {
   metadata {
     name      = "celeryconfig"
     namespace = kubernetes_namespace.unity-sps.metadata[0].name
   }
+  # data = {
+  #   "celeryconfig.py" = "${chomp(data.template_file.celeryconfig.rendered)}"
+  # }
   data = {
-    "celeryconfig.py" = "${chomp(data.template_file.celeryconfig.rendered)}"
+    "celeryconfig.py" = "${chomp("${chomp(templatefile("${path.module}/../../hysds/configs/${var.celeryconfig_filename}", {
+      rabbitmq_service_port = var.service_port_map.rabbitmq_service_listener
+      redis_service_port    = var.service_port_map.redis_service
+      mozart_service_port   = var.service_port_map.mozart_service
+      mozart_es_port        = var.service_port_map.mozart_es
+      grq2_service_port     = var.service_port_map.grq2_service
+      grq2_es_port          = var.service_port_map.grq2_es
+    }))}")}"
   }
 }
 
@@ -68,19 +91,19 @@ resource "kubernetes_config_map" "netrc" {
   }
 }
 
-data "template_file" "logstash-conf" {
-  template = file("${path.module}/../../hysds/mozart/logstash/logstash.conf")
-  vars = {
-    mozart_es_port = var.service_port_map.mozart_es
-  }
-}
+# data "template_file" "logstash-conf" {
+#   template = file("${path.module}/../../hysds/mozart/logstash/logstash.conf")
+#   vars = {
+#     mozart_es_port = var.service_port_map.mozart_es
+#   }
+# }
 
-data "template_file" "logstash-yml" {
-  template = file("${path.module}/../../hysds/mozart/logstash/logstash.yml")
-  vars = {
-    mozart_es_port = var.service_port_map.mozart_es
-  }
-}
+# data "template_file" "logstash-yml" {
+#   template = file("${path.module}/../../hysds/mozart/logstash/logstash.yml")
+#   vars = {
+#     mozart_es_port = var.service_port_map.mozart_es
+#   }
+# }
 
 resource "kubernetes_config_map" "logstash-configs" {
   metadata {
@@ -92,8 +115,14 @@ resource "kubernetes_config_map" "logstash-configs" {
     "event-status"  = "${file("${path.module}/../../hysds/mozart/logstash/event_status.template.json")}"
     "worker-status" = "${file("${path.module}/../../hysds/mozart/logstash/worker_status.template.json")}"
     "task-status"   = "${file("${path.module}/../../hysds/mozart/logstash/task_status.template.json")}"
-    "logstash-conf" = "${chomp(data.template_file.logstash-conf.rendered)}"
-    "logstash-yml"  = "${chomp(data.template_file.logstash-yml.rendered)}"
+    # "logstash-conf" = "${chomp(data.template_file.logstash-conf.rendered)}"
+    # "logstash-yml"  = "${chomp(data.template_file.logstash-yml.rendered)}"
+    "logstash-conf" = "${chomp(templatefile("${path.module}/../../hysds/mozart/logstash/logstash.conf", {
+      mozart_es_port = var.service_port_map.mozart_es
+    }))}"
+    "logstash-yml"  = "${chomp(templatefile("${path.module}/../../hysds/mozart/logstash/logstash.yml", {
+      mozart_es_port = var.service_port_map.mozart_es
+    }))}"
   }
 }
 
@@ -179,18 +208,18 @@ resource "kubernetes_config_map" "supervisord-orchestrator" {
 #   }
 # }
 
-resource "kubernetes_config_map" "datasets" {
-  metadata {
-    name      = "datasets"
-    namespace = kubernetes_namespace.unity-sps.metadata[0].name
-  }
-  # TODO - Using this template file is temporary. A more sophisticated method for generating
-  # custom config files will be added in the future. This could take the form of a Terraform
-  # resource that generates all the custom config files.
-  data = {
-    "datasets.json" = "${chomp(data.template_file.datasets.rendered)}"
-  }
-}
+# resource "kubernetes_config_map" "datasets" {
+#   metadata {
+#     name      = "datasets"
+#     namespace = kubernetes_namespace.unity-sps.metadata[0].name
+#   }
+#   # TODO - Using this template file is temporary. A more sophisticated method for generating
+#   # custom config files will be added in the future. This could take the form of a Terraform
+#   # resource that generates all the custom config files.
+#   data = {
+#     "datasets.json" = "${chomp(data.template_file.datasets.rendered)}"
+#   }
+# }
 
 resource "kubernetes_config_map" "supervisord-job-worker" {
   metadata {
