@@ -171,13 +171,13 @@ resource "kubernetes_config_map" "supervisord-orchestrator" {
   }
 }
 
-data "template_file" "datasets" {
-  template = file("${path.module}/../../hysds/configs/${var.datasets_filename}")
-  vars = {
-    minio_service_api_port       = var.service_port_map.minio_service_api
-    minio_service_interface_port = var.service_port_map.minio_service_interface
-  }
-}
+# data "template_file" "datasets" {
+#   template = file("${path.module}/../../hysds/configs/${var.datasets_filename}")
+#   vars = {
+#     minio_service_api_port       = var.service_port_map.minio_service_api
+#     minio_service_interface_port = var.service_port_map.minio_service_interface
+#   }
+# }
 
 resource "kubernetes_config_map" "datasets" {
   metadata {

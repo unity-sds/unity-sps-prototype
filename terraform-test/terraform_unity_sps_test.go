@@ -61,7 +61,7 @@ func TestTerraformUnity(t *testing.T) {
 	statusCode, _ = http_helper.HttpGet(t, ades_wpst_api_url, nil)
 	assert.Equal(t, statusCode, 200)
 
-	minio_url := fmt.Sprintf("http://%s:9001", loadBalancerHostnames["minio"])
-	statusCode, _ = http_helper.HttpGet(t, minio_url, nil)
-	assert.Equal(t, statusCode, 200)
+	// minio_url := fmt.Sprintf("http://%s:9001", loadBalancerHostnames["minio"])
+	// statusCode, _ = http_helper.HttpGet(t, minio_url, nil)
+	// assert.Equal(t, statusCode, 200)
 }
