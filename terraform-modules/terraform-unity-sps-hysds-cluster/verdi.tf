@@ -93,6 +93,10 @@ resource "kubernetes_deployment" "verdi" {
             name       = "tmp-dir"
             mount_path = "/tmp"
           }
+          volume_mount {
+            name       = "efs"
+            mount_path = "/efs"
+          }
         }
         container {
           name              = "verdi"
@@ -167,6 +171,10 @@ resource "kubernetes_deployment" "verdi" {
             name       = "tmp-dir"
             mount_path = "/tmp"
           }
+          volume_mount {
+            name       = "efs"
+            mount_path = "/efs"
+          }
         }
         # volume {
         #   name = "docker-sock"
@@ -229,6 +237,12 @@ resource "kubernetes_deployment" "verdi" {
         volume {
           name = "docker-graph-storage"
           empty_dir {}
+        }
+        volume {
+          name = "efs"
+          persistent_volume_claim {
+            claim_name = kubernetes_persistent_volume_claim.efs.metadata.0.name
+          }
         }
       }
     }
