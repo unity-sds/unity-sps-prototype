@@ -19,25 +19,25 @@ data "external" "eks_sg_id" {
 #   program = ["sh", "-c", "aws eks describe-cluster --name u-sps-dev-prototype-cluster | jq '.cluster.resourcesVpcConfig | {subnetIds: .subnetIds}'"]
 # }
 
-# resource "aws_security_group" "efs_sg" {
-#   name        = "sps-dev-efs-sg"
-#   description = "Allows inbound EFS traffic from SPS cluster"
-#   vpc_id      = data.external.eks_vpc_id.result["vpcId"]
+resource "aws_security_group" "efs_sg" {
+  name        = "sps-dev-efs-sg"
+  description = "Allows inbound EFS traffic from SPS cluster"
+  vpc_id      = data.external.eks_vpc_id.result["vpcId"]
 
-#   ingress {
-#     security_groups = [data.external.eks_sg_id.result["clusterSecurityGroupId"]]
-#     from_port       = 2049
-#     to_port         = 2049
-#     protocol        = "tcp"
-#   }
+  ingress {
+    security_groups = [data.external.eks_sg_id.result["clusterSecurityGroupId"]]
+    from_port       = 2049
+    to_port         = 2049
+    protocol        = "tcp"
+  }
 
-#   egress {
-#     security_groups = [data.external.eks_sg_id.result["clusterSecurityGroupId"]]
-#     from_port       = 0
-#     to_port         = 0
-#     protocol        = "-1"
-#   }
-# }
+  egress {
+    security_groups = [data.external.eks_sg_id.result["clusterSecurityGroupId"]]
+    from_port       = 0
+    to_port         = 0
+    protocol        = "-1"
+  }
+}
 
 resource "aws_efs_mount_target" "efs_mt" {
   file_system_id = aws_efs_file_system.efs.id
@@ -47,6 +47,15 @@ resource "aws_efs_mount_target" "efs_mt" {
   security_groups = [data.external.eks_sg_id.result["clusterSecurityGroupId"]]
 }
 
+resource "kubernetes_storage_class" "efs_storage_class" {
+  metadata {
+    name = "sps-efs"
+  }
+  storage_provisioner = "kubernetes.io/aws-efs"
+  reclaim_policy      = "Delete"
+  parameters          = {}
+}
+
 resource "kubernetes_persistent_volume" "efs" {
   metadata {
     name = "sps-dev-efs-fs"
@@ -54,7 +63,7 @@ resource "kubernetes_persistent_volume" "efs" {
 
   spec {
     access_modes       = ["ReadWriteMany"]
-    storage_class_name = "gp2-sps"
+    storage_class_name = kubernetes_storage_class.efs_storage_class.metadata.0.name
 
     capacity = {
       storage = "10Gi"
@@ -80,6 +89,8 @@ resource "kubernetes_persistent_volume_claim" "efs" {
 
   spec {
     access_modes = ["ReadWriteMany"]
+
+    storage_class_name = kubernetes_storage_class.efs_storage_class.metadata.0.name
 
     resources {
       requests = {
