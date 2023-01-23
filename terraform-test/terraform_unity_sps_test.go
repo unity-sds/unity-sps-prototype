@@ -19,7 +19,7 @@ func TestTerraformUnity(t *testing.T) {
 		TerraformDir: "../terraform-unity",
 
 		// Variables to pass to our Terraform code using -var-file options
-		VarFiles: []string{"terraform.tfvars"},
+		VarFiles: []string{"MCP_DEV.tfvars"},
 
 		// Disable colors in Terraform commands so its easier to parse stdout/stderr
 		NoColor: true,
