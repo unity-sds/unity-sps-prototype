@@ -42,9 +42,7 @@ locals {
     clusterHealthCheckParams = "wait_for_status=yellow&timeout=1s"
     replicas                 = 1
     service = {
-      type     = var.service_type
-      port     = var.service_port_map.mozart_es
-      nodePort = var.service_type != "NodePort" ? null : var.node_port_map.mozart_es
+      port = var.service_port_map.mozart_es
     }
     httpPort      = var.service_port_map.mozart_es
     transportPort = 9300
@@ -131,8 +129,7 @@ locals {
     clusterHealthCheckParams = "wait_for_status=yellow&timeout=1s"
     replicas                 = 1
     service = {
-      type     = var.service_type
-      nodePort = var.service_type != "NodePort" ? null : var.node_port_map.grq2_es
+      port = var.service_port_map.grq2_es
     }
     httpPort      = var.service_port_map.grq2_es
     transportPort = 9301

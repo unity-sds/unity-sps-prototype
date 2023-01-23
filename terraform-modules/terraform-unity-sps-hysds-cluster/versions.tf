@@ -1,5 +1,5 @@
 terraform {
-  required_version = ">= 1.1.8"
+  required_version = ">= 1.3.6"
   required_providers {
     kubernetes = {
       source  = "hashicorp/kubernetes"
@@ -11,15 +11,11 @@ terraform {
     }
     aws = {
       source  = "hashicorp/aws"
-      version = "4.23.0"
+      version = "4.51.0"
     }
     null = {
       source  = "hashicorp/null"
       version = "3.1.1"
-    }
-    template = {
-      source  = "hashicorp/template"
-      version = "2.2.0"
     }
   }
 }

@@ -151,11 +151,6 @@ resource "kubernetes_deployment" "verdi" {
           #   mount_path = "/tmp/data"
           #   read_only  = false
           # }
-          # A persistent volume storing static data
-          volume_mount {
-            name       = kubernetes_config_map.sounder-sips-static-data.metadata[0].name
-            mount_path = "/static-data"
-          }
           # Directory containing the Sounder Sips specific workflow
           # TODO: remove and make it part of the deployment phase
           volume_mount {
@@ -207,14 +202,6 @@ resource "kubernetes_deployment" "verdi" {
         volume {
           name = "docker-sock-dir"
           empty_dir {}
-        }
-        # TODO: replace with an independent persistent volume holding static data
-        # https://stackoverflow.com/questions/48150179/how-to-mount-entire-directory-in-kubernetes-using-configmap
-        volume {
-          name = kubernetes_config_map.sounder-sips-static-data.metadata[0].name
-          config_map {
-            name = kubernetes_config_map.sounder-sips-static-data.metadata[0].name
-          }
         }
         # TODO: remove and access the CWL workflow during the algorithm deployment
         volume {
