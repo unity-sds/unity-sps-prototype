@@ -23,9 +23,9 @@ module "unity-sps-hysds-cluster" {
   deployment_environment      = var.deployment_environment
   container_registry_server   = var.container_registry_server
   container_registry_username = var.container_registry_username
-  container_registry_pat      = var.container_registry_pat
+  container_registry_pat      = data.aws_ssm_parameter.ghcr_pat.value
   container_registry_owner    = var.container_registry_owner
-  uds_staging_bucket          = var.uds_staging_bucket
-  uds_client_id               = var.uds_client_id
-  uds_dapa_api                = var.uds_dapa_api
+  uds_staging_bucket          = data.aws_ssm_parameter.uds_staging_bucket.value
+  uds_client_id               = data.aws_ssm_parameter.uds_client_id.value
+  uds_dapa_api                = data.aws_ssm_parameter.uds_dapa_api.value
 }
