@@ -3,6 +3,12 @@ variable "project" {
   type        = string
 }
 
+variable "service_area" {
+  description = "The service area owner of the resources being deployed"
+  type        = string
+  default     = "sps"
+}
+
 variable "namespace" {
   description = "Namespace for the Unity SPS HySDS-related Kubernetes resources"
   type        = string
@@ -121,27 +127,7 @@ variable "container_registry_username" {
   type        = string
 }
 
-variable "container_registry_pat" {
-  description = "value"
-  type        = string
-}
-
 variable "container_registry_owner" {
-  description = "value"
-  type        = string
-}
-
-variable "uds_staging_bucket" {
-  description = "value"
-  type        = string
-}
-
-variable "uds_client_id" {
-  description = "value"
-  type        = string
-}
-
-variable "uds_dapa_api" {
   description = "value"
   type        = string
 }
