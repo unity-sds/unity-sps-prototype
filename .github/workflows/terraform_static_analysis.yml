@@ -160,7 +160,6 @@ jobs:
         name: Load TFLint Config
         with:
           source-repo: unity-sds/unity-sps-prototype
-          source-ref: 16-deploy-eks-mcp
           source-path: .github/config/.tflint.hcl
 
       - name: Setup TFLint
