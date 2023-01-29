@@ -94,8 +94,8 @@ resource "kubernetes_deployment" "verdi" {
             mount_path = "/tmp"
           }
           volume_mount {
-            name       = "efs"
-            mount_path = "/efs"
+            name       = "uads-development-efs"
+            mount_path = "/uads-development-efs"
           }
         }
         container {
@@ -172,8 +172,8 @@ resource "kubernetes_deployment" "verdi" {
             mount_path = "/tmp"
           }
           volume_mount {
-            name       = "efs"
-            mount_path = "/efs"
+            name       = "uads-development-efs"
+            mount_path = "/uads-development-efs"
           }
         }
         # volume {
@@ -239,9 +239,9 @@ resource "kubernetes_deployment" "verdi" {
           empty_dir {}
         }
         volume {
-          name = "efs"
+          name = "uads-development-efs"
           persistent_volume_claim {
-            claim_name = kubernetes_persistent_volume_claim.efs.metadata.0.name
+            claim_name = kubernetes_persistent_volume_claim.uads-development-efs.metadata.0.name
           }
         }
       }

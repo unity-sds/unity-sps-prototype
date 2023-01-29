@@ -3,6 +3,10 @@ provider "kubernetes" {
   insecure    = true
 }
 
+data "aws_eks_cluster" "sps-cluster" {
+  name = "u-sps-dev-prototype-cluster"
+}
+
 resource "kubernetes_namespace" "unity-sps" {
   metadata {
     name = var.namespace

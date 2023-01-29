@@ -131,3 +131,8 @@ variable "container_registry_owner" {
   description = "value"
   type        = string
 }
+
+variable "uads_development_efs_fsmt_id" {
+  type    = string
+  default = ""
+}

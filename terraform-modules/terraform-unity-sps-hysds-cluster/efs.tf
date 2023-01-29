@@ -1,88 +1,44 @@
-# resource "aws_efs_file_system" "efs" {
-#   creation_token   = "usps-dev-efs"
-#   performance_mode = "generalPurpose"
-
-#   tags = {
-#     Name = "sps-dev-efs-fs"
-#   }
-# }
-
-# data "external" "eks_vpc_id" {
-#   program = ["sh", "-c", "aws eks describe-cluster --name u-sps-dev-prototype-cluster | jq '.cluster.resourcesVpcConfig | {vpcId: .vpcId}'"]
-# }
-
-# data "external" "eks_sg_id" {
-#   program = ["sh", "-c", "aws eks describe-cluster --name u-sps-dev-prototype-cluster | jq '.cluster.resourcesVpcConfig | {clusterSecurityGroupId: .clusterSecurityGroupId}'"]
-# }
-
-# data "external" "eks_subnet_ids" {
-#   program = ["sh", "-c", "aws eks describe-cluster --name u-sps-dev-prototype-cluster | jq '.cluster.resourcesVpcConfig | {subnetIds: .subnetIds}'"]
-# }
-
-# resource "aws_security_group" "efs_sg" {
-#   name        = "sps-dev-efs-sg"
-#   description = "Allows inbound EFS traffic from SPS cluster"
-#   vpc_id      = data.external.eks_vpc_id.result["vpcId"]
-
-#   ingress {
-#     security_groups = [data.external.eks_sg_id.result["clusterSecurityGroupId"]]
-#     from_port       = 2049
-#     to_port         = 2049
-#     protocol        = "tcp"
-#   }
-
-#   egress {
-#     security_groups = [data.external.eks_sg_id.result["clusterSecurityGroupId"]]
-#     from_port       = 0
-#     to_port         = 0
-#     protocol        = "-1"
-#   }
-# }
+data "aws_efs_mount_target" "uads-development-efs-fsmt" {
+  mount_target_id = var.uads_development_efs_fsmt_id
+}
 
 resource "aws_security_group_rule" "efs_ingress" {
+  for_each                 = toset(data.aws_efs_mount_target.uads-development-efs-fsmt.security_groups)
   type                     = "ingress"
   from_port                = 2049
   to_port                  = 2049
   protocol                 = "tcp"
-  security_group_id        = "sg-0064f6c794ccf99ac"
-  source_security_group_id = "sg-0022ff4b177dd9855"
+  security_group_id        = each.key
+  source_security_group_id = data.aws_eks_cluster.sps-cluster.vpc_config[0].cluster_security_group_id
 
 }
 
 resource "aws_security_group_rule" "efs_egress" {
+  for_each                 = toset(data.aws_efs_mount_target.uads-development-efs-fsmt.security_groups)
   type                     = "egress"
   from_port                = 0
   to_port                  = 0
   protocol                 = "-1"
-  security_group_id        = "sg-0064f6c794ccf99ac"
-  source_security_group_id = "sg-0022ff4b177dd9855"
+  security_group_id        = each.key
+  source_security_group_id = data.aws_eks_cluster.sps-cluster.vpc_config[0].cluster_security_group_id
 }
-
-# resource "aws_efs_mount_target" "efs_mt" {
-#   #    file_system_id = aws_efs_file_system.efs.id
-#   file_system_id = "fs-028f90bcfdfa4d9ce"
-#   #   subnet_id      = "subnet-00db2965967acb6b1"
-#   subnet_id = "subnet-092597c48cfec3f04"
-#   #   security_groups = [aws_security_group.efs_sg.id]
-#   #   security_groups = [data.external.eks_sg_id.result["clusterSecurityGroupId"]]
-# }
 
 resource "kubernetes_storage_class" "efs_storage_class" {
   metadata {
-    name = "sps-efs"
+    name = "efs-sc"
   }
   storage_provisioner = "kubernetes.io/aws-efs"
   reclaim_policy      = "Delete"
   parameters          = {}
 }
 
-resource "kubernetes_persistent_volume" "efs" {
+resource "kubernetes_persistent_volume" "uads-development-efs" {
   depends_on = [
     aws_security_group_rule.efs_egress,
     aws_security_group_rule.efs_ingress
   ]
   metadata {
-    name = "sps-dev-efs-fs"
+    name = "uads-development-efs"
   }
 
   spec {
@@ -97,8 +53,7 @@ resource "kubernetes_persistent_volume" "efs" {
 
     persistent_volume_source {
       nfs {
-        # server    = aws_efs_mount_target.efs_mt.ip_address
-        server    = "10.52.9.55"
+        server    = data.aws_efs_mount_target.uads-development-efs-fsmt.ip_address
         path      = "/shared"
         read_only = false
       }
@@ -106,9 +61,9 @@ resource "kubernetes_persistent_volume" "efs" {
   }
 }
 
-resource "kubernetes_persistent_volume_claim" "efs" {
+resource "kubernetes_persistent_volume_claim" "uads-development-efs" {
   metadata {
-    name      = "sps-dev-efs-fs"
+    name      = "uads-development-efs"
     namespace = var.namespace
   }
 
@@ -122,6 +77,6 @@ resource "kubernetes_persistent_volume_claim" "efs" {
         storage = "10Gi"
       }
     }
-    volume_name = kubernetes_persistent_volume.efs.metadata.0.name
+    volume_name = kubernetes_persistent_volume.uads-development-efs.metadata.0.name
   }
 }

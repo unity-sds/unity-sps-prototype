@@ -160,3 +160,8 @@ variable "uds_dapa_api" {
   description = "value"
   type        = string
 }
+
+variable "uads_development_efs_fsmt_id" {
+  type    = string
+  default = ""
+}
