@@ -27,6 +27,7 @@ resource "kubernetes_deployment" "verdi" {
           # https://stackoverflow.com/questions/56155495/how-do-i-copy-a-kubernetes-configmap-to-a-write-enabled-area-of-a-pod
           args = [
             <<-EOT
+            chown -R 1000:1000 /uads-development-efs;
             chown -R 1000:1000 /tmp;
             cp -r /cwl-src/. /src;
             EOT
@@ -42,6 +43,10 @@ resource "kubernetes_deployment" "verdi" {
           volume_mount {
             name       = "src"
             mount_path = "/src"
+          }
+          volume_mount {
+            name       = "uads-development-efs"
+            mount_path = "/uads-development-efs"
           }
         }
         container {
