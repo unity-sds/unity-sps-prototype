@@ -69,6 +69,7 @@ resource "kubernetes_deployment" "verdi" {
           security_context {
             privileged = true
           }
+          args = ["--tls=false"]
           lifecycle {
             post_start {
               exec {

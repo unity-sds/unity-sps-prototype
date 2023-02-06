@@ -79,6 +79,7 @@ resource "kubernetes_deployment" "ades-wpst-api" {
           security_context {
             privileged = true
           }
+          args = ["--tls=false"]
           lifecycle {
             post_start {
               exec {

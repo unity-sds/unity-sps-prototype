@@ -64,7 +64,7 @@ resource "kubernetes_persistent_volume" "uads-development-efs" {
 resource "kubernetes_persistent_volume_claim" "uads-development-efs" {
   metadata {
     name      = "uads-development-efs"
-    namespace = var.namespace
+    namespace = kubernetes_namespace.unity-sps.metadata[0].name
   }
 
   spec {

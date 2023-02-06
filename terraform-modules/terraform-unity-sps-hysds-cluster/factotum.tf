@@ -63,6 +63,7 @@ resource "kubernetes_deployment" "factotum-job-worker" {
           security_context {
             privileged = true
           }
+          args = ["--tls=false"]
           lifecycle {
             post_start {
               exec {
