@@ -19,6 +19,16 @@ variable "venue" {
   type        = string
 }
 
+variable "region" {
+  description = "The AWS region"
+  type        = string
+  default     = "us-west-2"
+}
+
+variable "eks_cluster_name" {
+  type = string
+}
+
 variable "counter" {
   description = "value"
   type        = number

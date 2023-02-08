@@ -1,3 +1,7 @@
+variable "eks_cluster_name" {
+  type = string
+}
+
 variable "kubeconfig_filepath" {
   description = "Path to the kubeconfig file for the Kubernetes cluster"
   type        = string
@@ -18,6 +22,12 @@ variable "namespace" {
 variable "venue" {
   description = "The MCP venue in which the cluster will be deployed (dev, test, prod)"
   type        = string
+}
+
+variable "region" {
+  description = "The AWS region"
+  type        = string
+  default     = "us-west-2"
 }
 
 variable "counter" {

@@ -1,10 +1,10 @@
+data "aws_eks_cluster" "sps-cluster" {
+  name = var.eks_cluster_name
+}
+
 provider "kubernetes" {
   config_path = var.kubeconfig_filepath
   insecure    = true
-}
-
-data "aws_eks_cluster" "sps-cluster" {
-  name = "u-sps-dev-prototype-cluster"
 }
 
 resource "kubernetes_namespace" "unity-sps" {
@@ -21,5 +21,5 @@ provider "helm" {
 }
 
 provider "aws" {
-  region = "us-west-2"
+  region = var.region
 }

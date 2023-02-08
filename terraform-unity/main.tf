@@ -11,7 +11,9 @@ module "unity-sps-hysds-cluster" {
   project                      = var.project
   namespace                    = var.namespace
   venue                        = var.venue
+  region                       = var.region
   counter                      = var.counter
+  eks_cluster_name             = var.eks_cluster_name
   kubeconfig_filepath          = var.kubeconfig_filepath
   docker_images                = var.docker_images
   service_type                 = var.service_type
