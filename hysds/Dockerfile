@@ -8,7 +8,8 @@ USER ops
 WORKDIR /home/ops
 
 # check https://repo.anaconda.com/miniconda/ for miniconda version
-ARG VERSION="py39_4.10.3"
+# ARG VERSION="py39_4.10.3"
+ENV VERSION "py310_22.11.1-1"
 ENV PATH="/home/ops/miniconda3/bin:${PATH}"
 ARG PATH="/home/ops/miniconda3/bin:${PATH}"
 

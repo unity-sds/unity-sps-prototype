@@ -61,7 +61,6 @@ kubectl delete cm aws-credentials || true
 kubectl create cm aws-credentials --from-file ./configs/aws-credentials
 
 helm repo add elastic https://helm.elastic.co
-helm repo update
 
 if (($mozart == 1)); then
   kubectl delete cm mozart-settings || true
@@ -77,7 +76,7 @@ if (($mozart == 1)); then
     --from-file=logstash-yml=./mozart/logstash/logstash.yml
 
   helm repo add elastic https://helm.elastic.co
-  helm install --wait --timeout 150s mozart-es elastic/elasticsearch --version 7.9.3 -f ./mozart/elasticsearch/values-override.yml
+  helm install --wait --timeout 150s mozart-es elastic/elasticsearch --version 7 -f ./mozart/elasticsearch/values-override.yml
 
   mozart_es_template=$(curl -s https://raw.githubusercontent.com/hysds/mozart/develop/configs/es_template.json)
   for idx in "containers" "job_specs" "hysds_io"; do
@@ -110,7 +109,7 @@ if (($grq == 1)); then
   kubectl create cm grq2-settings --from-file ./grq/rest_api/settings.cfg
 
   helm repo add elastic https://helm.elastic.co
-  helm install --wait --timeout 150s grq-es elastic/elasticsearch --version 7.9.3 -f ./grq/elasticsearch/values-override.yml
+  helm install --wait --timeout 150s grq-es elastic/elasticsearch --version 7 -f ./grq/elasticsearch/values-override.yml
 
   grq_es_template=$(curl -s https://raw.githubusercontent.com/hysds/grq2/develop/config/es_template.json)
   template=$(echo ${grq_es_template} | sed 's/{{ prefix }}/grq/;s/{{ alias }}/grq/')
