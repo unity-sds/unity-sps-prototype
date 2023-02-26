@@ -1,42 +1,43 @@
-variable "project" {
-  description = "The project or mission deploying Unity SPS"
-  type        = string
-}
-
-variable "service_area" {
-  description = "The service area owner of the resources being deployed"
-  type        = string
-  default     = "sps"
-}
-
-variable "namespace" {
-  description = "Namespace for the Unity SPS HySDS-related Kubernetes resources"
-  type        = string
-}
-
-variable "venue" {
-  description = "The MCP venue in which the cluster will be deployed (dev, test, prod)"
-  type        = string
-}
-
 variable "region" {
-  description = "The AWS region"
+  description = "The AWS region."
   type        = string
   default     = "us-west-2"
 }
 
 variable "eks_cluster_name" {
-  type = string
-}
-
-variable "counter" {
-  description = "value"
-  type        = number
+  description = "The name of the EKS cluster."
+  type        = string
 }
 
 variable "kubeconfig_filepath" {
   description = "Path to the kubeconfig file for the Kubernetes cluster"
   type        = string
+}
+
+variable "namespace" {
+  description = "Namespace for the Unity SPS HySDS-related Kubernetes resources."
+  type        = string
+}
+
+variable "project" {
+  description = "The project or mission deploying Unity SPS."
+  type        = string
+}
+
+variable "venue" {
+  description = "The MCP venue in which the cluster will be deployed (dev, test, prod)."
+  type        = string
+}
+
+variable "service_area" {
+  description = "The service area owner of the resources being deployed."
+  type        = string
+  default     = "sps"
+}
+
+variable "counter" {
+  description = "value"
+  type        = number
 }
 
 variable "docker_images" {
@@ -66,7 +67,7 @@ variable "mozart_es" {
   })
   default = {
     volume_claim_template = {
-      storage_class_name = "gp2-sps"
+      storage_class_name = "gp2"
     }
   }
 }
@@ -96,19 +97,6 @@ variable "service_port_map" {
   }
 }
 
-variable "node_port_map" {
-  description = "value"
-  type        = map(number)
-  default = {
-    "mozart_service"        = 30001
-    "grq2_service"          = 30002
-    "hysds_ui_service"      = 30009
-    "ades_wpst_api_service" = 30011
-    "grq2_es"               = 30012
-    "mozart_es"             = 30013
-  }
-}
-
 variable "datasets_filename" {
   description = "value"
   type        = string
@@ -119,12 +107,6 @@ variable "celeryconfig_filename" {
   description = "value"
   type        = string
   default     = "celeryconfig_remote.py"
-}
-
-variable "deployment_environment" {
-  description = "value"
-  type        = string
-  default     = "mcp"
 }
 
 variable "container_registry_server" {
@@ -145,4 +127,9 @@ variable "container_registry_owner" {
 variable "uads_development_efs_fsmt_id" {
   type    = string
   default = ""
+}
+
+variable "unity_instance" {
+  description = "Name of the Unity instance where deploying"
+  type        = string
 }

@@ -26,7 +26,6 @@ $ terraform-docs tfvars hcl . --output-file "terraform.tfvars"
 celeryconfig_filename  = "celeryconfig_remote.py"
 counter                = ""
 datasets_filename      = "datasets.remote.template.json"
-deployment_environment = "mcp"
 docker_images = {
   "ades_wpst_api": "ghcr.io/unity-sds/unity-sps-prototype/ades-wpst-api:unity-v0.0.1",
   "busybox": "k8s.gcr.io/busybox",
@@ -45,7 +44,7 @@ docker_images = {
 kubeconfig_filepath = ""
 mozart_es = {
   "volume_claim_template": {
-    "storage_class_name": "gp2-sps"
+    "storage_class_name": "gp2"
   }
 }
 namespace = ""

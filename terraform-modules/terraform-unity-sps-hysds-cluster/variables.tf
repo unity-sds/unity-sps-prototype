@@ -1,3 +1,9 @@
+variable "region" {
+  description = "The AWS region"
+  type        = string
+  default     = "us-west-2"
+}
+
 variable "eks_cluster_name" {
   type = string
 }
@@ -7,16 +13,16 @@ variable "kubeconfig_filepath" {
   type        = string
 }
 
-variable "project" {
-  description = "The project or mission deploying Unity SPS"
-  type        = string
-  default     = "unity"
-}
-
 variable "namespace" {
   description = "Namespace for the Unity SPS HySDS-related Kubernetes resources"
   type        = string
   default     = "unity-sps"
+}
+
+variable "project" {
+  description = "The project or mission deploying Unity SPS"
+  type        = string
+  default     = "unity"
 }
 
 variable "venue" {
@@ -24,10 +30,10 @@ variable "venue" {
   type        = string
 }
 
-variable "region" {
-  description = "The AWS region"
+variable "service_area" {
+  description = "The service area owner of the resources being deployed"
   type        = string
-  default     = "us-west-2"
+  default     = "sps"
 }
 
 variable "counter" {
@@ -62,7 +68,7 @@ variable "mozart_es" {
   })
   default = {
     volume_claim_template = {
-      storage_class_name = "gp2-sps"
+      storage_class_name = "gp2"
     }
   }
 }
@@ -76,7 +82,7 @@ variable "grq2_es" {
   })
   default = {
     volume_claim_template = {
-      storage_class_name = "gp2-sps"
+      storage_class_name = "gp2"
     }
   }
 }
@@ -105,19 +111,6 @@ variable "service_port_map" {
   }
 }
 
-variable "node_port_map" {
-  description = "value"
-  type        = map(number)
-  default = {
-    "mozart_service"        = 30001
-    "grq2_service"          = 30002
-    "hysds_ui_service"      = 30009
-    "ades_wpst_api_service" = 30011
-    "grq2_es"               = 30012
-    "mozart_es"             = 30013
-  }
-}
-
 variable "datasets_filename" {
   description = "value"
   type        = string
@@ -128,12 +121,6 @@ variable "celeryconfig_filename" {
   description = "value"
   type        = string
   default     = "celeryconfig_remote.py"
-}
-
-variable "deployment_environment" {
-  description = "value"
-  type        = string
-  default     = "mcp"
 }
 
 variable "container_registry_server" {
@@ -172,6 +159,10 @@ variable "uds_dapa_api" {
 }
 
 variable "uads_development_efs_fsmt_id" {
-  type    = string
-  default = ""
+  type = string
+}
+
+variable "unity_instance" {
+  description = "Name of the Unity instance where deploying"
+  type        = string
 }

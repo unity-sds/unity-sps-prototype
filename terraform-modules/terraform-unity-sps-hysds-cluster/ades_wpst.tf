@@ -1,3 +1,36 @@
+resource "kubernetes_persistent_volume" "ades-wpst-sqlite-pv" {
+  metadata {
+    name = "ades-wpst-sqlite-pv"
+  }
+
+  spec {
+    storage_class_name = kubernetes_storage_class.efs_storage_class.metadata.0.name
+    access_modes       = ["ReadWriteMany"]
+    capacity = {
+      storage = "20Gi"
+    }
+
+    persistent_volume_reclaim_policy = "Delete"
+
+    # persistent_volume_source {
+    #   nfs {
+    #     server    = aws_efs_mount_target.hysds_efs_mt.ip_address
+    #     path      = "/flask_ades_wpst/sqlite"
+    #     read_only = false
+    #   }
+    # }
+
+    persistent_volume_source {
+      host_path {
+        path = "/flask_ades_wpst/sqlite"
+      }
+    }
+    # Link to the corresponding PVC using the volume_name
+    # claim_ref {
+    #   name = "ades-wpst-sqlite-pvc"
+    # }
+  }
+}
 
 resource "kubernetes_persistent_volume_claim" "ades-wpst-sqlite-pv-claim" {
   metadata {
@@ -7,15 +40,60 @@ resource "kubernetes_persistent_volume_claim" "ades-wpst-sqlite-pv-claim" {
       app = "ades-wpst-sqlite-storage-claim"
     }
   }
+
   spec {
-    access_modes = ["ReadWriteOnce"]
+    storage_class_name = kubernetes_storage_class.efs_storage_class.metadata.0.name
+    access_modes       = ["ReadWriteMany"]
     resources {
       requests = {
         storage = "20Gi"
       }
     }
+    volume_name = kubernetes_persistent_volume.ades-wpst-sqlite-pv.metadata.0.name
   }
 }
+
+
+# resource "kubernetes_persistent_volume_claim" "ades-wpst-sqlite-pv-claim" {
+#   metadata {
+#     name      = "ades-wpst-sqlite-pv-claim"
+#     namespace = kubernetes_namespace.unity-sps.metadata[0].name
+#     labels = {
+#       app = "ades-wpst-sqlite-storage-claim"
+#     }
+#   }
+#   spec {
+#     storage_class_name = "${var.project}-${var.venue}-${var.service_area}-efs-sc"
+#     access_modes       = ["ReadWriteOnce"]
+#     resources {
+#       requests = {
+#         storage = "20Gi"
+#       }
+#     }
+#     volume_name = kubernetes_persistent_volume.ades-wpst-sqlite-pv.metadata.0.name
+#   }
+# }
+
+# resource "kubernetes_persistent_volume" "ades-wpst-sqlite-pv" {
+#   metadata {
+#     name = "ades-wpst-sqlite-pv"
+#     labels = {
+#       pv-name = "ades-wpst-sqlite-pv"
+#     }
+#   }
+#   spec {
+#     storage_class_name = "gp2"
+#     access_modes       = ["ReadWriteOnce"]
+#     capacity = {
+#       storage = "20Gi"
+#     }
+#     persistent_volume_source {
+#       host_path {
+#         path = "/flask_ades_wpst/sqlite"
+#       }
+#     }
+#   }
+# }
 
 
 resource "kubernetes_service" "ades-wpst-api-service" {
@@ -27,13 +105,11 @@ resource "kubernetes_service" "ades-wpst-api-service" {
     selector = {
       app = "ades-wpst-api"
     }
-    session_affinity = var.deployment_environment != "local" ? null : "ClientIP"
-    type             = var.service_type
+    type = var.service_type
     port {
       protocol    = "TCP"
       port        = var.service_port_map.ades_wpst_api_service
       target_port = 5000
-      node_port   = var.service_type != "NodePort" ? null : var.node_port_map.ades_wpst_api_service
     }
   }
 }
@@ -157,13 +233,23 @@ resource "kubernetes_deployment" "ades-wpst-api" {
             mount_path = "/var/run"
             sub_path   = "docker.sock"
           }
+          # volume_mount {
+          #   name       = "uads-development-efs"
+          #   mount_path = "/uads-development-efs"
+          # }
         }
         volume {
           name = "sqlite-db"
           persistent_volume_claim {
-            claim_name = kubernetes_persistent_volume_claim.ades-wpst-sqlite-pv-claim.metadata[0].name
+            claim_name = kubernetes_persistent_volume_claim.ades-wpst-sqlite-pv-claim.metadata.0.name
           }
         }
+        # volume {
+        #   name = "uads-development-efs"
+        #   persistent_volume_claim {
+        #     claim_name = kubernetes_persistent_volume_claim.uads-development-efs.metadata.0.name
+        #   }
+        # }
         # Shared direcrtory holding the Docker socket
         volume {
           name = "docker-sock-dir"

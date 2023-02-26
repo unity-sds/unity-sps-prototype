@@ -18,11 +18,9 @@ module "unity-sps-hysds-cluster" {
   docker_images                = var.docker_images
   service_type                 = var.service_type
   service_port_map             = var.service_port_map
-  node_port_map                = var.node_port_map
   mozart_es                    = var.mozart_es
   celeryconfig_filename        = var.celeryconfig_filename
   datasets_filename            = var.datasets_filename
-  deployment_environment       = var.deployment_environment
   container_registry_server    = var.container_registry_server
   container_registry_username  = var.container_registry_username
   container_registry_pat       = data.aws_ssm_parameter.ghcr_pat.value
@@ -31,4 +29,5 @@ module "unity-sps-hysds-cluster" {
   uds_client_id                = data.aws_ssm_parameter.uds_client_id.value
   uds_dapa_api                 = data.aws_ssm_parameter.uds_dapa_api.value
   uads_development_efs_fsmt_id = var.uads_development_efs_fsmt_id
+  unity_instance               = var.unity_instance
 }
