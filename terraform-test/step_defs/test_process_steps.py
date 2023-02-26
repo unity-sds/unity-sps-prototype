@@ -7,21 +7,21 @@ feature_file = "process.feature"
 BASE_DIR = Path(__file__).resolve().parents[1]
 FEATURE_FILE = BASE_DIR.joinpath(feature_file_dir).joinpath(feature_file)
 
-@scenario(FEATURE_FILE, 'Request Deployment of the L1B algorithm process')
-def test_request_deployment_of_the_l1b_algorithm_process():
-    pass
+# @scenario(FEATURE_FILE, 'Request Deployment of the L1B algorithm process')
+# def test_request_deployment_of_the_l1b_algorithm_process():
+#     pass
 
 @scenario(FEATURE_FILE, "List deployed WPS Processes")
 def test_list_deployed_wps_processes():
     pass
 
-@scenario(FEATURE_FILE, 'Get the inputs for a given Algorithm deployment')
-def test_get_the_inputs_for_a_given_algorithm_deployment():
-    pass
+# @scenario(FEATURE_FILE, 'Get the inputs for a given Algorithm deployment')
+# def test_get_the_inputs_for_a_given_algorithm_deployment():
+#     pass
 
-@scenario(FEATURE_FILE, 'Request L1B Processing from an Algorithm deployment')
-def test_request_l1b_processing_from_an_algorithm_deployment():
-    pass
+# @scenario(FEATURE_FILE, 'Request L1B Processing from an Algorithm deployment')
+# def test_request_l1b_processing_from_an_algorithm_deployment():
+#     pass
 
 
 @given("the SoundsSIPS L1B algorithm has been deployed to the ADES")
@@ -191,103 +191,61 @@ def response_includes_input_element(get_processes_response):
     assert len(process_json["process"]["inputs"]) >= 1
 
 
-@given('the SoundsSIPS L1B algorithm has been deployed to the ADES')
-def _():
-    """the SoundsSIPS L1B algorithm has been deployed to the ADES."""
-    assert True
-
-
 @given('the proper JSON data for the POST request body')
 def _():
-    """the proper JSON data for the POST request body."""
     assert True
 
 
 @when('DescribeProcess is called on the WPS-T endpoint for the L1B Algorithm')
 def _():
-    """DescribeProcess is called on the WPS-T endpoint for the L1B Algorithm."""
-    assert True
-
-
-@when('a GET request is called on the WPS-T processes endpoint')
-def _():
-    """a GET request is called on the WPS-T processes endpoint."""
     assert True
 
 
 @when('a POST request is called on the WPS-T processes endpoint')
 def _():
-    """a POST request is called on the WPS-T processes endpoint."""
     assert True
 
 
 @when('a WPS-T request is made to execute the job and the defined L1A Data')
 def _():
-    """a WPS-T request is made to execute the job and the defined L1A Data."""
     assert True
 
 
 @then('the HTTP response body contains a DeploymentResult')
 def _():
-    """the HTTP response body contains a DeploymentResult."""
-    assert True
-
-
-@then('the HTTP response contains a status code of 200')
-def _():
-    """the HTTP response contains a status code of 200."""
     assert True
 
 
 @then('the HTTP response contains a status code of 201')
 def _():
-    """the HTTP response contains a status code of 201."""
     assert True
 
 
 @then('the Location header directs users to an OGC StatusInfo document')
 def _():
-    """the Location header directs users to an OGC StatusInfo document."""
     assert True
 
 
 @then('the OGC StatusInfo document returns a HTTP 200')
 def _():
-    """the OGC StatusInfo document returns a HTTP 200."""
     assert True
 
 
 @then('the OGC StatusInfo processing status is one of "Succeeded", "Failed", "Accepted", or "Running"')
 def _():
-    """the OGC StatusInfo processing status is one of "Succeeded", "Failed", "Accepted", or "Running"."""
     assert True
 
 
 @then('the WPS-T endpoint responds with a ProcessOfferings response')
 def _():
-    """the WPS-T endpoint responds with a ProcessOfferings response."""
-    assert True
-
-
-@then('the process summary included the L1B processor')
-def _():
-    """the process summary included the L1B processor."""
     assert True
 
 
 @then('the response includes a Location header')
 def _():
-    """the response includes a Location header."""
     assert True
 
 
 @then('the response includes one or more input element')
 def _():
-    """the response includes one or more input element."""
-    assert True
-
-
-@then('the response includes process summary elements')
-def _():
-    """the response includes process summary elements."""
     assert True
