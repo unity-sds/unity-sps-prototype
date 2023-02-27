@@ -31,14 +31,11 @@ def undeploy_processes(process_service_endpoint):
     response_json = get_processes_response.json()
     processes = response_json["processes"]
 
-    l1b_deployed = False
     for process in processes:
-        if "l1b_pge_cwl" in process["title"]:
-            l1b_deployed = True
-            break
-
-    if l1b_deployed:
-        url = urljoin(process_service_endpoint, "/processes/l1b-cwl:develop")
+        url = urljoin(
+            process_service_endpoint,
+            f"/processes/{process['id']}:{process['processVersion']}",
+        )
         undeploy_process_response = requests.delete(url)
         undeploy_process_response.raise_for_status()
 
