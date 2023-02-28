@@ -50,7 +50,7 @@ def process_summary_processor(response):
     l1b_processor_present = False
     process_json = response.json()["processes"]
     for process in process_json:
-        if "l1b_pge_cwl" in process["title"]:
+        if "l1b-cwl" in process["id"]:
             if l1b_processor_present:
                 raise ValueError("Duplicate process title")
             else:

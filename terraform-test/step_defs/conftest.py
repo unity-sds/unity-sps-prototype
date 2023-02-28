@@ -80,7 +80,7 @@ def l1b_deployed(process_service_endpoint, deploy_post_request_body):
 
     l1b_deployed = False
     for process in processes:
-        if "l1b_pge_cwl" in process["title"]:
+        if "l1b-cwl" in process["id"]:
             l1b_deployed = True
             break
 

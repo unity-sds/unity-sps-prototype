@@ -35,7 +35,7 @@ def l1b_process_no_longer_deployed(process_service_endpoint):
     l1b_process_deployed = False
     process_json = response.json()["processes"]
     for process in process_json:
-        if "l1b_pge_cwl" in process["title"]:
+        if "l1b-cwl" in process["id"]:
             l1b_process_deployed = True
             break
     assert not l1b_process_deployed

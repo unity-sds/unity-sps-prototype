@@ -27,7 +27,7 @@ def l1b_process_is_undeployed(process_service_endpoint):
 
     l1b_deployed = False
     for process in processes:
-        if "l1b_pge_cwl" in process["title"]:
+        if "l1b-cwl" in process["id"]:
             l1b_deployed = True
             break
 

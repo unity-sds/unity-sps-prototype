@@ -1,10 +1,10 @@
-name: Smoke Test
+name: U-SPS Smoke Test
 
 on:
   workflow_dispatch:
     inputs:
       PROCESS_SERVICE_ENDPOINT:
-        description: "Base URL for the Process service endpoint"
+        description: "Base URL for the WPS-T API endpoint (i.e. http://abc.def.ghi:port-number)"
         type: string
 
 jobs:
