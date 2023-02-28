@@ -18,10 +18,10 @@ jobs:
         with:
           python-version: "3.10"
       - name: Install dependencies
-        working-directory: ${{ github.workspace }}/terraform-test
+        working-directory: ${{ github.workspace }}/unity-test
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt --use-pep517
       - name: Run the smoke test
-        working-directory: ${{ github.workspace }}/terraform-test/step_defs
+        working-directory: ${{ github.workspace }}/unity-test/step_defs
         run: pytest --process-service-endpoint=${{ github.event.inputs.PROCESS_SERVICE_ENDPOINT }}
