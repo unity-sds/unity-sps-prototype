@@ -42,6 +42,7 @@ locals {
     clusterHealthCheckParams = "wait_for_status=yellow&timeout=1s"
     replicas                 = 1
     service = {
+      type = var.service_type
       port = var.service_port_map.mozart_es
     }
     httpPort      = var.service_port_map.mozart_es
@@ -129,6 +130,7 @@ locals {
     clusterHealthCheckParams = "wait_for_status=yellow&timeout=1s"
     replicas                 = 1
     service = {
+      type = var.service_type
       port = var.service_port_map.grq2_es
     }
     httpPort      = var.service_port_map.grq2_es
