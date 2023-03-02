@@ -75,6 +75,7 @@ variable "service_port_map" {
     "hysds_ui_service"                  = 3000
     "redis_service"                     = 6379
     "ades_wpst_api_service"             = 5001
+    "sps_api_service"                   = 5002
     "grq2_es"                           = 9201
     "mozart_es"                         = 9200
   }
@@ -90,6 +91,7 @@ variable "node_port_map" {
     "ades_wpst_api_service" = 30011
     "grq2_es"               = 30012
     "mozart_es"             = 30013
+    "sps_api_service"       = 30014
   }
 }
 

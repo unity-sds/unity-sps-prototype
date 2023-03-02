@@ -11,7 +11,7 @@ resource "kubernetes_service" "sps-api-service" {
     type             = var.service_type
     port {
       protocol    = "TCP"
-      port        = var.service_port_map.sps_api_api_service
+      port        = var.service_port_map.sps_api_service
       target_port = 80
       node_port   = var.service_type != "NodePort" ? null : var.node_port_map.sps_api_api_service
     }
