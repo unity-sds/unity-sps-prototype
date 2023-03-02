@@ -87,6 +87,7 @@ locals {
     clusterHealthCheckParams = "wait_for_status=yellow&timeout=1s"
     replicas                 = 1
     service = {
+      type = var.service_type
       port = var.service_port_map.mozart_es
     }
     httpPort      = var.service_port_map.mozart_es
@@ -175,6 +176,7 @@ locals {
     clusterHealthCheckParams = "wait_for_status=yellow&timeout=1s"
     replicas                 = 1
     service = {
+      type = var.service_type
       port = var.service_port_map.grq2_es
     }
     httpPort      = var.service_port_map.grq2_es
@@ -241,4 +243,18 @@ resource "helm_release" "grq2-es" {
   values = [
     yamlencode(local.grq2_es_values)
   ]
+}
+
+data "kubernetes_service" "grq-es" {
+  metadata {
+    namespace = kubernetes_namespace.unity-sps.metadata[0].name
+    name      = jsondecode(helm_release.grq2-es.metadata[0].values).masterService
+  }
+}
+
+data "kubernetes_service" "mozart-es" {
+  metadata {
+    namespace = kubernetes_namespace.unity-sps.metadata[0].name
+    name      = jsondecode(helm_release.mozart-es.metadata[0].values).masterService
+  }
 }

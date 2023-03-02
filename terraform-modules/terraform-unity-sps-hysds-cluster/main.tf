@@ -19,3 +19,11 @@ provider "helm" {
 provider "aws" {
   region = "us-west-2"
 }
+
+# resource "random_id" "counter" {
+#   byte_length = 2
+# }
+
+# locals {
+#   counter = var.counter != "" ? var.counter : random_id.counter.hex
+# }
