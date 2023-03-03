@@ -43,8 +43,8 @@ def proper_json_data_post_request_body(deploy_post_request_body):
     "a POST request is called on the WPS-T processes endpoint",
     target_fixture="response",
 )
-def post_processes(sps_api_service_endpoint, deploy_post_request_body):
-    url = urljoin(sps_api_service_endpoint, "processes")
+def post_processes(process_service_endpoint, deploy_post_request_body):
+    url = urljoin(process_service_endpoint, "processes")
     deploy_process_response = requests.post(url, json=deploy_post_request_body)
     deploy_process_response.raise_for_status()
     return deploy_process_response

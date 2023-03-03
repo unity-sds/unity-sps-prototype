@@ -22,8 +22,8 @@ def proper_json_data_post_request_body(start_prewarm_post_request_body):
     "a POST request is called on the SPS API prewarm endpoint",
     target_fixture="response",
 )
-def post_processes(prewarm_service_endpoint, start_prewarm_post_request_body):
-    url = urljoin(prewarm_service_endpoint, "sps/prewarm")
+def post_processes(sps_api_service_endpoint, start_prewarm_post_request_body):
+    url = urljoin(sps_api_service_endpoint, "sps/prewarm")
     start_prewarm_response = requests.post(url, json=start_prewarm_post_request_body)
     start_prewarm_response.raise_for_status()
     return start_prewarm_response
