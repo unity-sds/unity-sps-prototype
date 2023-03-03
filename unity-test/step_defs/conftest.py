@@ -58,6 +58,13 @@ def deploy_post_request_body():
         data = json.load(f)
     return data
 
+@pytest.fixture
+def start_prewarm_post_request_body():
+    data_file_path = DATA_DIR.joinpath("start_prewarm_post_request_body.json")
+
+    with open(data_file_path) as f:
+        data = json.load(f)
+    return data
 
 @pytest.fixture
 def execution_post_request_body():
@@ -67,6 +74,18 @@ def execution_post_request_body():
         data = json.load(f)
     return data
 
+
+@given("the prewarm request has been created", target_fixture="request_id")
+def prewarm_request_has_been_created(start_prewarm_post_request_body):
+    url = urljoin(process_service_endpoint, "sps/prewarm")
+    start_prewarm_response = requests.post(url, json=start_prewarm_post_request_body)
+    start_prewarm_response.raise_for_status()
+    return start_prewarm_response.json()["request_id"]
+
+@then("the HTTP response body contains a request id")
+def response_contains_request_id(response):
+    response_json = response.json()
+    assert "request_id" in response_json
 
 @given("the SoundsSIPS L1B algorithm has been deployed to the ADES")
 def l1b_deployed(process_service_endpoint, deploy_post_request_body):
@@ -92,10 +111,13 @@ def l1b_deployed(process_service_endpoint, deploy_post_request_body):
     assert l1b_deployed
 
 
+@then("the HTTP response contains a successful status code")
+def success_response(response):
+    assert response.status_code <= 399
+
 @then("the HTTP response contains a status code of 200")
 def ok_response(response):
     assert response.status_code == 200
-
 
 @then("the HTTP response contains a status code of 201")
 def created_response(response):
