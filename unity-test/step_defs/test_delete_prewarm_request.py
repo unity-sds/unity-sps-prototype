@@ -4,13 +4,15 @@ from urllib.parse import urljoin
 
 from .conftest import FEATURES_DIR
 
-feature_file = "get_prewarm_request_status.feature"
+feature_file = "delete_prewarm_request.feature"
 FEATURE_FILE = FEATURES_DIR.joinpath(feature_file)
 
 
 @scenario(
-    FEATURE_FILE, "Request the status of an SPS prewarm request"
+    FEATURE_FILE, "Delete an SPS prewarm request"
 )
+def test_delete_prewarm_request():
+    pass
 
 @when(
     "a DELETE request is called on the SPS API prewarm request endpoint",

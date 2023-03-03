@@ -11,6 +11,8 @@ FEATURE_FILE = FEATURES_DIR.joinpath(feature_file)
 @scenario(
     FEATURE_FILE, "Request the status of an SPS prewarm request"
 )
+def test_get_prewarm_status_request():
+    pass
 
 @when(
     "a GET request is called on the SPS API prewarm request endpoint",

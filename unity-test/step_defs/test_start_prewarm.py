@@ -11,6 +11,8 @@ FEATURE_FILE = FEATURES_DIR.joinpath(feature_file)
 @scenario(
     FEATURE_FILE, "Request SPS to start a prewarming of backend resources"
 )
+def test_start_prewarm():
+    pass
 
 @given("the proper JSON data for the POST request body")
 def proper_json_data_post_request_body(start_prewarm_post_request_body):
