@@ -85,8 +85,8 @@ def execution_post_request_body():
 
 
 @given("the prewarm request has been created", target_fixture="request_id")
-def prewarm_request_has_been_created(start_prewarm_post_request_body):
-    url = urljoin(process_service_endpoint, "sps/prewarm")
+def prewarm_request_has_been_created(sps_api_service_endpoint, start_prewarm_post_request_body):
+    url = urljoin(sps_api_service_endpoint, "sps/prewarm")
     start_prewarm_response = requests.post(url, json=start_prewarm_post_request_body)
     start_prewarm_response.raise_for_status()
     return start_prewarm_response.json()["request_id"]
