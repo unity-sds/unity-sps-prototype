@@ -16,8 +16,8 @@ FEATURE_FILE = FEATURES_DIR.joinpath(feature_file)
     "a DELETE request is called on the SPS API prewarm request endpoint",
     target_fixture="response",
 )
-def delete_prewarm_request(prewarm_service_endpoint, request_id):
-    url = urljoin(prewarm_service_endpoint, f"sps/prewarm/{request_id}")
+def delete_prewarm_request(sps_api_service_endpoint, request_id):
+    url = urljoin(sps_api_service_endpoint, f"sps/prewarm/{request_id}")
     delete_prewarm_request_response = requests.delete(url)
     delete_prewarm_request_response.raise_for_status()
     return delete_prewarm_request_response

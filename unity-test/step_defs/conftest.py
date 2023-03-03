@@ -16,11 +16,20 @@ def pytest_addoption(parser):
         action="store",
         help="Base URL for the Process service endpoint",
     )
+    parser.addoption(
+        "--sps-api-service-endpoint",
+        action="store",
+        help="Base URL for the SPS API service endpoint",
+    )
 
 
 @pytest.fixture
 def process_service_endpoint(request):
     return request.config.getoption("--process-service-endpoint")
+
+@pytest.fixture
+def sps_api_service_endpoint(request):
+    return request.config.getoption("--sps-api-service-endpoint")
 
 
 def undeploy_processes(process_service_endpoint):
