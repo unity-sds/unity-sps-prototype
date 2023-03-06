@@ -168,6 +168,10 @@ resource "kubernetes_deployment" "verdi" {
             name       = "tmp-dir"
             mount_path = "/tmp"
           }
+          volume_mount {
+            name       = kubernetes_config_map.sounder-sips-static-data.metadata[0].name
+            mount_path = "/tmp/SOUNDER_SIPS/STATIC_DATA"
+          }
         }
         # volume {
         #   name = "docker-sock"
@@ -230,6 +234,12 @@ resource "kubernetes_deployment" "verdi" {
         volume {
           name = "docker-graph-storage"
           empty_dir {}
+        }
+        volume {
+          name = kubernetes_config_map.sounder-sips-static-data.metadata[0].name
+          config_map {
+            name = kubernetes_config_map.sounder-sips-static-data.metadata[0].name
+          }
         }
       }
     }

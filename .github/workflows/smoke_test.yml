@@ -6,11 +6,20 @@ on:
       PROCESS_SERVICE_ENDPOINT:
         description: "Base URL for the WPS-T API endpoint (i.e. http://abc.def.ghi:port-number)"
         type: string
-
+      SOUNDER_SIPS_PGE_SELECTION:
+        description: "The Sounder SIPS PGEs to test (L1A, L1B)"
+        default: ".*"
+        required: false
+        type: string
 jobs:
+  print_inputs:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          echo "Base URL for the WPS-T API endpoint (i.e. http://abc.def.ghi:port-number): ${{ github.event.inputs.PROCESS_SERVICE_ENDPOINT }}"
+          echo "The Sounder SIPS PGEs to test (L1A, L1B): ${{ github.event.inputs.SOUNDER_SIPS_PGE_SELECTION }}"
   smoke_test:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v3
       - name: Setup Python
@@ -24,4 +33,4 @@ jobs:
           pip install -r requirements.txt --use-pep517
       - name: Run the smoke test
         working-directory: ${{ github.workspace }}/unity-test/step_defs
-        run: pytest --process-service-endpoint=${{ github.event.inputs.PROCESS_SERVICE_ENDPOINT }}
+        run: pytest --process-service-endpoint=${{ github.event.inputs.PROCESS_SERVICE_ENDPOINT }} --sounder-sips-pge-selection=${{ github.event.inputs.SOUNDER_SIPS_PGE_SELECTION }}
