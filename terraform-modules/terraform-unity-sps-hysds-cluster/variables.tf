@@ -5,7 +5,8 @@ variable "region" {
 }
 
 variable "eks_cluster_name" {
-  type = string
+  description = "value"
+  type        = string
 }
 
 variable "kubeconfig_filepath" {
@@ -70,20 +71,6 @@ variable "mozart_es" {
   default = {
     volume_claim_template = {
       storage_class_name = "gp2"
-    }
-  }
-}
-
-variable "grq2_es" {
-  description = "value"
-  type = object({
-    volume_claim_template = object({
-      storage_class_name = string
-    })
-  })
-  default = {
-    volume_claim_template = {
-      storage_class_name = "gp2-sps"
     }
   }
 }
@@ -167,5 +154,6 @@ variable "uds_dapa_api" {
 }
 
 variable "uads_development_efs_fsmt_id" {
-  type = string
+  description = "value"
+  type        = string
 }

@@ -89,7 +89,7 @@ locals {
     ]
     # Request smaller persistent volumes.
     volumeClaimTemplate = {
-      volumeName       = kubernetes_persistent_volume.mozart-es-pv.metadata.0.name
+      volumeName       = kubernetes_persistent_volume.mozart-es-pv.metadata[0].name
       accessModes      = ["ReadWriteOnce"]
       storageClassName = "gp2"
       resources = {
@@ -196,7 +196,7 @@ locals {
 
     # Request smaller persistent volumes.
     volumeClaimTemplate = {
-      volumeName       = kubernetes_persistent_volume.grq-es-pv.metadata.0.name
+      volumeName       = kubernetes_persistent_volume.grq-es-pv.metadata[0].name
       accessModes      = ["ReadWriteOnce"]
       storageClassName = "gp2"
       resources = {

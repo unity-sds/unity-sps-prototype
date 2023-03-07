@@ -42,7 +42,7 @@ resource "kubernetes_persistent_volume" "uads-development-efs" {
 
   spec {
     access_modes       = ["ReadWriteMany"]
-    storage_class_name = kubernetes_storage_class.efs_storage_class.metadata.0.name
+    storage_class_name = kubernetes_storage_class.efs_storage_class.metadata[0].name
 
     capacity = {
       storage = "10Gi"
@@ -69,13 +69,13 @@ resource "kubernetes_persistent_volume_claim" "uads-development-efs" {
   spec {
     access_modes = ["ReadWriteMany"]
 
-    storage_class_name = kubernetes_storage_class.efs_storage_class.metadata.0.name
+    storage_class_name = kubernetes_storage_class.efs_storage_class.metadata[0].name
 
     resources {
       requests = {
         storage = "10Gi"
       }
     }
-    volume_name = kubernetes_persistent_volume.uads-development-efs.metadata.0.name
+    volume_name = kubernetes_persistent_volume.uads-development-efs.metadata[0].name
   }
 }

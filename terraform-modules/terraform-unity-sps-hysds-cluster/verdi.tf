@@ -243,7 +243,7 @@ resource "kubernetes_deployment" "verdi" {
         volume {
           name = "uads-development-efs"
           persistent_volume_claim {
-            claim_name = kubernetes_persistent_volume_claim.uads-development-efs.metadata.0.name
+            claim_name = kubernetes_persistent_volume_claim.uads-development-efs.metadata[0].name
           }
         }
       }

@@ -37,7 +37,7 @@ resource "kubernetes_persistent_volume_claim" "ades-wpst-sqlite-pv-claim" {
         storage = "20Gi"
       }
     }
-    volume_name = kubernetes_persistent_volume.ades-wpst-sqlite-pv.metadata.0.name
+    volume_name = kubernetes_persistent_volume.ades-wpst-sqlite-pv.metadata[0].name
   }
 }
 

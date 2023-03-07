@@ -17,7 +17,6 @@ module "unity-sps-hysds-cluster" {
   docker_images                = var.docker_images
   service_type                 = var.service_type
   service_port_map             = var.service_port_map
-  mozart_es                    = var.mozart_es
   celeryconfig_filename        = var.celeryconfig_filename
   datasets_filename            = var.datasets_filename
   deployment_environment       = var.deployment_environment
