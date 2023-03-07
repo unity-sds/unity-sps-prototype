@@ -61,20 +61,6 @@ variable "docker_images" {
   }
 }
 
-variable "mozart_es" {
-  description = "value"
-  type = object({
-    volume_claim_template = object({
-      storage_class_name = string
-    })
-  })
-  default = {
-    volume_claim_template = {
-      storage_class_name = "gp2"
-    }
-  }
-}
-
 variable "service_type" {
   description = "value"
   type        = string
