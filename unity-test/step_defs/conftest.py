@@ -24,11 +24,21 @@ def pytest_addoption(parser):
         help="The Sounder SIPS processes to test (L1A, L1B)",
         required=True,
     )
+    parser.addoption(
+        "--sps-api-service-endpoint",
+        action="store",
+        help="Base URL for the SPS API service endpoint",
+    )
 
 
 @pytest.fixture(scope="module", autouse=True)
 def process_service_endpoint(request):
     return request.config.getoption("--process-service-endpoint")
+
+
+@pytest.fixture
+def sps_api_service_endpoint(request):
+    return request.config.getoption("--sps-api-service-endpoint")
 
 
 @pytest.fixture
@@ -93,6 +103,31 @@ def pytest_sessionfinish(session, exitstatus):
     _undeploy_all_processes(process_service_endpoint)
 
 
+@pytest.fixture
+def start_prewarm_post_request_body():
+    project_name = "on_demand"
+    request_body = reader.request_body(
+        project_name, "", reader.deploy_post_request_body
+    )
+    return request_body
+
+
+@given("the prewarm request has been created", target_fixture="request_id")
+def prewarm_request_has_been_created(
+    sps_api_service_endpoint, start_prewarm_post_request_body
+):
+    url = urljoin(sps_api_service_endpoint, "sps/prewarm")
+    start_prewarm_response = requests.post(url, json=start_prewarm_post_request_body)
+    start_prewarm_response.raise_for_status()
+    return start_prewarm_response.json()["request_id"]
+
+
+@then("the HTTP response body contains a request id")
+def response_contains_request_id(response):
+    response_json = response.json()
+    assert "request_id" in response_json
+
+
 def _is_process_deployed(process_service_endpoint, process_name):
     deployed = False
     url = urljoin(process_service_endpoint, "processes")
@@ -142,6 +177,11 @@ def ensure_process_has_been_deployed(
 
     project_process_dict = dict(project_name=project_name, process_name=process_name)
     return project_process_dict
+
+
+@then("the HTTP response contains a successful status code")
+def success_response(response):
+    assert response.status_code <= 399
 
 
 @then("the HTTP response contains a status code of 200")

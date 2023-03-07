@@ -8,6 +8,7 @@ class JsonReader:
         self.projects = "projects.json"
         self.deploy_post_request_body = "deploy_post_request_body.json"
         self.execution_post_request_body = "execution_post_request_body.json"
+        self.start_prewarm_post_request_body = "start_prewarm_post_request_body.json"
 
     def request_body(self, project_name, process_name, request_body_filename):
         data_file_path = self.data_dir.joinpath(

@@ -11,6 +11,10 @@ on:
         default: ".*"
         required: false
         type: string
+      SPS_API_SERVICE_ENDPOINT:
+        description: "Base URL for the SPS API endpoint (i.e. http://abc.def.ghi:port-number)"
+        type: string
+
 jobs:
   print_inputs:
     runs-on: ubuntu-latest
@@ -33,4 +37,4 @@ jobs:
           pip install -r requirements.txt --use-pep517
       - name: Run the smoke test
         working-directory: ${{ github.workspace }}/unity-test/step_defs
-        run: pytest -rs --process-service-endpoint=${{ github.event.inputs.PROCESS_SERVICE_ENDPOINT }} --sounder-sips-process-selection=${{ github.event.inputs.SOUNDER_SIPS_PROCESS_SELECTION }}
+        run: pytest -rs --process-service-endpoint=${{ github.event.inputs.PROCESS_SERVICE_ENDPOINT }} --sps-api-service-endpoint=${{ github.event.inputs.SPS_API_SERVICE_ENDPOINT }} --sounder-sips-process-selection=${{ github.event.inputs.SOUNDER_SIPS_PROCESS_SELECTION }}
