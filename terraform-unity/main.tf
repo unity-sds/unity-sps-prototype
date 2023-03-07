@@ -11,6 +11,7 @@ module "unity-sps-hysds-cluster" {
   project                      = var.project
   namespace                    = var.namespace
   venue                        = var.venue
+  region                       = var.region
   counter                      = var.counter
   kubeconfig_filepath          = var.kubeconfig_filepath
   docker_images                = var.docker_images
