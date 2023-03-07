@@ -114,8 +114,9 @@ variable "container_registry_owner" {
 }
 
 variable "uads_development_efs_fsmt_id" {
-  type    = string
-  default = ""
+  description = "value"
+  type        = string
+  default     = ""
 }
 
 variable "eks_cluster_name" {
