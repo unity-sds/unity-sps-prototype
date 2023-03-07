@@ -1,3 +1,47 @@
+resource "kubernetes_persistent_volume" "mozart-es-pv" {
+  metadata {
+    name = "mozart-es-pv"
+  }
+
+  spec {
+    storage_class_name = "gp2"
+    access_modes       = ["ReadWriteOnce"]
+    capacity = {
+      storage = "5Gi"
+    }
+
+    persistent_volume_reclaim_policy = "Delete"
+
+    persistent_volume_source {
+      host_path {
+        path = "/data/mozart-es"
+      }
+    }
+  }
+}
+
+resource "kubernetes_persistent_volume" "grq-es-pv" {
+  metadata {
+    name = "grq-es-pv"
+  }
+
+  spec {
+    storage_class_name = "gp2"
+    access_modes       = ["ReadWriteOnce"]
+    capacity = {
+      storage = "5Gi"
+    }
+
+    persistent_volume_reclaim_policy = "Delete"
+
+    persistent_volume_source {
+      host_path {
+        path = "/data/grq-es"
+      }
+    }
+  }
+}
+
 locals {
   mozart_es_values = {
     clusterName = "mozart-es"
@@ -26,10 +70,28 @@ locals {
         memory = "1Gi"
       }
     }
+    extraInitContainers = [
+      {
+        name    = "file-permissions"
+        image   = var.docker_images.busybox
+        command = ["chown", "-R", "1000:1000", "/usr/share/elasticsearch/"]
+        volumeMounts = [
+          {
+            mountPath = "/usr/share/elasticsearch/data"
+            name      = "mozart-es-master"
+          }
+        ]
+        securityContext = {
+          privileged = true
+          runAsUser  = 0
+        }
+      }
+    ]
     # Request smaller persistent volumes.
     volumeClaimTemplate = {
+      volumeName       = kubernetes_persistent_volume.mozart-es-pv.metadata.0.name
       accessModes      = ["ReadWriteOnce"]
-      storageClassName = var.mozart_es.volume_claim_template.storage_class_name
+      storageClassName = "gp2"
       resources = {
         requests = {
           storage = "5Gi"
@@ -113,10 +175,29 @@ locals {
         memory = "1Gi"
       }
     }
+    extraInitContainers = [
+      {
+        name    = "file-permissions"
+        image   = var.docker_images.busybox
+        command = ["chown", "-R", "1000:1000", "/usr/share/elasticsearch/"]
+        volumeMounts = [
+          {
+            mountPath = "/usr/share/elasticsearch/data"
+            name      = "grq-es-master"
+          }
+        ]
+        securityContext = {
+          privileged = true
+          runAsUser  = 0
+        }
+      }
+    ]
+
     # Request smaller persistent volumes.
     volumeClaimTemplate = {
+      volumeName       = kubernetes_persistent_volume.grq-es-pv.metadata.0.name
       accessModes      = ["ReadWriteOnce"]
-      storageClassName = var.grq2_es.volume_claim_template.storage_class_name
+      storageClassName = "gp2"
       resources = {
         requests = {
           storage = "5Gi"

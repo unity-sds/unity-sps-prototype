@@ -1,3 +1,24 @@
+resource "kubernetes_persistent_volume" "ades-wpst-sqlite-pv" {
+  metadata {
+    name = "ades-wpst-sqlite-pv"
+  }
+
+  spec {
+    storage_class_name = "gp2"
+    access_modes       = ["ReadWriteOnce"]
+    capacity = {
+      storage = "20Gi"
+    }
+
+    persistent_volume_reclaim_policy = "Delete"
+
+    persistent_volume_source {
+      host_path {
+        path = "/flask_ades_wpst/sqlite"
+      }
+    }
+  }
+}
 
 resource "kubernetes_persistent_volume_claim" "ades-wpst-sqlite-pv-claim" {
   metadata {
@@ -7,16 +28,18 @@ resource "kubernetes_persistent_volume_claim" "ades-wpst-sqlite-pv-claim" {
       app = "ades-wpst-sqlite-storage-claim"
     }
   }
+
   spec {
-    access_modes = ["ReadWriteOnce"]
+    storage_class_name = "gp2"
+    access_modes       = ["ReadWriteOnce"]
     resources {
       requests = {
         storage = "20Gi"
       }
     }
+    volume_name = kubernetes_persistent_volume.ades-wpst-sqlite-pv.metadata.0.name
   }
 }
-
 
 resource "kubernetes_service" "ades-wpst-api-service" {
   metadata {
