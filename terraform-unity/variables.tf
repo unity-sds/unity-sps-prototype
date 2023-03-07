@@ -87,19 +87,6 @@ variable "service_port_map" {
   }
 }
 
-variable "node_port_map" {
-  description = "value"
-  type        = map(number)
-  default = {
-    "mozart_service"        = 30001
-    "grq2_service"          = 30002
-    "hysds_ui_service"      = 30009
-    "ades_wpst_api_service" = 30011
-    "grq2_es"               = 30012
-    "mozart_es"             = 30013
-    "sps_api_service"       = 30014
-  }
-}
 
 variable "datasets_filename" {
   description = "value"
@@ -131,5 +118,15 @@ variable "container_registry_username" {
 
 variable "container_registry_owner" {
   description = "value"
+  type        = string
+}
+
+variable "uads_development_efs_fsmt_id" {
+  type    = string
+  default = ""
+}
+
+variable "eks_cluster_name" {
+  description = "The name of the EKS cluster."
   type        = string
 }

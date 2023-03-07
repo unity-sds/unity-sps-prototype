@@ -1,3 +1,13 @@
+variable "region" {
+  description = "The AWS region"
+  type        = string
+  default     = "us-west-2"
+}
+
+variable "eks_cluster_name" {
+  type = string
+}
+
 variable "kubeconfig_filepath" {
   description = "Path to the kubeconfig file for the Kubernetes cluster"
   type        = string
@@ -18,6 +28,12 @@ variable "namespace" {
 variable "venue" {
   description = "The MCP venue in which the cluster will be deployed (dev, test, prod)"
   type        = string
+}
+
+variable "service_area" {
+  description = "The service area owner of the resources being deployed"
+  type        = string
+  default     = "sps"
 }
 
 variable "counter" {
@@ -53,7 +69,7 @@ variable "mozart_es" {
   })
   default = {
     volume_claim_template = {
-      storage_class_name = "gp2-sps"
+      storage_class_name = "gp2"
     }
   }
 }
@@ -94,20 +110,6 @@ variable "service_port_map" {
     "sps_api_service"                   = 5002
     "grq2_es"                           = 9201
     "mozart_es"                         = 9200
-  }
-}
-
-variable "node_port_map" {
-  description = "value"
-  type        = map(number)
-  default = {
-    "mozart_service"        = 30001
-    "grq2_service"          = 30002
-    "hysds_ui_service"      = 30009
-    "ades_wpst_api_service" = 30011
-    "grq2_es"               = 30012
-    "mozart_es"             = 30013
-    "sps_api_service"       = 30014
   }
 }
 
@@ -162,4 +164,8 @@ variable "uds_client_id" {
 variable "uds_dapa_api" {
   description = "value"
   type        = string
+}
+
+variable "uads_development_efs_fsmt_id" {
+  type = string
 }

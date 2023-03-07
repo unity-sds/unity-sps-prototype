@@ -27,6 +27,7 @@ resource "kubernetes_deployment" "verdi" {
           # https://stackoverflow.com/questions/56155495/how-do-i-copy-a-kubernetes-configmap-to-a-write-enabled-area-of-a-pod
           args = [
             <<-EOT
+            chown -R 1000:1000 /home/ops/hysds/uads-development-efs;
             chown -R 1000:1000 /tmp;
             cp -r /cwl-src/. /src;
             EOT
@@ -42,6 +43,10 @@ resource "kubernetes_deployment" "verdi" {
           volume_mount {
             name       = "src"
             mount_path = "/src"
+          }
+          volume_mount {
+            name       = "uads-development-efs"
+            mount_path = "/home/ops/hysds/uads-development-efs"
           }
         }
         container {
@@ -147,6 +152,10 @@ resource "kubernetes_deployment" "verdi" {
             sub_path   = "supervisord.conf"
             read_only  = false
           }
+          volume_mount {
+            name       = "uads-development-efs"
+            mount_path = "/home/ops/hysds/uads-development-efs"
+          }
           # volume_mount {
           #   name       = "data-work"
           #   mount_path = "/tmp/data"
@@ -167,10 +176,6 @@ resource "kubernetes_deployment" "verdi" {
           volume_mount {
             name       = "tmp-dir"
             mount_path = "/tmp"
-          }
-          volume_mount {
-            name       = kubernetes_config_map.sounder-sips-static-data.metadata[0].name
-            mount_path = "/tmp/SOUNDER_SIPS/STATIC_DATA"
           }
         }
         # volume {
@@ -236,9 +241,9 @@ resource "kubernetes_deployment" "verdi" {
           empty_dir {}
         }
         volume {
-          name = kubernetes_config_map.sounder-sips-static-data.metadata[0].name
-          config_map {
-            name = kubernetes_config_map.sounder-sips-static-data.metadata[0].name
+          name = "uads-development-efs"
+          persistent_volume_claim {
+            claim_name = kubernetes_persistent_volume_claim.uads-development-efs.metadata.0.name
           }
         }
       }

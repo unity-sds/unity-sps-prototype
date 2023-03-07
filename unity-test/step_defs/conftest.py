@@ -107,7 +107,7 @@ def pytest_sessionfinish(session, exitstatus):
 def start_prewarm_post_request_body():
     project_name = "on_demand"
     request_body = reader.request_body(
-        project_name, "", reader.deploy_post_request_body
+        project_name, "", reader.start_prewarm_post_request_body
     )
     return request_body
 
