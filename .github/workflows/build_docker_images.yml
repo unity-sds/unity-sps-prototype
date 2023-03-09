@@ -15,7 +15,7 @@ env:
   ADES_WPST_API_DEPLOY_IMAGE_NAME: ${{ github.repository }}/ades-wpst-api-deploy
   ADES_WPST_API_FORK_IMAGE_NAME: ${{ github.repository }}/ades-wpst-api-fork
   SPS_API_IMAGE_NAME: ${{ github.repository }}/sps-api
-  SPS_HYSDS_PGE_BASE_IMAGE: ${{ githuib.repository }}/sps-hysds-pge-base
+  SPS_HYSDS_PGE_BASE_IMAGE_NAME: ${{ github.repository }}/sps-hysds-pge-base
 
 on: workflow_dispatch
 
