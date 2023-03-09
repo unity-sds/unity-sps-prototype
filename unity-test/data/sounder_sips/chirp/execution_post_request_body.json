@@ -1,0 +1,32 @@
+{
+  "mode": "async",
+  "response": "document",
+  "inputs": [
+    {
+      "id": "input_cmr_collection_name",
+      "data": "my_input_coll"
+    },
+    {
+      "id": "input_cmr_search_start_time",
+      "data": "2023-01-01"
+    },
+    {
+      "id": "input_cmr_search_stop_time",
+      "data": "2023-01-31"
+    },
+    {
+      "id": "input_cmr_edl_user",
+      "data": "abc"
+    },
+    {
+      "id": "input_cmr_edl_pass",
+      "data": "def"
+    }
+  ],
+  "outputs": [
+    {
+      "id": "output",
+      "transmissionMode": "reference"
+    }
+  ]
+}

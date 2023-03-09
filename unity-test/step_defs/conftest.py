@@ -26,7 +26,7 @@ def pytest_addoption(parser):
     parser.addoption(
         "--sounder-sips-process-selection",
         action="store",
-        help="The Sounder SIPS processes to test (L1A, L1B)",
+        help="The Sounder SIPS processes to test (L1A, L1B, chirp)",
         required=True,
     )
 

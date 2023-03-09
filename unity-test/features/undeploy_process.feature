@@ -6,6 +6,7 @@ Feature: Undeploy an OGC Process
         And the algorithm is no longer contained in the list of deployed processes
 
         Examples:
-        | project_name | process_name |
-        | sounder_sips |  L1A   |
-        | sounder_sips |  L1B   |
+        | project_name | process_name     |
+        | sounder_sips |  L1A             |
+        | sounder_sips |  L1B             |
+        | sounder_sips |  chirp |

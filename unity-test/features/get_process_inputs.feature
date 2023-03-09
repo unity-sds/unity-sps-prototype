@@ -7,6 +7,7 @@ Feature: Get the inputs for an OGC process
         And the response includes one or more input element
 
         Examples:
-        | project_name | process_name |
-        | sounder_sips |  L1A   |
-        | sounder_sips |  L1B   |
+        | project_name | process_name     |
+        | sounder_sips |  L1A             |
+        | sounder_sips |  L1B             |
+        | sounder_sips |  chirp |

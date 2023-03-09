@@ -9,6 +9,7 @@ Feature: The Processes Execute Successfully
         Then the processing status ultimately ends in the "succeeded" state
 
         Examples:
-        | project_name | process_name |
-        | sounder_sips |  L1A   |
-        | sounder_sips |  L1B   |
+        | project_name | process_name     |
+        | sounder_sips |  L1A             |
+        | sounder_sips |  L1B             |
+        | sounder_sips |  chirp |
