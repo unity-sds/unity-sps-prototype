@@ -18,7 +18,7 @@
       "id": "static_dir",
       "data": {
         "class": "Directory",
-        "path": "/home/ops/hysds/uads-development-efs/sounder_sips/static_files/"
+        "path": "/tmp/SOUNDER_SIPS/STATIC_DATA"
       }
     },
     {

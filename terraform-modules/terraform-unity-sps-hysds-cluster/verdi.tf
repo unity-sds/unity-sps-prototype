@@ -27,8 +27,8 @@ resource "kubernetes_deployment" "verdi" {
           # https://stackoverflow.com/questions/56155495/how-do-i-copy-a-kubernetes-configmap-to-a-write-enabled-area-of-a-pod
           args = [
             <<-EOT
-            chown -R 1000:1000 /home/ops/hysds/uads-development-efs;
             chown -R 1000:1000 /tmp;
+            chown -R 1000:1000 /tmp/SOUNDER_SIPS/STATIC_DATA;
             cp -r /cwl-src/. /src;
             EOT
           ]
@@ -46,7 +46,8 @@ resource "kubernetes_deployment" "verdi" {
           }
           volume_mount {
             name       = "uads-development-efs"
-            mount_path = "/home/ops/hysds/uads-development-efs"
+            mount_path = "/tmp/SOUNDER_SIPS/STATIC_DATA"
+            sub_path   = "sounder_sips/static_files"
           }
         }
         container {
@@ -98,6 +99,11 @@ resource "kubernetes_deployment" "verdi" {
           volume_mount {
             name       = "tmp-dir"
             mount_path = "/tmp"
+          }
+          volume_mount {
+            name       = "uads-development-efs"
+            mount_path = "/tmp/SOUNDER_SIPS/STATIC_DATA"
+            sub_path   = "sounder_sips/static_files"
           }
         }
         container {
@@ -154,7 +160,8 @@ resource "kubernetes_deployment" "verdi" {
           }
           volume_mount {
             name       = "uads-development-efs"
-            mount_path = "/home/ops/hysds/uads-development-efs"
+            mount_path = "/tmp/SOUNDER_SIPS/STATIC_DATA"
+            sub_path   = "sounder_sips/static_files"
           }
           # volume_mount {
           #   name       = "data-work"

@@ -19,15 +19,15 @@ def pytest_addoption(parser):
         required=True,
     )
     parser.addoption(
+        "--sps-api-service-endpoint",
+        action="store",
+        help="Base URL for the SPS API service endpoint",
+    )
+    parser.addoption(
         "--sounder-sips-process-selection",
         action="store",
         help="The Sounder SIPS processes to test (L1A, L1B)",
         required=True,
-    )
-    parser.addoption(
-        "--sps-api-service-endpoint",
-        action="store",
-        help="Base URL for the SPS API service endpoint",
     )
 
 
