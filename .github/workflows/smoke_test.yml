@@ -21,7 +21,7 @@ jobs:
     steps:
       - run: |
           echo "Base URL for the WPS-T API endpoint (i.e. http://abc.def.ghi:port-number): ${{ github.event.inputs.PROCESS_SERVICE_ENDPOINT }}"
-          echo "The Sounder SIPS PGEs to test (L1A, L1B): ${{ github.event.inputs.SOUNDER_SIPS_PROCESS_SELECTION }}"
+          echo "The Sounder SIPS PGEs to test (L1A, L1B, chirp): ${{ github.event.inputs.SOUNDER_SIPS_PROCESS_SELECTION }}"
   smoke_test:
     runs-on: ubuntu-latest
     steps:
