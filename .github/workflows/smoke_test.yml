@@ -6,13 +6,13 @@ on:
       PROCESS_SERVICE_ENDPOINT:
         description: "Base URL for the WPS-T API endpoint (i.e. http://abc.def.ghi:port-number)"
         type: string
+      SPS_API_SERVICE_ENDPOINT:
+        description: "Base URL for the SPS API endpoint (i.e. http://abc.def.ghi:port-number)"
+        type: string
       SOUNDER_SIPS_PROCESS_SELECTION:
         description: "The Sounder SIPS process to test (L1A, L1B)"
         default: ".*"
         required: false
-        type: string
-      SPS_API_SERVICE_ENDPOINT:
-        description: "Base URL for the SPS API endpoint (i.e. http://abc.def.ghi:port-number)"
         type: string
 
 jobs:
