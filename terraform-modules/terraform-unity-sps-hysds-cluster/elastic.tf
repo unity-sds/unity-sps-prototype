@@ -70,6 +70,23 @@ locals {
         memory = "1Gi"
       }
     }
+    extraInitContainers = [
+      {
+        name    = "file-permissions"
+        image   = var.docker_images.busybox
+        command = ["chown", "-R", "1000:1000", "/usr/share/elasticsearch/"]
+        volumeMounts = [
+          {
+            mountPath = "/usr/share/elasticsearch/data"
+            name      = "mozart-es-master"
+          }
+        ]
+        securityContext = {
+          privileged = true
+          runAsUser  = 0
+        }
+      }
+    ]
     # Request smaller persistent volumes.
     volumeClaimTemplate = {
       volumeName       = kubernetes_persistent_volume.mozart-es-pv.metadata.0.name
@@ -159,6 +176,24 @@ locals {
         memory = "1Gi"
       }
     }
+    extraInitContainers = [
+      {
+        name    = "file-permissions"
+        image   = var.docker_images.busybox
+        command = ["chown", "-R", "1000:1000", "/usr/share/elasticsearch/"]
+        volumeMounts = [
+          {
+            mountPath = "/usr/share/elasticsearch/data"
+            name      = "grq-es-master"
+          }
+        ]
+        securityContext = {
+          privileged = true
+          runAsUser  = 0
+        }
+      }
+    ]
+
     # Request smaller persistent volumes.
     volumeClaimTemplate = {
       volumeName       = kubernetes_persistent_volume.grq-es-pv.metadata.0.name

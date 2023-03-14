@@ -34,6 +34,7 @@ variable "docker_images" {
     hysds_verdi    = "ghcr.io/unity-sds/unity-sps-prototype/hysds-verdi:unity-v0.0.1"
     hysds_factotum = "ghcr.io/unity-sds/unity-sps-prototype/hysds-factotum:unity-v0.0.1"
     ades_wpst_api  = "ghcr.io/unity-sds/unity-sps-prototype/ades-wpst-api:unity-v0.0.1"
+    sps_api        = "ghcr.io/unity-sds/unity-sps-prototype/sps-api:unity-v0.0.1"
     logstash       = "docker.elastic.co/logstash/logstash:7.10.2"
     rabbitmq       = "rabbitmq:3-management"
     busybox        = "k8s.gcr.io/busybox"
@@ -75,6 +76,7 @@ variable "service_port_map" {
     "hysds_ui_service"                  = 3000
     "redis_service"                     = 6379
     "ades_wpst_api_service"             = 5001
+    "sps_api_service"                   = 5002
     "grq2_es"                           = 9201
     "mozart_es"                         = 9200
   }
@@ -90,6 +92,7 @@ variable "node_port_map" {
     "ades_wpst_api_service" = 30011
     "grq2_es"               = 30012
     "mozart_es"             = 30013
+    "sps_api_service"       = 30014
   }
 }
 
