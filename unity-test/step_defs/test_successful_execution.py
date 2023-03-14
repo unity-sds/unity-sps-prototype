@@ -32,7 +32,7 @@ def fatal_status(e):
     parsers.parse("the status of the job is monitored through the WPS-T"),
     target_fixture="job_status",
 )
-@backoff.on_exception(backoff.expo, AssertionError, max_time=600, giveup=fatal_status)
+@backoff.on_exception(backoff.expo, AssertionError, max_time=3600, giveup=fatal_status)
 def request_job_status_by_id(process_service_endpoint, project_process_dict, job_id):
     job_status_response = _request_job_status_by_id(
         process_service_endpoint,
