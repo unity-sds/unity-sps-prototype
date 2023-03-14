@@ -39,7 +39,8 @@ jobs:
       - name: Run the smoke test
         working-directory: ${{ github.workspace }}/unity-test/step_defs
         run: >
-          pytest -rs
+          pytest -s
           --process-service-endpoint=${{ github.event.inputs.PROCESS_SERVICE_ENDPOINT || vars.PROCESS_SERVICE_ENDPOINT }}
           --sps-api-service-endpoint=${{ github.event.inputs.SPS_API_SERVICE_ENDPOINT || vars.SPS_API_SERVICE_ENDPOINT }}
           --sounder-sips-process-selection=${{ github.event.inputs.SOUNDER_SIPS_PROCESS_SELECTION || vars.SOUNDER_SIPS_PROCESS_SELECTION }}
+          -rs
