@@ -144,3 +144,9 @@ variable "uads_development_efs_fsmt_id" {
   description = "value"
   type        = string
 }
+
+
+variable "elb_subnet" {
+  description = "value"
+  type        = string
+}

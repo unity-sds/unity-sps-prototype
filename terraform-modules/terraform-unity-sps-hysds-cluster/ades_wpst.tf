@@ -45,6 +45,9 @@ resource "kubernetes_service" "ades-wpst-api-service" {
   metadata {
     name      = "ades-wpst-api"
     namespace = kubernetes_namespace.unity-sps.metadata[0].name
+    annotations = {
+      "service.beta.kubernetes.io/aws-load-balancer-subnets" = var.elb_subnet
+    }
   }
   spec {
     selector = {

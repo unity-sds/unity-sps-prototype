@@ -125,3 +125,9 @@ variable "eks_cluster_name" {
   description = "The name of the EKS cluster."
   type        = string
 }
+
+variable "elb_subnet" {
+  description = "value"
+  type        = string
+  default     = "subnet-0ca61daf80bc568d9"
+}

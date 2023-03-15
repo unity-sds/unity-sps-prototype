@@ -29,4 +29,5 @@ module "unity-sps-hysds-cluster" {
   uds_dapa_api                 = data.aws_ssm_parameter.uds_dapa_api.value
   uads_development_efs_fsmt_id = var.uads_development_efs_fsmt_id
   eks_cluster_name             = var.eks_cluster_name
+  elb_subnet                   = var.elb_subnet
 }

@@ -263,7 +263,14 @@ resource "helm_release" "mozart-es" {
   wait       = true
   timeout    = 600
   values = [
-    yamlencode(local.mozart_es_values)
+    yamlencode(local.mozart_es_values),
+    yamlencode({
+      "service" = {
+        "annotations" = {
+          "service.beta.kubernetes.io/aws-load-balancer-subnets" = var.elb_subnet
+        }
+      }
+    })
   ]
 }
 
@@ -276,6 +283,13 @@ resource "helm_release" "grq2-es" {
   wait       = true
   timeout    = 600
   values = [
-    yamlencode(local.grq2_es_values)
+    yamlencode(local.grq2_es_values),
+    yamlencode({
+      "service" = {
+        "annotations" = {
+          "service.beta.kubernetes.io/aws-load-balancer-subnets" = var.elb_subnet
+        }
+      }
+    })
   ]
 }
