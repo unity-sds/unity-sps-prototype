@@ -110,8 +110,7 @@ resource "kubernetes_deployment" "ades-wpst-api" {
                 command = [
                   "bin/sh",
                   "-c",
-                  "sleep 5; chmod 777 /var/run/docker.sock",
-                  "docker pull ghcr.io/unity-sds/sps-hysds-pge-base:unity-v0.0.1"
+                  "sleep 5; chmod 777 /var/run/docker.sock; docker pull ghcr.io/unity-sds/unity-sps-prototype/sps-hysds-pge-base:unity-v0.0.1"
                 ]
               }
             }
