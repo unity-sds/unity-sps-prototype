@@ -112,8 +112,7 @@ resource "kubernetes_deployment" "ades-wpst-api" {
                 command = [
                   "bin/sh",
                   "-c",
-                  "sleep 5; chmod 777 /var/run/docker.sock",
-                  "docker pull ${var.docker_images.sps_hysds_pge_base}"
+                  "sleep 5; chmod 777 /var/run/docker.sock; docker pull ${var.docker_images.sps_hysds_pge_base}"
                 ]
               }
             }
