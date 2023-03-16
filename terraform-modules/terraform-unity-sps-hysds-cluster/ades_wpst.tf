@@ -37,7 +37,7 @@ resource "kubernetes_persistent_volume_claim" "ades-wpst-sqlite-pv-claim" {
         storage = "20Gi"
       }
     }
-    volume_name = kubernetes_persistent_volume.ades-wpst-sqlite-pv.metadata.0.name
+    volume_name = kubernetes_persistent_volume.ades-wpst-sqlite-pv.metadata[0].name
   }
 }
 
@@ -45,6 +45,9 @@ resource "kubernetes_service" "ades-wpst-api-service" {
   metadata {
     name      = "ades-wpst-api"
     namespace = kubernetes_namespace.unity-sps.metadata[0].name
+    annotations = {
+      "service.beta.kubernetes.io/aws-load-balancer-subnets" = var.elb_subnet
+    }
   }
   spec {
     selector = {
@@ -56,7 +59,6 @@ resource "kubernetes_service" "ades-wpst-api-service" {
       protocol    = "TCP"
       port        = var.service_port_map.ades_wpst_api_service
       target_port = 5000
-      node_port   = var.service_type != "NodePort" ? null : var.node_port_map.ades_wpst_api_service
     }
   }
 }
@@ -110,7 +112,7 @@ resource "kubernetes_deployment" "ades-wpst-api" {
                 command = [
                   "bin/sh",
                   "-c",
-                  "sleep 5; chmod 777 /var/run/docker.sock; docker pull ghcr.io/unity-sds/unity-sps-prototype/sps-hysds-pge-base:unity-v0.0.1"
+                  "sleep 5; chmod 777 /var/run/docker.sock; docker pull ${var.docker_images.sps_hysds_pge_base}"
                 ]
               }
             }

@@ -28,6 +28,7 @@ resource "kubernetes_deployment" "verdi" {
           args = [
             <<-EOT
             chown -R 1000:1000 /tmp;
+            chown -R 1000:1000 /tmp/SOUNDER_SIPS/STATIC_DATA;
             cp -r /cwl-src/. /src;
             EOT
           ]
@@ -42,6 +43,11 @@ resource "kubernetes_deployment" "verdi" {
           volume_mount {
             name       = "src"
             mount_path = "/src"
+          }
+          volume_mount {
+            name       = "uads-development-efs"
+            mount_path = "/tmp/SOUNDER_SIPS/STATIC_DATA"
+            sub_path   = "sounder_sips/static_files"
           }
         }
         container {
@@ -93,6 +99,11 @@ resource "kubernetes_deployment" "verdi" {
           volume_mount {
             name       = "tmp-dir"
             mount_path = "/tmp"
+          }
+          volume_mount {
+            name       = "uads-development-efs"
+            mount_path = "/tmp/SOUNDER_SIPS/STATIC_DATA"
+            sub_path   = "sounder_sips/static_files"
           }
         }
         container {
@@ -146,6 +157,11 @@ resource "kubernetes_deployment" "verdi" {
             mount_path = "/etc/supervisord.conf"
             sub_path   = "supervisord.conf"
             read_only  = false
+          }
+          volume_mount {
+            name       = "uads-development-efs"
+            mount_path = "/tmp/SOUNDER_SIPS/STATIC_DATA"
+            sub_path   = "sounder_sips/static_files"
           }
           # volume_mount {
           #   name       = "data-work"
@@ -230,6 +246,12 @@ resource "kubernetes_deployment" "verdi" {
         volume {
           name = "docker-graph-storage"
           empty_dir {}
+        }
+        volume {
+          name = "uads-development-efs"
+          persistent_volume_claim {
+            claim_name = kubernetes_persistent_volume_claim.uads-development-efs.metadata[0].name
+          }
         }
       }
     }

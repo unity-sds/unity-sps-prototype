@@ -1,3 +1,14 @@
+variable "region" {
+  description = "The AWS region"
+  type        = string
+  default     = "us-west-2"
+}
+
+variable "eks_cluster_name" {
+  description = "value"
+  type        = string
+}
+
 variable "kubeconfig_filepath" {
   description = "Path to the kubeconfig file for the Kubernetes cluster"
   type        = string
@@ -20,6 +31,12 @@ variable "venue" {
   type        = string
 }
 
+variable "service_area" {
+  description = "The service area owner of the resources being deployed"
+  type        = string
+  default     = "sps"
+}
+
 variable "counter" {
   description = "value"
   type        = number
@@ -29,46 +46,19 @@ variable "docker_images" {
   description = "Docker images for the Unity SPS containers"
   type        = map(string)
   default = {
-    hysds_core     = "ghcr.io/unity-sds/unity-sps-prototype/hysds-core:unity-v0.0.1"
-    hysds_ui       = "ghcr.io/unity-sds/unity-sps-prototype/hysds-ui-remote:unity-v0.0.1"
-    hysds_mozart   = "ghcr.io/unity-sds/unity-sps-prototype/hysds-mozart:unity-v0.0.1"
-    hysds_grq2     = "ghcr.io/unity-sds/unity-sps-prototype/hysds-grq2:unity-v0.0.1"
-    hysds_verdi    = "ghcr.io/unity-sds/unity-sps-prototype/hysds-verdi:unity-v0.0.1"
-    hysds_factotum = "ghcr.io/unity-sds/unity-sps-prototype/hysds-factotum:unity-v0.0.1"
-    ades_wpst_api  = "ghcr.io/unity-sds/unity-sps-prototype/ades-wpst-api:unity-v0.0.1"
-    sps_api        = "ghcr.io/unity-sds/unity-sps-prototype/sps-api:unity-v0.0.1"
-    logstash       = "docker.elastic.co/logstash/logstash:7.10.2"
-    rabbitmq       = "rabbitmq:3-management"
-    busybox        = "k8s.gcr.io/busybox"
-    redis          = "redis:latest"
-  }
-}
-
-variable "mozart_es" {
-  description = "value"
-  type = object({
-    volume_claim_template = object({
-      storage_class_name = string
-    })
-  })
-  default = {
-    volume_claim_template = {
-      storage_class_name = "gp2-sps"
-    }
-  }
-}
-
-variable "grq2_es" {
-  description = "value"
-  type = object({
-    volume_claim_template = object({
-      storage_class_name = string
-    })
-  })
-  default = {
-    volume_claim_template = {
-      storage_class_name = "gp2-sps"
-    }
+    hysds_core         = "ghcr.io/unity-sds/unity-sps-prototype/hysds-core:unity-v0.0.1"
+    hysds_ui           = "ghcr.io/unity-sds/unity-sps-prototype/hysds-ui-remote:unity-v0.0.1"
+    hysds_mozart       = "ghcr.io/unity-sds/unity-sps-prototype/hysds-mozart:unity-v0.0.1"
+    hysds_grq2         = "ghcr.io/unity-sds/unity-sps-prototype/hysds-grq2:unity-v0.0.1"
+    hysds_verdi        = "ghcr.io/unity-sds/unity-sps-prototype/hysds-verdi:unity-v0.0.1"
+    hysds_factotum     = "ghcr.io/unity-sds/unity-sps-prototype/hysds-factotum:unity-v0.0.1"
+    ades_wpst_api      = "ghcr.io/unity-sds/unity-sps-prototype/ades-wpst-api:unity-v0.0.1"
+    sps_api            = "ghcr.io/unity-sds/unity-sps-prototype/sps-api:unity-v0.0.1"
+    sps_hysds_pge_base = "ghcr.io/unity-sds/unity-sps-prototype/sps-hysds-pge-base:unity-v0.0.1"
+    logstash           = "docker.elastic.co/logstash/logstash:7.10.2"
+    rabbitmq           = "rabbitmq:3-management"
+    busybox            = "k8s.gcr.io/busybox"
+    redis              = "redis:latest"
   }
 }
 
@@ -94,20 +84,6 @@ variable "service_port_map" {
     "sps_api_service"                   = 5002
     "grq2_es"                           = 9201
     "mozart_es"                         = 9200
-  }
-}
-
-variable "node_port_map" {
-  description = "value"
-  type        = map(number)
-  default = {
-    "mozart_service"        = 30001
-    "grq2_service"          = 30002
-    "hysds_ui_service"      = 30009
-    "ades_wpst_api_service" = 30011
-    "grq2_es"               = 30012
-    "mozart_es"             = 30013
-    "sps_api_service"       = 30014
   }
 }
 
@@ -160,6 +136,17 @@ variable "uds_client_id" {
 }
 
 variable "uds_dapa_api" {
+  description = "value"
+  type        = string
+}
+
+variable "uads_development_efs_fsmt_id" {
+  description = "value"
+  type        = string
+}
+
+
+variable "elb_subnet" {
   description = "value"
   type        = string
 }

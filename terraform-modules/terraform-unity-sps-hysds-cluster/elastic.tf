@@ -89,7 +89,7 @@ locals {
     ]
     # Request smaller persistent volumes.
     volumeClaimTemplate = {
-      volumeName       = kubernetes_persistent_volume.mozart-es-pv.metadata.0.name
+      volumeName       = kubernetes_persistent_volume.mozart-es-pv.metadata[0].name
       accessModes      = ["ReadWriteOnce"]
       storageClassName = "gp2"
       resources = {
@@ -104,6 +104,7 @@ locals {
     clusterHealthCheckParams = "wait_for_status=yellow&timeout=1s"
     replicas                 = 1
     service = {
+      type = var.service_type
       port = var.service_port_map.mozart_es
     }
     httpPort      = var.service_port_map.mozart_es
@@ -195,7 +196,7 @@ locals {
 
     # Request smaller persistent volumes.
     volumeClaimTemplate = {
-      volumeName       = kubernetes_persistent_volume.grq-es-pv.metadata.0.name
+      volumeName       = kubernetes_persistent_volume.grq-es-pv.metadata[0].name
       accessModes      = ["ReadWriteOnce"]
       storageClassName = "gp2"
       resources = {
@@ -210,6 +211,7 @@ locals {
     clusterHealthCheckParams = "wait_for_status=yellow&timeout=1s"
     replicas                 = 1
     service = {
+      type = var.service_type
       port = var.service_port_map.grq2_es
     }
     httpPort      = var.service_port_map.grq2_es
@@ -261,7 +263,14 @@ resource "helm_release" "mozart-es" {
   wait       = true
   timeout    = 600
   values = [
-    yamlencode(local.mozart_es_values)
+    yamlencode(local.mozart_es_values),
+    yamlencode({
+      "service" = {
+        "annotations" = {
+          "service.beta.kubernetes.io/aws-load-balancer-subnets" = var.elb_subnet
+        }
+      }
+    })
   ]
 }
 
@@ -274,6 +283,13 @@ resource "helm_release" "grq2-es" {
   wait       = true
   timeout    = 600
   values = [
-    yamlencode(local.grq2_es_values)
+    yamlencode(local.grq2_es_values),
+    yamlencode({
+      "service" = {
+        "annotations" = {
+          "service.beta.kubernetes.io/aws-load-balancer-subnets" = var.elb_subnet
+        }
+      }
+    })
   ]
 }

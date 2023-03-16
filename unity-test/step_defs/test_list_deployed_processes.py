@@ -1,4 +1,4 @@
-from pytest_bdd import scenario, when, then
+from pytest_bdd import scenario, when, then, parsers
 import requests
 from urllib.parse import urljoin
 from .conftest import FEATURES_DIR
@@ -9,9 +9,9 @@ FEATURE_FILE = FEATURES_DIR.joinpath(feature_file)
 
 @scenario(
     FEATURE_FILE,
-    "The L1B process is currently deployed and a request is made to list the OGC processes",
+    "A process is currently deployed and a request is made to list the OGC processes",
 )
-def test_list_deployed_wps_processes():
+def test_list_deployed_processes():
     pass
 
 
@@ -45,14 +45,15 @@ def process_summary_elements(response):
         assert all(key in process for key in required_keys)
 
 
-@then("the process summary included the L1B processor")
-def process_summary_processor(response):
-    l1b_processor_present = False
+@then(parsers.parse("the process summary included the {process_name} processor"))
+def process_summary_processor(response, process_name):
+    processor_present = False
     process_json = response.json()["processes"]
     for process in process_json:
-        if "l1b-cwl" in process["id"]:
-            if l1b_processor_present:
+        deployed_process_name = process["id"].split(":")[0]
+        if process_name.casefold() in deployed_process_name:
+            if processor_present:
                 raise ValueError("Duplicate process title")
             else:
-                l1b_processor_present = True
-    assert l1b_processor_present
+                processor_present = True
+    assert processor_present
