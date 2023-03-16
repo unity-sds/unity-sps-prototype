@@ -2,7 +2,9 @@ name: U-SPS Smoke Test
 
 on:
   schedule:
-    - cron: "*/5 * * * *"
+    # Runs around midnight Pacific Time (UTC-7)
+    # Doesn't account for daylight saving transitions
+    - cron: "0 7 * * *"
   push:
     branches:
       - 146-auto-test
@@ -27,7 +29,7 @@ jobs:
       - run: |
           echo "Base URL for the WPS-T API endpoint (i.e. http://abc.def.ghi:port-number): ${{ github.event.inputs.PROCESS_SERVICE_ENDPOINT || vars.PROCESS_SERVICE_ENDPOINT }}"
           echo "Base URL for the SPS API endpoint (i.e. http://abc.def.ghi:port-number): ${{ github.event.inputs.SPS_API_SERVICE_ENDPOINT || vars.SPS_API_SERVICE_ENDPOINT }}"
-          echo "The Sounder SIPS PGEs to test (L1A, L1B, chirp): ${{ github.event.inputs.SOUNDER_SIPS_PROCESS_SELECTION }}"
+          echo "The Sounder SIPS PGEs to test (L1A, L1B, chirp): ${{ github.event.inputs.SOUNDER_SIPS_PROCESS_SELECTION || vars.SOUNDER_SIPS_PROCESS_SELECTION }}"
   smoke_test:
     runs-on: ubuntu-latest
     steps:
@@ -47,5 +49,5 @@ jobs:
           pytest -s
           --process-service-endpoint=${{ github.event.inputs.PROCESS_SERVICE_ENDPOINT || vars.PROCESS_SERVICE_ENDPOINT }}
           --sps-api-service-endpoint=${{ github.event.inputs.SPS_API_SERVICE_ENDPOINT || vars.SPS_API_SERVICE_ENDPOINT }}
-          --sounder-sips-process-selection=${{ github.event.inputs.SOUNDER_SIPS_PROCESS_SELECTION }}
+          --sounder-sips-process-selection=${{ github.event.inputs.SOUNDER_SIPS_PROCESS_SELECTION || vars.SOUNDER_SIPS_PROCESS_SELECTION }}
           -rs
