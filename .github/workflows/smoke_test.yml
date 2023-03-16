@@ -3,6 +3,9 @@ name: U-SPS Smoke Test
 on:
   schedule:
     - cron: "*/5 * * * *"
+  push:
+    branches:
+      - 146-auto-test
   workflow_dispatch:
     inputs:
       PROCESS_SERVICE_ENDPOINT:
