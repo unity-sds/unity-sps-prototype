@@ -5,9 +5,6 @@ on:
     # Runs around midnight Pacific Time (UTC-7)
     # Doesn't account for daylight saving transitions
     - cron: "0 7 * * *"
-  push:
-    branches:
-      - 146-auto-test
   workflow_dispatch:
     inputs:
       PROCESS_SERVICE_ENDPOINT:
