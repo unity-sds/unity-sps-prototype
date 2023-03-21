@@ -1,4 +1,4 @@
-resource "kubernetes_deployment" "verdi" {
+resource "kubernetes_daemonset" "verdi" {
   metadata {
     name      = "verdi"
     namespace = kubernetes_namespace.unity-sps.metadata[0].name
@@ -7,7 +7,6 @@ resource "kubernetes_deployment" "verdi" {
     }
   }
   spec {
-    # replicas = 2
     selector {
       match_labels = {
         app = "verdi"
@@ -20,6 +19,9 @@ resource "kubernetes_deployment" "verdi" {
         }
       }
       spec {
+        node_selector = {
+          "eks.amazonaws.com/nodegroup" = "VerdiNodeGroup"
+        }
         init_container {
           name    = "change-ownership"
           image   = var.docker_images.busybox
