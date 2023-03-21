@@ -29,7 +29,7 @@ def fatal_status(e):
 
 
 @when(
-    parsers.parse("the status of the job is monitored through the WPS-T"),
+    "the status of the job is monitored through the WPS-T",
     target_fixture="job_status",
 )
 @backoff.on_exception(backoff.expo, AssertionError, max_time=3600, giveup=fatal_status)

@@ -20,7 +20,7 @@ def created_response(response):
 
 
 @when(
-    parsers.parse("a WPS-T request is made to get the status of the job by its ID"),
+    "a WPS-T request is made to get the status of the job by its ID",
     target_fixture="response",
 )
 def request_job_status_by_id(process_service_endpoint, project_process_dict, job_id):

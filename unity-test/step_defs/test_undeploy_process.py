@@ -27,11 +27,7 @@ def delete_request_process_id(process_service_endpoint, project_process_dict):
     return undeploy_process_response
 
 
-@then(
-    parsers.parse(
-        "the algorithm is no longer contained in the list of deployed processes"
-    )
-)
+@then("the algorithm is no longer contained in the list of deployed processes")
 def process_no_longer_deployed(process_service_endpoint, project_process_dict):
     deployed = _is_process_deployed(
         process_service_endpoint, project_process_dict["process_name"]
