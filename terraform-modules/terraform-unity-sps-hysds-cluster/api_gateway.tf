@@ -8,11 +8,11 @@ data "aws_ssm_parameter" "api_gateway_rest_api_id" {
 resource "null_resource" "update_api_gateway_stage_variables" {
   provisioner "local-exec" {
     command = <<-EOT
-      aws apigateway update-stage --rest-api-id "${data.aws_ssm_parameter.api_gateway_rest_api_id.value}" --stage-name "${var.venue}" --region us-west-2 --patch-operations op=replace,path=/variables/adesWpstUrl,value="${kubernetes_service.ades-wpst-api-service.status[0].load_balancer[0].ingress[0].hostname}"
-      aws apigateway update-stage --rest-api-id "${data.aws_ssm_parameter.api_gateway_rest_api_id.value}" --stage-name "${var.venue}" --region us-west-2 --patch-operations op=replace,path=/variables/grqEsUrl,value="${data.kubernetes_service.grq-es.status[0].load_balancer[0].ingress[0].hostname}"
+      aws apigateway update-stage --rest-api-id "${data.aws_ssm_parameter.api_gateway_rest_api_id.value}" --stage-name "${var.venue}" --region us-west-2 --patch-operations op=replace,path=/variables/adesWpstUrl,value="${kubernetes_service.ades-wpst-api-service.status[0].load_balancer[0].ingress[0].hostname}:${var.service_port_map.ades_wpst_api_service}"
+      aws apigateway update-stage --rest-api-id "${data.aws_ssm_parameter.api_gateway_rest_api_id.value}" --stage-name "${var.venue}" --region us-west-2 --patch-operations op=replace,path=/variables/grqEsUrl,value="${data.kubernetes_service.grq-es.status[0].load_balancer[0].ingress[0].hostname}:${var.service_port_map.grq2_es}"
       aws apigateway update-stage --rest-api-id "${data.aws_ssm_parameter.api_gateway_rest_api_id.value}" --stage-name "${var.venue}" --region us-west-2 --patch-operations op=replace,path=/variables/grqRestApiUrl,value="-"
       aws apigateway update-stage --rest-api-id "${data.aws_ssm_parameter.api_gateway_rest_api_id.value}" --stage-name "${var.venue}" --region us-west-2 --patch-operations op=replace,path=/variables/hysdsUiUrl,value="-"
-      aws apigateway update-stage --rest-api-id "${data.aws_ssm_parameter.api_gateway_rest_api_id.value}" --stage-name "${var.venue}" --region us-west-2 --patch-operations op=replace,path=/variables/mozartEsUrl,value="${data.kubernetes_service.mozart-es.status[0].load_balancer[0].ingress[0].hostname}"
+      aws apigateway update-stage --rest-api-id "${data.aws_ssm_parameter.api_gateway_rest_api_id.value}" --stage-name "${var.venue}" --region us-west-2 --patch-operations op=replace,path=/variables/mozartEsUrl,value="${data.kubernetes_service.mozart-es.status[0].load_balancer[0].ingress[0].hostname}:${var.service_port_map.mozart_es}"
       aws apigateway update-stage --rest-api-id "${data.aws_ssm_parameter.api_gateway_rest_api_id.value}" --stage-name "${var.venue}" --region us-west-2 --patch-operations op=replace,path=/variables/mozartRestApiUrl,value="-"
     EOT
   }
