@@ -1,3 +1,7 @@
+data "aws_eks_cluster" "sps-cluster" {
+  name = var.eks_cluster_name
+}
+
 provider "kubernetes" {
   config_path = var.kubeconfig_filepath
   insecure    = true
@@ -17,7 +21,7 @@ provider "helm" {
 }
 
 provider "aws" {
-  region = "us-west-2"
+  region = var.region
 }
 
 # resource "random_id" "counter" {

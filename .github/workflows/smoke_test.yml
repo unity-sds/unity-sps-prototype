@@ -1,6 +1,10 @@
 name: U-SPS Smoke Test
 
 on:
+  schedule:
+    # Runs around midnight Pacific Time (UTC-7)
+    # Doesn't account for daylight saving transitions
+    - cron: "0 7 * * *"
   workflow_dispatch:
     inputs:
       PROCESS_SERVICE_ENDPOINT:
@@ -9,11 +13,22 @@ on:
       SPS_API_SERVICE_ENDPOINT:
         description: "Base URL for the SPS API endpoint (i.e. http://abc.def.ghi:port-number)"
         type: string
+      SOUNDER_SIPS_PROCESS_SELECTION:
+        description: "The Sounder SIPS process to test (L1A, L1B, chirp)"
+        default: ".*"
+        required: false
+        type: string
 
 jobs:
+  print_inputs:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          echo "Base URL for the WPS-T API endpoint (i.e. http://abc.def.ghi:port-number): ${{ github.event.inputs.PROCESS_SERVICE_ENDPOINT || vars.PROCESS_SERVICE_ENDPOINT }}"
+          echo "Base URL for the SPS API endpoint (i.e. http://abc.def.ghi:port-number): ${{ github.event.inputs.SPS_API_SERVICE_ENDPOINT || vars.SPS_API_SERVICE_ENDPOINT }}"
+          echo "The Sounder SIPS PGEs to test (L1A, L1B, chirp): ${{ github.event.inputs.SOUNDER_SIPS_PROCESS_SELECTION || vars.SOUNDER_SIPS_PROCESS_SELECTION }}"
   smoke_test:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v3
       - name: Setup Python
@@ -27,4 +42,9 @@ jobs:
           pip install -r requirements.txt --use-pep517
       - name: Run the smoke test
         working-directory: ${{ github.workspace }}/unity-test/step_defs
-        run: pytest --process-service-endpoint=${{ github.event.inputs.PROCESS_SERVICE_ENDPOINT }} --sps-api-service-endpoint=${{ github.event.inputs.SPS_API_SERVICE_ENDPOINT }}
+        run: >
+          pytest -s
+          --process-service-endpoint=${{ github.event.inputs.PROCESS_SERVICE_ENDPOINT || vars.PROCESS_SERVICE_ENDPOINT }}
+          --sps-api-service-endpoint=${{ github.event.inputs.SPS_API_SERVICE_ENDPOINT || vars.SPS_API_SERVICE_ENDPOINT }}
+          --sounder-sips-process-selection=${{ github.event.inputs.SOUNDER_SIPS_PROCESS_SELECTION || vars.SOUNDER_SIPS_PROCESS_SELECTION }}
+          -rs

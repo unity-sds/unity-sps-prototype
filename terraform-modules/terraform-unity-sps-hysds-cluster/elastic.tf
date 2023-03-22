@@ -89,7 +89,7 @@ locals {
     ]
     # Request smaller persistent volumes.
     volumeClaimTemplate = {
-      volumeName       = kubernetes_persistent_volume.mozart-es-pv.metadata.0.name
+      volumeName       = kubernetes_persistent_volume.mozart-es-pv.metadata[0].name
       accessModes      = ["ReadWriteOnce"]
       storageClassName = "gp2"
       resources = {
@@ -196,7 +196,7 @@ locals {
 
     # Request smaller persistent volumes.
     volumeClaimTemplate = {
-      volumeName       = kubernetes_persistent_volume.grq-es-pv.metadata.0.name
+      volumeName       = kubernetes_persistent_volume.grq-es-pv.metadata[0].name
       accessModes      = ["ReadWriteOnce"]
       storageClassName = "gp2"
       resources = {
@@ -263,7 +263,14 @@ resource "helm_release" "mozart-es" {
   wait       = true
   timeout    = 600
   values = [
-    yamlencode(local.mozart_es_values)
+    yamlencode(local.mozart_es_values),
+    yamlencode({
+      "service" = {
+        "annotations" = {
+          "service.beta.kubernetes.io/aws-load-balancer-subnets" = var.elb_subnet
+        }
+      }
+    })
   ]
 }
 
@@ -276,7 +283,14 @@ resource "helm_release" "grq2-es" {
   wait       = true
   timeout    = 600
   values = [
-    yamlencode(local.grq2_es_values)
+    yamlencode(local.grq2_es_values),
+    yamlencode({
+      "service" = {
+        "annotations" = {
+          "service.beta.kubernetes.io/aws-load-balancer-subnets" = var.elb_subnet
+        }
+      }
+    })
   ]
 }
 

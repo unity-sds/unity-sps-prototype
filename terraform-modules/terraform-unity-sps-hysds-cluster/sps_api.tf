@@ -2,6 +2,9 @@ resource "kubernetes_service" "sps-api-service" {
   metadata {
     name      = "sps-api"
     namespace = kubernetes_namespace.unity-sps.metadata[0].name
+    annotations = {
+      "service.beta.kubernetes.io/aws-load-balancer-subnets" = var.elb_subnet
+    }
   }
   spec {
     selector = {
@@ -13,7 +16,6 @@ resource "kubernetes_service" "sps-api-service" {
       protocol    = "TCP"
       port        = var.service_port_map.sps_api_service
       target_port = 80
-      node_port   = var.service_type != "NodePort" ? null : var.node_port_map.sps_api_api_service
     }
   }
 }

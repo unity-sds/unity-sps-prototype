@@ -1,25 +1,55 @@
 {
   "processDescription": {
     "process": {
-      "id": "l1b-cwl",
-      "title": "l1b_pge_cwl",
+      "id": "l1a",
+      "title": "l1a_pge_cwl",
       "owsContext": {
         "offering": {
           "code": "http://www.opengis.net/eoc/applicationContext/cwl",
           "content": {
-            "href": "https://raw.githubusercontent.com/unity-sds/unity-sps-workflows/main/sounder_sips/ssips_L1b_workflow.cwl"
+            "href": "https://raw.githubusercontent.com/unity-sds/unity-sps-workflows/main/sounder_sips/ssips_L1a_workflow.cwl"
           }
         }
       },
-      "abstract": "l1b_pge_cwl",
+      "abstract": "l1a_pge_cwl",
       "keywords": [],
       "inputs": [
         {
-          "id": "input_collection_id",
-          "title": "input_collection_id",
+          "id": "input_ephatt_collection_id",
+          "title": "input_ephatt_collection_id",
           "formats": [
             {
               "mimeType": "text",
+              "default": true
+            }
+          ]
+        },
+        {
+          "id": "input_science_collection_id",
+          "title": "input_science_collection_id",
+          "formats": [
+            {
+              "mimeType": "text",
+              "default": true
+            }
+          ]
+        },
+        {
+          "id": "output_collection_id",
+          "title": "output_collection_id",
+          "formats": [
+            {
+              "mimeType": "text",
+              "default": true
+            }
+          ]
+        },
+        {
+          "id": "static_dir",
+          "title": "static_dir",
+          "formats": [
+            {
+              "mimeType": "application/json",
               "default": true
             }
           ]
@@ -45,8 +75,18 @@
           ]
         },
         {
-          "id": "output_collection_id",
-          "title": "output_collection_id",
+          "id": "ephatt_download_dir",
+          "title": "ephatt_download_dir",
+          "formats": [
+            {
+              "mimeType": "text",
+              "default": true
+            }
+          ]
+        },
+        {
+          "id": "science_download_dir",
+          "title": "science_download_dir",
           "formats": [
             {
               "mimeType": "text",
@@ -58,7 +98,7 @@
       "outputs": [
         {
           "id": "output",
-          "title": "L1B-product",
+          "title": "L1A-product",
           "formats": [
             {
               "mimeType": "image/tiff",
