@@ -185,7 +185,7 @@ variable "verdi_node_group_scaling_config" {
   description = "value"
   type        = map(number)
   default = {
-    "desired_size" = 1
+    "desired_size" = 3
     "min_size"     = 0
     "max_size"     = 10
   }
