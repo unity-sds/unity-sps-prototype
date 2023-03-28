@@ -118,7 +118,7 @@ variable "container_registry_owner" {
 variable "uads_development_efs_fsmt_id" {
   description = "value"
   type        = string
-  default     = ""
+  default     = null
 }
 
 variable "eks_cluster_name" {
@@ -130,4 +130,50 @@ variable "elb_subnet" {
   description = "value"
   type        = string
   default     = "subnet-0ca61daf80bc568d9"
+}
+
+# TODO - Consolidate these verdi variables
+
+variable "default_group_node_group_name" {
+  description = "value"
+  type        = string
+  default     = "defaultgroupNodeGroup"
+}
+
+
+variable "default_group_node_group_launch_template_name" {
+  description = "value"
+  type        = string
+  default     = "eksctl-unity-test-sps-hysds-eks-multinode-nodegroup-defaultgroupNodeGroup"
+}
+
+
+variable "verdi_node_group_name" {
+  description = "value"
+  type        = string
+  default     = "VerdiNodeGroup"
+}
+
+variable "verdi_node_group_capacity_type" {
+  description = "value"
+  type        = string
+  default     = "ON_DEMAND"
+}
+
+
+variable "verdi_node_group_scaling_config" {
+  description = "value"
+  type        = map(number)
+  default = {
+    "desired_size" = 3
+    "min_size"     = 0
+    "max_size"     = 10
+  }
+}
+
+
+variable "verdi_node_group_instance_types" {
+  description = "value"
+  type        = list(string)
+  default     = ["m3.medium"]
 }

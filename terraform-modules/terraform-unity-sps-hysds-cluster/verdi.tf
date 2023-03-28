@@ -20,7 +20,7 @@ resource "kubernetes_daemonset" "verdi" {
       }
       spec {
         node_selector = {
-          "eks.amazonaws.com/nodegroup" = "VerdiNodeGroup"
+          "eks.amazonaws.com/nodegroup" = aws_eks_node_group.verdi_node_group.node_group_name
         }
         init_container {
           name    = "change-ownership"
@@ -46,10 +46,13 @@ resource "kubernetes_daemonset" "verdi" {
             name       = "src"
             mount_path = "/src"
           }
-          volume_mount {
-            name       = "uads-development-efs"
-            mount_path = "/tmp/SOUNDER_SIPS/STATIC_DATA"
-            sub_path   = "sounder_sips/static_files"
+          dynamic "volume_mount" {
+            for_each = var.uads_development_efs_fsmt_id != null ? [1] : []
+            content {
+              name       = "uads-development-efs"
+              mount_path = "/tmp/SOUNDER_SIPS/STATIC_DATA"
+              sub_path   = "sounder_sips/static_files"
+            }
           }
         }
         container {
@@ -80,7 +83,12 @@ resource "kubernetes_daemonset" "verdi" {
                 command = [
                   "bin/sh",
                   "-c",
-                  "sleep 5; chmod 777 /var/run/docker.sock"
+                  trimspace(
+                    <<-EOT
+                      sleep 5 && \
+                      chmod 777 /var/run/docker.sock
+                    EOT
+                  )
                 ]
               }
             }
@@ -102,10 +110,13 @@ resource "kubernetes_daemonset" "verdi" {
             name       = "tmp-dir"
             mount_path = "/tmp"
           }
-          volume_mount {
-            name       = "uads-development-efs"
-            mount_path = "/tmp/SOUNDER_SIPS/STATIC_DATA"
-            sub_path   = "sounder_sips/static_files"
+          dynamic "volume_mount" {
+            for_each = var.uads_development_efs_fsmt_id != null ? [1] : []
+            content {
+              name       = "uads-development-efs"
+              mount_path = "/tmp/SOUNDER_SIPS/STATIC_DATA"
+              sub_path   = "sounder_sips/static_files"
+            }
           }
         }
         container {
@@ -130,6 +141,38 @@ resource "kubernetes_daemonset" "verdi" {
             value = "tcp://localhost:2375"
           }
 
+          lifecycle {
+            post_start {
+              exec {
+                command = [
+                  "/bin/sh",
+                  "-c",
+                  trimspace(
+                    <<-EOT
+                      if [ "${var.uads_development_efs_fsmt_id != null ? var.uads_development_efs_fsmt_id : ""}" != "" ]; then
+                        echo 'EFS enabled'
+                      else
+                        echo 'EFS disabled'
+                      fi
+                    EOT
+                  )
+                  # trimspace(
+                  #   <<-EOT
+                  #     if [ "${var.uads_development_efs_fsmt_id != null ? var.uads_development_efs_fsmt_id : ""}" != "" ]; then
+                  #       echo 'EFS enabled'
+                  #     else
+                  #       echo 'EFS disabled'
+                  #       if [ "${var.s3_static_data}" ]; then
+                  #         "aws s3 sync s3://${var.s3_bucket_name}/${var.s3_prefix} ${var.target_directory}"
+                  #         fi
+                  #     fi
+                  #   EOT
+                  # )
+                ]
+              }
+            }
+          }
+          # ${var.uads_development_efs_fsmt_id} != null ?
           # volume_mount {
           #   name       = "docker-sock"
           #   mount_path = "/var/run/docker.sock"
@@ -160,16 +203,14 @@ resource "kubernetes_daemonset" "verdi" {
             sub_path   = "supervisord.conf"
             read_only  = false
           }
-          volume_mount {
-            name       = "uads-development-efs"
-            mount_path = "/tmp/SOUNDER_SIPS/STATIC_DATA"
-            sub_path   = "sounder_sips/static_files"
+          dynamic "volume_mount" {
+            for_each = var.uads_development_efs_fsmt_id != null ? [1] : []
+            content {
+              name       = "uads-development-efs"
+              mount_path = "/tmp/SOUNDER_SIPS/STATIC_DATA"
+              sub_path   = "sounder_sips/static_files"
+            }
           }
-          # volume_mount {
-          #   name       = "data-work"
-          #   mount_path = "/tmp/data"
-          #   read_only  = false
-          # }
           # Directory containing the Sounder Sips specific workflow
           # TODO: remove and make it part of the deployment phase
           volume_mount {
@@ -211,12 +252,6 @@ resource "kubernetes_daemonset" "verdi" {
             name = kubernetes_config_map.supervisord-verdi.metadata[0].name
           }
         }
-        # volume {
-        #   name = "data-work"
-        #   host_path {
-        #     path = "/tmp/data"
-        #   }
-        # }
         # Shared direcrtory holding the Docker socket
         volume {
           name = "docker-sock-dir"
@@ -249,10 +284,13 @@ resource "kubernetes_daemonset" "verdi" {
           name = "docker-graph-storage"
           empty_dir {}
         }
-        volume {
-          name = "uads-development-efs"
-          persistent_volume_claim {
-            claim_name = kubernetes_persistent_volume_claim.uads-development-efs.metadata[0].name
+        dynamic "volume" {
+          for_each = var.uads_development_efs_fsmt_id != null ? [1] : []
+          content {
+            name = "uads-development-efs"
+            persistent_volume_claim {
+              claim_name = kubernetes_persistent_volume_claim.uads-development-efs[0].metadata[0].name
+            }
           }
         }
       }

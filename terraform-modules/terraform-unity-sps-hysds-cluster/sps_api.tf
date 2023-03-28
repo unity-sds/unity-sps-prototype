@@ -44,12 +44,33 @@ resource "kubernetes_deployment" "sps-api" {
         }
       }
       spec {
+        service_account_name = kubernetes_service_account.sps-api.metadata[0].name
         container {
           image             = var.docker_images.sps_api
           image_pull_policy = "Always"
           name              = "sps-api"
           port {
             container_port = 80
+          }
+          env {
+            name  = "AWS_REGION_NAME"
+            value = var.region
+          }
+          env {
+            name  = "EKS_CLUSTER_NAME"
+            value = var.eks_cluster_name
+          }
+          env {
+            name  = "VERDI_NODE_GROUP_NAME"
+            value = "VerdiNodeGroup"
+          }
+          env {
+            name  = "VERDI_DAEMONSET_NAMESPACE"
+            value = kubernetes_daemonset.verdi.metadata[0].namespace
+          }
+          env {
+            name  = "VERDI_DAEMONSET_NAME"
+            value = kubernetes_daemonset.verdi.metadata[0].name
           }
         }
         restart_policy = "Always"
