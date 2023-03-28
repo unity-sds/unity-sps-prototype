@@ -1,4 +1,5 @@
 resource "kubernetes_storage_class" "efs_storage_class" {
+  count = var.uads_development_efs_fsmt_id != null ? 1 : 0
   metadata {
     name = "${var.project}-${var.venue}-${var.service_area}-efs-sc"
   }
@@ -8,11 +9,12 @@ resource "kubernetes_storage_class" "efs_storage_class" {
 }
 
 data "aws_efs_mount_target" "uads-development-efs-fsmt" {
+  count           = var.uads_development_efs_fsmt_id != null ? 1 : 0
   mount_target_id = var.uads_development_efs_fsmt_id
 }
 
 resource "aws_security_group_rule" "efs_ingress" {
-  for_each                 = toset(data.aws_efs_mount_target.uads-development-efs-fsmt.security_groups)
+  for_each                 = length(data.aws_efs_mount_target.uads-development-efs-fsmt) > 0 ? toset(data.aws_efs_mount_target.uads-development-efs-fsmt[0].security_groups) : toset([])
   type                     = "ingress"
   from_port                = 2049
   to_port                  = 2049
@@ -22,7 +24,7 @@ resource "aws_security_group_rule" "efs_ingress" {
 }
 
 resource "aws_security_group_rule" "efs_egress" {
-  for_each                 = toset(data.aws_efs_mount_target.uads-development-efs-fsmt.security_groups)
+  for_each                 = length(data.aws_efs_mount_target.uads-development-efs-fsmt) > 0 ? toset(data.aws_efs_mount_target.uads-development-efs-fsmt[0].security_groups) : toset([])
   type                     = "egress"
   from_port                = 0
   to_port                  = 0
@@ -32,6 +34,7 @@ resource "aws_security_group_rule" "efs_egress" {
 }
 
 resource "kubernetes_persistent_volume" "uads-development-efs" {
+  count = var.uads_development_efs_fsmt_id != null ? 1 : 0
   depends_on = [
     aws_security_group_rule.efs_egress,
     aws_security_group_rule.efs_ingress
@@ -42,7 +45,7 @@ resource "kubernetes_persistent_volume" "uads-development-efs" {
 
   spec {
     access_modes       = ["ReadWriteMany"]
-    storage_class_name = kubernetes_storage_class.efs_storage_class.metadata[0].name
+    storage_class_name = kubernetes_storage_class.efs_storage_class[count.index].metadata[0].name
 
     capacity = {
       storage = "10Gi"
@@ -52,7 +55,7 @@ resource "kubernetes_persistent_volume" "uads-development-efs" {
 
     persistent_volume_source {
       nfs {
-        server    = data.aws_efs_mount_target.uads-development-efs-fsmt.ip_address
+        server    = data.aws_efs_mount_target.uads-development-efs-fsmt[count.index].ip_address
         path      = "/shared"
         read_only = false
       }
@@ -61,6 +64,7 @@ resource "kubernetes_persistent_volume" "uads-development-efs" {
 }
 
 resource "kubernetes_persistent_volume_claim" "uads-development-efs" {
+  count = var.uads_development_efs_fsmt_id != null ? 1 : 0
   metadata {
     name      = "uads-development-efs"
     namespace = kubernetes_namespace.unity-sps.metadata[0].name
@@ -69,13 +73,13 @@ resource "kubernetes_persistent_volume_claim" "uads-development-efs" {
   spec {
     access_modes = ["ReadWriteMany"]
 
-    storage_class_name = kubernetes_storage_class.efs_storage_class.metadata[0].name
+    storage_class_name = kubernetes_storage_class.efs_storage_class[count.index].metadata[0].name
 
     resources {
       requests = {
         storage = "10Gi"
       }
     }
-    volume_name = kubernetes_persistent_volume.uads-development-efs.metadata[0].name
+    volume_name = kubernetes_persistent_volume.uads-development-efs[count.index].metadata[0].name
   }
 }
