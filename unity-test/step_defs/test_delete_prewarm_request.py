@@ -1,3 +1,4 @@
+import pytest
 from pytest_bdd import scenario, when, then
 import requests
 from urllib.parse import urljoin
@@ -8,11 +9,11 @@ feature_file = "delete_prewarm_request.feature"
 FEATURE_FILE = FEATURES_DIR.joinpath(feature_file)
 
 
-@scenario(
-    FEATURE_FILE, "Delete an SPS prewarm request"
-)
+@pytest.mark.skip(reason="This feature is currently unsupported")
+@scenario(FEATURE_FILE, "Delete an SPS prewarm request")
 def test_delete_prewarm_request():
     pass
+
 
 @when(
     "a DELETE request is called on the SPS API prewarm request endpoint",
@@ -24,8 +25,7 @@ def delete_prewarm_request(sps_api_service_endpoint, request_id):
     delete_prewarm_request_response.raise_for_status()
     return delete_prewarm_request_response
 
-@then(
-    "the prewarm request is deleted"
-)
+
+@then("the prewarm request is deleted")
 def verify_deleted_prewarm(request_id):
     return request_id
