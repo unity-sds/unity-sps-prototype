@@ -144,7 +144,6 @@ variable "default_group_node_group_name" {
 variable "default_group_node_group_launch_template_name" {
   description = "value"
   type        = string
-  default     = "eksctl-unity-test-sps-hysds-eks-multinode-nodegroup-defaultgroupNodeGroup"
 }
 
 
