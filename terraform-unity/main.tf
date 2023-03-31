@@ -8,6 +8,7 @@
 module "unity-sps-hysds-cluster" {
   source = "../terraform-modules/terraform-unity-sps-hysds-cluster"
   # source                      = "git::https://github.com/unity-sds/unity-sps-prototype.git//terraform-modules/terraform-unity-sps-hysds-cluster?ref=main"
+  release                                       = var.release
   project                                       = var.project
   namespace                                     = var.namespace
   venue                                         = var.venue
@@ -30,5 +31,6 @@ module "unity-sps-hysds-cluster" {
   uads_development_efs_fsmt_id                  = var.uads_development_efs_fsmt_id
   eks_cluster_name                              = var.eks_cluster_name
   elb_subnet                                    = var.elb_subnet
+  default_group_node_group_name                 = var.default_group_node_group_name
   default_group_node_group_launch_template_name = var.default_group_node_group_launch_template_name
 }
