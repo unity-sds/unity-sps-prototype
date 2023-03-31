@@ -1,3 +1,9 @@
+
+variable "release" {
+  description = "The SPS release version"
+  type        = string
+}
+
 variable "project" {
   description = "The project or mission deploying Unity SPS"
   type        = string
