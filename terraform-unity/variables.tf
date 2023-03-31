@@ -1,3 +1,8 @@
+variable "release" {
+  description = "The SPS release version"
+  type        = string
+}
+
 variable "project" {
   description = "The project or mission deploying Unity SPS"
   type        = string
@@ -28,7 +33,7 @@ variable "region" {
 
 variable "counter" {
   description = "value"
-  type        = number
+  default     = ""
 }
 
 variable "kubeconfig_filepath" {
@@ -129,7 +134,6 @@ variable "eks_cluster_name" {
 variable "elb_subnet" {
   description = "value"
   type        = string
-  default     = "subnet-0ca61daf80bc568d9"
 }
 
 # TODO - Consolidate these verdi variables

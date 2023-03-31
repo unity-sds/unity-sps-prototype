@@ -1,3 +1,8 @@
+variable "release" {
+  description = "The SPS release version"
+  type        = string
+}
+
 variable "region" {
   description = "The AWS region"
   type        = string
@@ -39,7 +44,7 @@ variable "service_area" {
 
 variable "counter" {
   description = "value"
-  type        = number
+  default     = ""
 }
 
 variable "docker_images" {
@@ -165,7 +170,6 @@ variable "default_group_node_group_launch_template_name" {
   description = "value"
   type        = string
 }
-
 
 variable "verdi_node_group_name" {
   description = "value"
