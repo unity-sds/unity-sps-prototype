@@ -26,26 +26,6 @@ resource "aws_api_gateway_resource" "api_gateway_ades_wpst_proxy_resource" {
   path_part   = "{proxy+}"
 }
 
-resource "aws_api_gateway_method" "api_gateway_ades_wpst_method" {
-  rest_api_id   = data.aws_ssm_parameter.api_gateway_rest_api_id.value
-  resource_id   = aws_api_gateway_resource.api_gateway_ades_wpst_resource.id
-  http_method   = "ANY"
-  authorization = "CUSTOM"
-  authorizer_id = data.aws_ssm_parameter.api_gateway_rest_api_lambda_authorizer_id.value 
-
-  request_parameters = {
-    "method.request.path.proxy" = true
-  }
-}
-
-resource "aws_api_gateway_integration" "api_gateway_ades_wpst_integration" {
-  rest_api_id   = data.aws_ssm_parameter.api_gateway_rest_api_id.value
-  resource_id   = aws_api_gateway_resource.api_gateway_ades_wpst_resource.id
-  http_method   = aws_api_gateway_method.api_gateway_ades_wpst_method.http_method
-  integration_http_method = "ANY"
-  type          = "MOCK"
-}
-
 resource "aws_api_gateway_method" "api_gateway_ades_wpst_proxy_method" {
   rest_api_id   = data.aws_ssm_parameter.api_gateway_rest_api_id.value
   resource_id   = aws_api_gateway_resource.api_gateway_ades_wpst_proxy_resource.id
@@ -72,6 +52,8 @@ resource "aws_api_gateway_integration" "api_gateway_ades_wpst_proxy_integration"
   
 }
 
+# Create deployment, uses hash of wpst resources to create a change to this resource. This enables deployment changes without
+# destroying the gateway resources.
 resource "aws_api_gateway_deployment" "api_gateway_deployment" {
   rest_api_id = data.aws_ssm_parameter.api_gateway_rest_api_id.value
   triggers = {
