@@ -26,12 +26,32 @@ resource "aws_api_gateway_resource" "api_gateway_ades_wpst_proxy_resource" {
   path_part   = "{proxy+}"
 }
 
+resource "aws_api_gateway_method" "api_gateway_ades_wpst_method" {
+  rest_api_id   = data.aws_ssm_parameter.api_gateway_rest_api_id.value
+  resource_id   = aws_api_gateway_resource.api_gateway_ades_wpst_resource.id
+  http_method   = "ANY"
+  authorization = "CUSTOM"
+  authorizer_id = data.aws_ssm_parameter.api_gateway_rest_api_lambda_authorizer_id.value 
+
+  request_parameters = {
+    "method.request.path.proxy" = true
+  }
+}
+
+resource "aws_api_gateway_integration" "api_gateway_ades_wpst_integration" {
+  rest_api_id   = data.aws_ssm_parameter.api_gateway_rest_api_id.value
+  resource_id   = aws_api_gateway_resource.api_gateway_ades_wpst_resource.id
+  http_method   = aws_api_gateway_method.api_gateway_ades_wpst_method.http_method
+  integration_http_method = "ANY"
+  type          = "MOCK"
+}
+
 resource "aws_api_gateway_method" "api_gateway_ades_wpst_proxy_method" {
   rest_api_id   = data.aws_ssm_parameter.api_gateway_rest_api_id.value
   resource_id   = aws_api_gateway_resource.api_gateway_ades_wpst_proxy_resource.id
   http_method   = "ANY"
   authorization = "CUSTOM"
-  authorizer_id = data.aws_ssm_parameter.api_gateway_rest_api_root_resource_id.value 
+  authorizer_id = data.aws_ssm_parameter.api_gateway_rest_api_lambda_authorizer_id.value 
 
   request_parameters = {
     "method.request.path.proxy" = true
@@ -42,6 +62,34 @@ resource "aws_api_gateway_integration" "api_gateway_ades_wpst_proxy_integration"
   rest_api_id   = data.aws_ssm_parameter.api_gateway_rest_api_id.value
   resource_id   = aws_api_gateway_resource.api_gateway_ades_wpst_proxy_resource.id
   http_method   = aws_api_gateway_method.api_gateway_ades_wpst_proxy_method.http_method
+  integration_http_method = "ANY"
   type          = "HTTP_PROXY"
-  uri           = "${kubernetes_service.ades-wpst-api-service.status[0].load_balancer[0].ingress[0].hostname[0]}:${var.service_port_map.ades_wpst_api_service}"
+  uri           = "http://${kubernetes_service.ades-wpst-api-service.status[0].load_balancer[0].ingress[0].hostname}:${var.service_port_map.ades_wpst_api_service}/{proxy}"
+  cache_key_parameters = ["method.request.path.proxy"]
+  request_parameters = {
+    "integration.request.path.proxy" = "method.request.path.proxy"
+  }
+  
+}
+
+resource "aws_api_gateway_deployment" "api_gateway_deployment" {
+  rest_api_id = data.aws_ssm_parameter.api_gateway_rest_api_id.value
+  triggers = {
+    redeployment = sha1(jsonencode([
+      aws_api_gateway_resource.api_gateway_ades_wpst_resource, 
+      aws_api_gateway_resource.api_gateway_ades_wpst_proxy_resource,
+      aws_api_gateway_method.api_gateway_ades_wpst_proxy_method,
+      aws_api_gateway_integration.api_gateway_ades_wpst_proxy_integration
+    ]))
+  }
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+resource "aws_api_gateway_stage" "api_gatway_stage" {
+  deployment_id = aws_api_gateway_deployment.api_gateway_deployment.id
+  rest_api_id = data.aws_ssm_parameter.api_gateway_rest_api_id.value
+  stage_name  = "sps"
 }
