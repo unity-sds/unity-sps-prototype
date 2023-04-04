@@ -1,16 +1,15 @@
-# https://github.com/unity-sds/unity-cs-infra/blob/main/terraform-api-gateway-cognito/post-deployment/update-api-gateway-urls.sh
+# Rest API ID from project api gateway deployment, needed to add resources, methods, and integrations to api gateway
 data "aws_ssm_parameter" "api_gateway_rest_api_id" {
-  # name = format("/unity/${var.venue}/%s-%s/api-gateway/rest-api-id", var.namespace, var.counter)
   name = "/unity/${var.venue}/api-gateway/rest-api-id"
 }
 
+# Rest API root resource ID from project api gateway deployment, needed by child resources
 data "aws_ssm_parameter" "api_gateway_rest_api_root_resource_id" {
-  # name = format("/unity/${var.venue}/%s-%s/api-gateway/rest-api-id", var.namespace, var.counter)
   name = "/unity/${var.venue}/api-gateway/rest-api-root-resource-id"
 }
 
+# Lambda authorizer ID in Rest API, needed by methods authorizing with CS custom authorizer
 data "aws_ssm_parameter" "api_gateway_rest_api_lambda_authorizer_id" {
-  # name = format("/unity/${var.venue}/%s-%s/api-gateway/rest-api-id", var.namespace, var.counter)
   name = "/unity/${var.venue}/api-gateway/rest-api-lambda-authorizer-id"
 }
 
@@ -48,26 +47,19 @@ resource "aws_api_gateway_integration" "api_gateway_ades_wpst_proxy_integration"
   cache_key_parameters = ["method.request.path.proxy"]
   request_parameters = {
     "integration.request.path.proxy" = "method.request.path.proxy"
-  }
-  
+  }  
 }
 
-# Create deployment, uses hash of wpst resources to create a change to this resource. This enables deployment changes without
-# destroying the gateway resources.
+# Deployment resource, to enable updating a deployment when a dependent resource changes see:
+# https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/api_gateway_deployment#triggers
 resource "aws_api_gateway_deployment" "api_gateway_deployment" {
   rest_api_id = data.aws_ssm_parameter.api_gateway_rest_api_id.value
-  triggers = {
-    redeployment = sha1(jsonencode([
-      aws_api_gateway_resource.api_gateway_ades_wpst_resource, 
-      aws_api_gateway_resource.api_gateway_ades_wpst_proxy_resource,
-      aws_api_gateway_method.api_gateway_ades_wpst_proxy_method,
-      aws_api_gateway_integration.api_gateway_ades_wpst_proxy_integration
-    ]))
-  }
-
   lifecycle {
     create_before_destroy = true
   }
+  depends_on = [
+    aws_api_gateway_integration.api_gateway_ades_wpst_proxy_integration
+  ]
 }
 
 resource "null_resource" "api_gateway_stage_update_resource" {
