@@ -70,8 +70,8 @@ resource "aws_api_gateway_deployment" "api_gateway_deployment" {
   }
 }
 
-resource "aws_api_gateway_stage" "api_gatway_stage" {
-  deployment_id = aws_api_gateway_deployment.api_gateway_deployment.id
-  rest_api_id = data.aws_ssm_parameter.api_gateway_rest_api_id.value
-  stage_name  = "sps"
+resource "null_resource" "api_gateway_stage_update_resource" {
+  provisioner "local-exec" {
+    command = "aws apigateway update-stage --region ${var.region} --rest-api-id ${data.aws_ssm_parameter.api_gateway_rest_api_id.value} --stage-name=${var.venue} --patch-operations op='replace',path='/deploymentId',value='${aws_api_gateway_deployment.api_gateway_deployment.id}'"
+  }
 }
