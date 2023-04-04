@@ -50,6 +50,43 @@ resource "aws_api_gateway_integration" "api_gateway_ades_wpst_proxy_integration"
   }  
 }
 
+resource "aws_api_gateway_resource" "api_gateway_sps_api_resource" {
+  rest_api_id = data.aws_ssm_parameter.api_gateway_rest_api_id.value
+  parent_id   = data.aws_ssm_parameter.api_gateway_rest_api_root_resource_id.value
+  path_part   = "sps-api"
+}
+
+resource "aws_api_gateway_resource" "api_gateway_sps_api_proxy_resource" {
+  rest_api_id = data.aws_ssm_parameter.api_gateway_rest_api_id.value
+  parent_id   = aws_api_gateway_resource.api_gateway_sps_api_resource.id
+  path_part   = "{proxy+}"
+}
+
+resource "aws_api_gateway_method" "api_gateway_sps_api_proxy_method" {
+  rest_api_id   = data.aws_ssm_parameter.api_gateway_rest_api_id.value
+  resource_id   = aws_api_gateway_resource.api_gateway_sps_api_proxy_resource.id
+  http_method   = "ANY"
+  authorization = "CUSTOM"
+  authorizer_id = data.aws_ssm_parameter.api_gateway_rest_api_lambda_authorizer_id.value 
+
+  request_parameters = {
+    "method.request.path.proxy" = true
+  }
+}
+
+resource "aws_api_gateway_integration" "api_gateway_sps_api_proxy_integration" {
+  rest_api_id   = data.aws_ssm_parameter.api_gateway_rest_api_id.value
+  resource_id   = aws_api_gateway_resource.api_gateway_sps_api_proxy_resource.id
+  http_method   = aws_api_gateway_method.api_gateway_sps_api_proxy_method.http_method
+  integration_http_method = "ANY"
+  type          = "HTTP_PROXY"
+  uri           = "http://${kubernetes_service.sps-api-service.status[0].load_balancer[0].ingress[0].hostname}:${var.service_port_map.sps_api_service}/{proxy}"
+  cache_key_parameters = ["method.request.path.proxy"]
+  request_parameters = {
+    "integration.request.path.proxy" = "method.request.path.proxy"
+  }  
+}
+
 # Deployment resource, to enable updating a deployment when a dependent resource changes see:
 # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/api_gateway_deployment#triggers
 resource "aws_api_gateway_deployment" "api_gateway_deployment" {
@@ -58,7 +95,8 @@ resource "aws_api_gateway_deployment" "api_gateway_deployment" {
     create_before_destroy = true
   }
   depends_on = [
-    aws_api_gateway_integration.api_gateway_ades_wpst_proxy_integration
+    aws_api_gateway_integration.api_gateway_ades_wpst_proxy_integration,
+    aws_api_gateway_integration.api_gateway_sps_api_proxy_integration
   ]
 }
 
