@@ -293,17 +293,3 @@ resource "helm_release" "grq2-es" {
     })
   ]
 }
-
-data "kubernetes_service" "grq-es" {
-  metadata {
-    namespace = kubernetes_namespace.unity-sps.metadata[0].name
-    name      = jsondecode(helm_release.grq2-es.metadata[0].values).masterService
-  }
-}
-
-data "kubernetes_service" "mozart-es" {
-  metadata {
-    namespace = kubernetes_namespace.unity-sps.metadata[0].name
-    name      = jsondecode(helm_release.mozart-es.metadata[0].values).masterService
-  }
-}
