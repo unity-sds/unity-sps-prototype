@@ -199,9 +199,9 @@ $ rm terraform.tf.backup
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_celeryconfig_filename"></a> [celeryconfig\_filename](#input\_celeryconfig\_filename) | value | `string` | `"celeryconfig_remote.py"` | no |
-| <a name="input_container_registry_owner"></a> [container\_registry\_owner](#input\_container\_registry\_owner) | value | `string` | n/a | yes |
-| <a name="input_container_registry_server"></a> [container\_registry\_server](#input\_container\_registry\_server) | value | `string` | n/a | yes |
-| <a name="input_container_registry_username"></a> [container\_registry\_username](#input\_container\_registry\_username) | value | `string` | n/a | yes |
+| <a name="input_container_registry_owner"></a> [container\_registry\_owner](#input\_container\_registry\_owner) | value | `string` | `"unity-sds/unity-sps-prototype"` | no |
+| <a name="input_container_registry_server"></a> [container\_registry\_server](#input\_container\_registry\_server) | value | `string` | `"ghcr.io"` | no |
+| <a name="input_container_registry_username"></a> [container\_registry\_username](#input\_container\_registry\_username) | value | `string` | `"drewm-jpl"` | no |
 | <a name="input_counter"></a> [counter](#input\_counter) | value | `string` | `""` | no |
 | <a name="input_datasets_filename"></a> [datasets\_filename](#input\_datasets\_filename) | value | `string` | `"datasets.remote.template.json"` | no |
 | <a name="input_default_group_node_group_launch_template_name"></a> [default\_group\_node\_group\_launch\_template\_name](#input\_default\_group\_node\_group\_launch\_template\_name) | value | `string` | n/a | yes |
@@ -210,8 +210,8 @@ $ rm terraform.tf.backup
 | <a name="input_eks_cluster_name"></a> [eks\_cluster\_name](#input\_eks\_cluster\_name) | The name of the EKS cluster. | `string` | n/a | yes |
 | <a name="input_elb_subnet"></a> [elb\_subnet](#input\_elb\_subnet) | value | `string` | n/a | yes |
 | <a name="input_kubeconfig_filepath"></a> [kubeconfig\_filepath](#input\_kubeconfig\_filepath) | Path to the kubeconfig file for the Kubernetes cluster | `string` | n/a | yes |
-| <a name="input_namespace"></a> [namespace](#input\_namespace) | Namespace for the Unity SPS HySDS-related Kubernetes resources | `string` | n/a | yes |
-| <a name="input_project"></a> [project](#input\_project) | The project or mission deploying Unity SPS | `string` | n/a | yes |
+| <a name="input_namespace"></a> [namespace](#input\_namespace) | Namespace for the Unity SPS HySDS-related Kubernetes resources | `string` | `"unity-sps"` | no |
+| <a name="input_project"></a> [project](#input\_project) | The project or mission deploying Unity SPS | `string` | `"unity"` | no |
 | <a name="input_region"></a> [region](#input\_region) | The AWS region | `string` | `"us-west-2"` | no |
 | <a name="input_release"></a> [release](#input\_release) | The SPS release version | `string` | n/a | yes |
 | <a name="input_service_area"></a> [service\_area](#input\_service\_area) | The service area owner of the resources being deployed | `string` | `"sps"` | no |

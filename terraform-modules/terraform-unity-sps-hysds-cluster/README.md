@@ -10,6 +10,7 @@
 | <a name="requirement_helm"></a> [helm](#requirement\_helm) | 2.6.0 |
 | <a name="requirement_kubernetes"></a> [kubernetes](#requirement\_kubernetes) | 2.19.0 |
 | <a name="requirement_null"></a> [null](#requirement\_null) | 3.1.1 |
+| <a name="requirement_random"></a> [random](#requirement\_random) | 3.4.3 |
 
 ## Providers
 
@@ -88,8 +89,7 @@ No modules.
 | [kubernetes_service_account.sps-api](https://registry.terraform.io/providers/hashicorp/kubernetes/2.19.0/docs/resources/service_account) | resource |
 | [kubernetes_stateful_set.rabbitmq_statefulset](https://registry.terraform.io/providers/hashicorp/kubernetes/2.19.0/docs/resources/stateful_set) | resource |
 | [kubernetes_storage_class.efs_storage_class](https://registry.terraform.io/providers/hashicorp/kubernetes/2.19.0/docs/resources/storage_class) | resource |
-| [random_id.counter](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/id) | resource |
-| [random_uuid.boundary_uuid](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/uuid) | resource |
+| [random_id.counter](https://registry.terraform.io/providers/hashicorp/random/3.4.3/docs/resources/id) | resource |
 | [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/4.57.1/docs/data-sources/caller_identity) | data source |
 | [aws_efs_mount_target.uads-development-efs-fsmt](https://registry.terraform.io/providers/hashicorp/aws/4.57.1/docs/data-sources/efs_mount_target) | data source |
 | [aws_eks_cluster.sps-cluster](https://registry.terraform.io/providers/hashicorp/aws/4.57.1/docs/data-sources/eks_cluster) | data source |
@@ -104,10 +104,10 @@ No modules.
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_celeryconfig_filename"></a> [celeryconfig\_filename](#input\_celeryconfig\_filename) | value | `string` | `"celeryconfig_remote.py"` | no |
-| <a name="input_container_registry_owner"></a> [container\_registry\_owner](#input\_container\_registry\_owner) | value | `string` | n/a | yes |
+| <a name="input_container_registry_owner"></a> [container\_registry\_owner](#input\_container\_registry\_owner) | value | `string` | `"unity-sds/unity-sps-prototype"` | no |
 | <a name="input_container_registry_pat"></a> [container\_registry\_pat](#input\_container\_registry\_pat) | value | `string` | n/a | yes |
-| <a name="input_container_registry_server"></a> [container\_registry\_server](#input\_container\_registry\_server) | value | `string` | n/a | yes |
-| <a name="input_container_registry_username"></a> [container\_registry\_username](#input\_container\_registry\_username) | value | `string` | n/a | yes |
+| <a name="input_container_registry_server"></a> [container\_registry\_server](#input\_container\_registry\_server) | value | `string` | `"ghcr.io"` | no |
+| <a name="input_container_registry_username"></a> [container\_registry\_username](#input\_container\_registry\_username) | value | `string` | `"drewm-jpl"` | no |
 | <a name="input_counter"></a> [counter](#input\_counter) | value | `string` | `""` | no |
 | <a name="input_datasets_filename"></a> [datasets\_filename](#input\_datasets\_filename) | value | `string` | `"datasets.remote.template.json"` | no |
 | <a name="input_default_group_node_group_launch_template_name"></a> [default\_group\_node\_group\_launch\_template\_name](#input\_default\_group\_node\_group\_launch\_template\_name) | value | `string` | n/a | yes |
