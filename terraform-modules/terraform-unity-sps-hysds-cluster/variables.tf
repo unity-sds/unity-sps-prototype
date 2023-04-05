@@ -1,3 +1,20 @@
+variable "project" {
+  description = "The project or mission deploying Unity SPS"
+  type        = string
+  default     = "unity"
+}
+
+variable "service_area" {
+  description = "The service area owner of the resources being deployed"
+  type        = string
+  default     = "sps"
+}
+
+variable "venue" {
+  description = "The MCP venue in which the cluster will be deployed (dev, test, prod)"
+  type        = string
+}
+
 variable "release" {
   description = "The SPS release version"
   type        = string
@@ -19,27 +36,10 @@ variable "kubeconfig_filepath" {
   type        = string
 }
 
-variable "project" {
-  description = "The project or mission deploying Unity SPS"
-  type        = string
-  default     = "unity"
-}
-
 variable "namespace" {
   description = "Namespace for the Unity SPS HySDS-related Kubernetes resources"
   type        = string
   default     = "unity-sps"
-}
-
-variable "venue" {
-  description = "The MCP venue in which the cluster will be deployed (dev, test, prod)"
-  type        = string
-}
-
-variable "service_area" {
-  description = "The service area owner of the resources being deployed"
-  type        = string
-  default     = "sps"
 }
 
 variable "counter" {
@@ -108,11 +108,13 @@ variable "celeryconfig_filename" {
 variable "container_registry_server" {
   description = "value"
   type        = string
+  default     = "ghcr.io"
 }
 
 variable "container_registry_username" {
   description = "value"
   type        = string
+  default     = "drewm-jpl"
 }
 
 variable "container_registry_pat" {
@@ -123,6 +125,7 @@ variable "container_registry_pat" {
 variable "container_registry_owner" {
   description = "value"
   type        = string
+  default     = "unity-sds/unity-sps-prototype"
 }
 
 variable "uds_staging_bucket" {

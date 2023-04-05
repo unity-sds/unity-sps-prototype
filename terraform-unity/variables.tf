@@ -1,11 +1,7 @@
-variable "release" {
-  description = "The SPS release version"
-  type        = string
-}
-
 variable "project" {
   description = "The project or mission deploying Unity SPS"
   type        = string
+  default     = "unity"
 }
 
 variable "service_area" {
@@ -14,13 +10,13 @@ variable "service_area" {
   default     = "sps"
 }
 
-variable "namespace" {
-  description = "Namespace for the Unity SPS HySDS-related Kubernetes resources"
+variable "venue" {
+  description = "The MCP venue in which the cluster will be deployed (dev, test, prod)"
   type        = string
 }
 
-variable "venue" {
-  description = "The MCP venue in which the cluster will be deployed (dev, test, prod)"
+variable "release" {
+  description = "The SPS release version"
   type        = string
 }
 
@@ -30,15 +26,26 @@ variable "region" {
   default     = "us-west-2"
 }
 
-variable "counter" {
-  description = "value"
+variable "eks_cluster_name" {
+  description = "The name of the EKS cluster."
   type        = string
-  default     = ""
 }
 
 variable "kubeconfig_filepath" {
   description = "Path to the kubeconfig file for the Kubernetes cluster"
   type        = string
+}
+
+variable "namespace" {
+  description = "Namespace for the Unity SPS HySDS-related Kubernetes resources"
+  type        = string
+  default     = "unity-sps"
+}
+
+variable "counter" {
+  description = "value"
+  type        = string
+  default     = ""
 }
 
 variable "docker_images" {
@@ -101,27 +108,25 @@ variable "celeryconfig_filename" {
 variable "container_registry_server" {
   description = "value"
   type        = string
+  default     = "ghcr.io"
 }
 
 variable "container_registry_username" {
   description = "value"
   type        = string
+  default     = "drewm-jpl"
 }
 
 variable "container_registry_owner" {
   description = "value"
   type        = string
+  default     = "unity-sds/unity-sps-prototype"
 }
 
 variable "uads_development_efs_fsmt_id" {
   description = "value"
   type        = string
   default     = null
-}
-
-variable "eks_cluster_name" {
-  description = "The name of the EKS cluster."
-  type        = string
 }
 
 variable "elb_subnet" {
