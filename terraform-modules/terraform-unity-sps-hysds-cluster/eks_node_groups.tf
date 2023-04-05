@@ -1,4 +1,4 @@
-resource "random_uuid" "boundary_uuid" {}
+# resource "random_uuid" "boundary_uuid" {}
 
 locals {
   aws_managed_policies = [
