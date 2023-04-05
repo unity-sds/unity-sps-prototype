@@ -1,10 +1,5 @@
-# Shared values between local and remote deployment
 release = "23.1"
 
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-# MCP EKS cluster
-# Most variables default to an MCP deployment environment.
 docker_images = {
   hysds_core         = "ghcr.io/unity-sds/unity-sps-prototype/hysds-core:unity-v0.0.1"
   hysds_ui           = "ghcr.io/unity-sds/unity-sps-prototype/hysds-ui-remote:unity-v0.0.1"
@@ -23,9 +18,6 @@ docker_images = {
   redis              = "redis:latest"
 }
 
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-# MCP Test Venue
 venue                                         = "test"
 eks_cluster_name                              = "<INSERT-EKS-CLUSTER-NAME>"
 kubeconfig_filepath                           = "<INSERT-EKS-CLUSTER-KUBECONFIG-PATH>"
@@ -33,5 +25,3 @@ uads_development_efs_fsmt_id                  = "fsmt-06c1de455bed6a67b"
 default_group_node_group_name                 = "defaultgroupNodeGroup"
 default_group_node_group_launch_template_name = "eksctl-unity-test-sps-hysds-eks-nightly-nodegroup-defaultgroupNodeGroup"
 elb_subnet                                    = "subnet-0ca61daf80bc568d9"
-
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
