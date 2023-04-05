@@ -1,4 +1,3 @@
-# Shared values between local and remote deployment
 release = "23.1"
 
 docker_images = {
