@@ -23,6 +23,9 @@ resource "kubernetes_deployment" "factotum-job-worker" {
       }
 
       spec {
+        node_selector = {
+          "eks.amazonaws.com/nodegroup" = var.default_group_node_group_name
+        }
         # init_container {
         #   name    = "changeume-ownership"
         #   image   = var.docker_images.busybox

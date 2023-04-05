@@ -10,8 +10,7 @@ resource "kubernetes_service" "sps-api-service" {
     selector = {
       app = "sps-api"
     }
-    session_affinity = var.deployment_environment != "local" ? null : "ClientIP"
-    type             = var.service_type
+    type = var.service_type
     port {
       protocol    = "TCP"
       port        = var.service_port_map.sps_api_service
@@ -45,6 +44,9 @@ resource "kubernetes_deployment" "sps-api" {
       }
       spec {
         service_account_name = kubernetes_service_account.sps-api.metadata[0].name
+        node_selector = {
+          "eks.amazonaws.com/nodegroup" = aws_eks_node_group.sps_api.node_group_name
+        }
         container {
           image             = var.docker_images.sps_api
           image_pull_policy = "Always"
@@ -62,7 +64,7 @@ resource "kubernetes_deployment" "sps-api" {
           }
           env {
             name  = "VERDI_NODE_GROUP_NAME"
-            value = "VerdiNodeGroup"
+            value = "${var.project}-${var.venue}-${var.service_area}-EKS-VerdiNodeGroup"
           }
           env {
             name  = "VERDI_DAEMONSET_NAMESPACE"

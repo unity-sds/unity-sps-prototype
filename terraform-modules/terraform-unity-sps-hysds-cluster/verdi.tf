@@ -20,7 +20,7 @@ resource "kubernetes_daemonset" "verdi" {
       }
       spec {
         node_selector = {
-          "eks.amazonaws.com/nodegroup" = aws_eks_node_group.verdi_node_group.node_group_name
+          "eks.amazonaws.com/nodegroup" = aws_eks_node_group.verdi.node_group_name
         }
         init_container {
           name    = "change-ownership"

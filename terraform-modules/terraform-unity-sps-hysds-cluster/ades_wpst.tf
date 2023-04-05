@@ -53,8 +53,7 @@ resource "kubernetes_service" "ades-wpst-api-service" {
     selector = {
       app = "ades-wpst-api"
     }
-    session_affinity = var.deployment_environment != "local" ? null : "ClientIP"
-    type             = var.service_type
+    type = var.service_type
     port {
       protocol    = "TCP"
       port        = var.service_port_map.ades_wpst_api_service
@@ -87,6 +86,9 @@ resource "kubernetes_deployment" "ades-wpst-api" {
         }
       }
       spec {
+        node_selector = {
+          "eks.amazonaws.com/nodegroup" = var.default_group_node_group_name
+        }
         container {
           name              = "dind-daemon"
           image             = "docker:dind"
@@ -133,6 +135,18 @@ resource "kubernetes_deployment" "ades-wpst-api" {
           image             = var.docker_images.ades_wpst_api
           image_pull_policy = "Always"
           name              = "ades-wpst-api"
+          lifecycle {
+            # TODO remove, this is a temp workaround
+            post_start {
+              exec {
+                command = [
+                  "/bin/sh",
+                  "-c",
+                  "cd / && git clone -b MCP_${upper(var.venue)} https://github.com/unity-sds/unity-sps-register_job.git"
+                ]
+              }
+            }
+          }
           env {
             name  = "ADES_PLATFORM"
             value = "HYSDS"

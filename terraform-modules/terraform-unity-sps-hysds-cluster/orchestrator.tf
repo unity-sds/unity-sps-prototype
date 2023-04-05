@@ -23,6 +23,9 @@ resource "kubernetes_deployment" "orchestrator" {
       }
 
       spec {
+        node_selector = {
+          "eks.amazonaws.com/nodegroup" = var.default_group_node_group_name
+        }
         security_context {
           run_as_user  = 0
           run_as_group = 0

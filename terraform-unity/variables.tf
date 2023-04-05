@@ -24,7 +24,6 @@ variable "venue" {
   type        = string
 }
 
-
 variable "region" {
   description = "The AWS region"
   type        = string
@@ -33,6 +32,7 @@ variable "region" {
 
 variable "counter" {
   description = "value"
+  type        = string
   default     = ""
 }
 
@@ -86,7 +86,6 @@ variable "service_port_map" {
   }
 }
 
-
 variable "datasets_filename" {
   description = "value"
   type        = string
@@ -97,12 +96,6 @@ variable "celeryconfig_filename" {
   description = "value"
   type        = string
   default     = "celeryconfig_remote.py"
-}
-
-variable "deployment_environment" {
-  description = "value"
-  type        = string
-  default     = "mcp"
 }
 
 variable "container_registry_server" {
@@ -137,24 +130,14 @@ variable "elb_subnet" {
 }
 
 # TODO - Consolidate these verdi variables
-
 variable "default_group_node_group_name" {
   description = "value"
   type        = string
-  default     = "defaultgroupNodeGroup"
 }
-
 
 variable "default_group_node_group_launch_template_name" {
   description = "value"
   type        = string
-}
-
-
-variable "verdi_node_group_name" {
-  description = "value"
-  type        = string
-  default     = "VerdiNodeGroup"
 }
 
 variable "verdi_node_group_capacity_type" {
@@ -162,7 +145,6 @@ variable "verdi_node_group_capacity_type" {
   type        = string
   default     = "ON_DEMAND"
 }
-
 
 variable "verdi_node_group_scaling_config" {
   description = "value"
@@ -173,7 +155,6 @@ variable "verdi_node_group_scaling_config" {
     "max_size"     = 10
   }
 }
-
 
 variable "verdi_node_group_instance_types" {
   description = "value"

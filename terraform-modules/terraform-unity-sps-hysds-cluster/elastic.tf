@@ -45,6 +45,9 @@ resource "kubernetes_persistent_volume" "grq-es-pv" {
 locals {
   mozart_es_values = {
     clusterName = "mozart-es"
+    node_selector = {
+      "eks.amazonaws.com/nodegroup" = var.default_group_node_group_name
+    }
     # Permit co-located instances for solitary minikube virtual machines.
     antiAffinity = "soft"
     # Shrink default JVM heap.
@@ -151,6 +154,9 @@ locals {
   }
   grq2_es_values = {
     clusterName = "grq-es"
+    node_selector = {
+      "eks.amazonaws.com/nodegroup" = var.default_group_node_group_name
+    }
     # Permit co-located instances for solitary minikube virtual machines.
     antiAffinity = "soft"
     # Shrink default JVM heap.

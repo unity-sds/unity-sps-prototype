@@ -20,7 +20,6 @@ module "unity-sps-hysds-cluster" {
   service_port_map                              = var.service_port_map
   celeryconfig_filename                         = var.celeryconfig_filename
   datasets_filename                             = var.datasets_filename
-  deployment_environment                        = var.deployment_environment
   container_registry_server                     = var.container_registry_server
   container_registry_username                   = var.container_registry_username
   container_registry_pat                        = data.aws_ssm_parameter.ghcr_pat.value
@@ -33,4 +32,7 @@ module "unity-sps-hysds-cluster" {
   elb_subnet                                    = var.elb_subnet
   default_group_node_group_name                 = var.default_group_node_group_name
   default_group_node_group_launch_template_name = var.default_group_node_group_launch_template_name
+  verdi_node_group_capacity_type                = var.verdi_node_group_capacity_type
+  verdi_node_group_scaling_config               = var.verdi_node_group_scaling_config
+  verdi_node_group_instance_types               = var.verdi_node_group_instance_types
 }
