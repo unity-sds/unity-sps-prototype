@@ -44,6 +44,7 @@ variable "service_area" {
 
 variable "counter" {
   description = "value"
+  type        = string
   default     = ""
 }
 

@@ -6,7 +6,7 @@ resource "kubernetes_secret" "sps-api" {
       "kubernetes.io/service-account.name" = "sps-api-sa"
     }
     namespace     = kubernetes_namespace.unity-sps.metadata[0].name
-    generate_name = "${kubernetes_service_account.sps-api.metadata.0.name}-token-"
+    generate_name = "${kubernetes_service_account.sps-api.metadata[0].name}-token-"
   }
 
   type                           = "kubernetes.io/service-account-token"
