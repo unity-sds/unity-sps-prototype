@@ -114,7 +114,11 @@ resource "kubernetes_deployment" "ades-wpst-api" {
                 command = [
                   "bin/sh",
                   "-c",
-                  "sleep 5; chmod 777 /var/run/docker.sock; docker pull ${var.docker_images.sps_hysds_pge_base}"
+                  <<-EOT
+                  sleep 5 && \
+                  chmod 777 /var/run/docker.sock && \
+                  docker pull ${var.docker_images.sps_hysds_pge_base}
+                  EOT
                 ]
               }
             }
@@ -142,7 +146,12 @@ resource "kubernetes_deployment" "ades-wpst-api" {
                 command = [
                   "/bin/sh",
                   "-c",
-                  "cd / && git clone -b MCP_${upper(var.venue)} https://github.com/unity-sds/unity-sps-register_job.git"
+                  <<-EOT
+                  cd / && \
+                  git clone -b MCP_${upper(var.venue)} https://github.com/unity-sds/unity-sps-register_job.git && \
+                  git clone -b  v1.0.5 https://github.com/hysds/lightweight-jobs.git && \
+                  python3 /flask_ades_wpst/utils/register_lightweight_jobs.py --image-name lightweight-jobs --image-tag v1.0.5 --register-job-location /lightweight-jobs
+                  EOT
                 ]
               }
             }
@@ -217,4 +226,10 @@ resource "kubernetes_deployment" "ades-wpst-api" {
       }
     }
   }
+  depends_on = [
+    kubernetes_service.mozart-service,
+    kubernetes_service.grq2-service,
+    data.kubernetes_service.mozart-es,
+    data.kubernetes_service.grq-es
+  ]
 }
