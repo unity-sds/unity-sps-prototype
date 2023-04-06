@@ -6,8 +6,7 @@
 # https://www.terraform.io/language/modules/syntax
 
 module "unity-sps-hysds-cluster" {
-  source = "../terraform-modules/terraform-unity-sps-hysds-cluster"
-  # source                      = "git::https://github.com/unity-sds/unity-sps-prototype.git//terraform-modules/terraform-unity-sps-hysds-cluster?ref=main"
+  source                                        = "../terraform-modules/terraform-unity-sps-hysds-cluster"
   release                                       = var.release
   project                                       = var.project
   namespace                                     = var.namespace
