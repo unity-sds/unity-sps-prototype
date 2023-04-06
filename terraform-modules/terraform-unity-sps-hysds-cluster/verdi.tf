@@ -60,7 +60,7 @@ resource "kubernetes_daemonset" "verdi" {
           # After starting, the Docker socket is made available to the Vedri container
           # so that Verdi can execute Docker commands vs this engine
           name  = "dind-daemon"
-          image = "docker:dind"
+          image = var.docker_images.dind
           #image = "docker:dind-rootless"
           env {
             name  = "DOCKER_TLS_CERTDIR"

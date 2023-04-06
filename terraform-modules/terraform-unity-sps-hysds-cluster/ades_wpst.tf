@@ -91,7 +91,7 @@ resource "kubernetes_deployment" "ades-wpst-api" {
         }
         container {
           name              = "dind-daemon"
-          image             = "docker:dind"
+          image             = var.docker_images.dind
           image_pull_policy = "Always"
           env {
             name  = "DOCKER_TLS_CERTDIR"
