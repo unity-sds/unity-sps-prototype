@@ -1,8 +1,16 @@
 name: Build Docker Images
 
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Docker Image Tag"
+        required: false
+        default: "development-tag"
+
 env:
   REGISTRY: ghcr.io
-  TAG: unity-v0.0.1
+  TAG: ${{ github.event.inputs.tag }}
   HYSDS_CORE_IMAGE_NAME: ${{ github.repository }}/hysds-core
   MOZART_IMAGE_NAME: ${{ github.repository }}/hysds-mozart
   GRQ_IMAGE_NAME: ${{ github.repository }}/hysds-grq2
@@ -20,8 +28,6 @@ env:
   SPS_API_FORK_IMAGE_NAME: ${{ github.repository }}/sps-api-fork
 
   SPS_HYSDS_PGE_BASE_IMAGE_NAME: ${{ github.repository }}/sps-hysds-pge-base
-
-on: workflow_dispatch
 
 jobs:
   build-hysds-core:
