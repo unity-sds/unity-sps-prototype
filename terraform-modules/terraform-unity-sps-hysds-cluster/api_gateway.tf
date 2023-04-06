@@ -49,7 +49,7 @@ resource "aws_api_gateway_integration" "api_gateway_ades_wpst_proxy_integration"
     "integration.request.path.proxy" = "method.request.path.proxy"
   }
 }
-
+/*
 resource "aws_api_gateway_resource" "api_gateway_sps_api_resource" {
   rest_api_id = data.aws_ssm_parameter.api_gateway_rest_api_id.value
   parent_id   = data.aws_ssm_parameter.api_gateway_rest_api_root_resource_id.value
@@ -86,6 +86,7 @@ resource "aws_api_gateway_integration" "api_gateway_sps_api_proxy_integration" {
     "integration.request.path.proxy" = "method.request.path.proxy"
   }
 }
+*/
 
 # Deployment resource, to enable updating a deployment when a dependent resource changes see:
 # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/api_gateway_deployment#triggers
@@ -94,10 +95,34 @@ resource "aws_api_gateway_deployment" "api_gateway_deployment" {
   lifecycle {
     create_before_destroy = true
   }
+  triggers = {
+    region = var.region
+    venue  = var.venue
+    rest_api_id = data.aws_ssm_parameter.api_gateway_rest_api_id.value
+    redployment = sha1(jsonencode([
+      aws_api_gateway_resource.api_gateway_ades_wpst_resource
+    ]))
+  }
+  depends_on = [
+    aws_api_gateway_integration.api_gateway_ades_wpst_proxy_integration
+  ]
+
+  # Creates a new deployment and sets the stage to use it, this allows terraform to delete this deployment object. Without this step,
+  # attempts to delete the deployment may fail because the stage is still associated with it.
+  provisioner "local-exec" {
+    when = destroy
+    command = <<EOF
+aws apigateway update-stage --region ${self.triggers.region} --rest-api-id ${self.triggers.rest_api_id} \
+--stage-name=${self.triggers.venue} --patch-operations op='replace',path='/deploymentId',value=\
+$(aws apigateway create-deployment --rest-api-id ${self.triggers.rest_api_id} --region ${self.triggers.region} | jq -r .id)
+EOF
+  }
+  /*
   depends_on = [
     aws_api_gateway_integration.api_gateway_ades_wpst_proxy_integration,
     aws_api_gateway_integration.api_gateway_sps_api_proxy_integration
   ]
+  */
 }
 
 resource "null_resource" "api_gateway_stage_update_resource" {
