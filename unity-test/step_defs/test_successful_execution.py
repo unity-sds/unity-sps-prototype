@@ -1,6 +1,6 @@
 from pytest_bdd import scenario, given, when, then, parsers
 import backoff
-import json
+import requests
 from .conftest import FEATURES_DIR, _request_job_status_by_id
 
 feature_file = "successful_execution.feature"
@@ -34,7 +34,7 @@ def fatal_status(e):
 )
 @backoff.on_exception(
     backoff.constant,
-    AssertionError,
+    (AssertionError, requests.exceptions.HTTPError),
     max_time=3600,
     giveup=fatal_status,
     jitter=None,
