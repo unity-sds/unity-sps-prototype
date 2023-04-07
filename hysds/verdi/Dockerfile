@@ -1,4 +1,4 @@
-ARG PARENT_DOCKER_IMAGE=hysds-core:unity-v0.0.1
+ARG PARENT_DOCKER_IMAGE=hysds-core:unity-v1.0.0
 FROM $PARENT_DOCKER_IMAGE
 
 USER root
