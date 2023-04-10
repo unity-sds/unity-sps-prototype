@@ -1,4 +1,6 @@
-from pytest_bdd import scenario, given, when, then, parsers
+from pytest_bdd import scenario, given, when, then
+import backoff
+import requests
 
 from .conftest import FEATURES_DIR, _request_job_status_by_id
 
@@ -22,6 +24,13 @@ def created_response(response):
 @when(
     "a WPS-T request is made to get the status of the job by its ID",
     target_fixture="response",
+)
+@backoff.on_exception(
+    backoff.constant,
+    (requests.exceptions.HTTPError),
+    max_time=3600,
+    jitter=None,
+    interval=1,
 )
 def request_job_status_by_id(process_service_endpoint, project_process_dict, job_id):
     return _request_job_status_by_id(
