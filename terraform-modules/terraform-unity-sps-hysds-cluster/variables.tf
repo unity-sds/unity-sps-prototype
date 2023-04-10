@@ -1,3 +1,25 @@
+variable "project" {
+  description = "The project or mission deploying Unity SPS"
+  type        = string
+  default     = "unity"
+}
+
+variable "service_area" {
+  description = "The service area owner of the resources being deployed"
+  type        = string
+  default     = "sps"
+}
+
+variable "venue" {
+  description = "The MCP venue in which the cluster will be deployed (dev, test, prod)"
+  type        = string
+}
+
+variable "release" {
+  description = "The SPS release version"
+  type        = string
+}
+
 variable "region" {
   description = "The AWS region"
   type        = string
@@ -14,51 +36,36 @@ variable "kubeconfig_filepath" {
   type        = string
 }
 
-variable "project" {
-  description = "The project or mission deploying Unity SPS"
-  type        = string
-  default     = "unity"
-}
-
 variable "namespace" {
   description = "Namespace for the Unity SPS HySDS-related Kubernetes resources"
   type        = string
   default     = "unity-sps"
 }
 
-variable "venue" {
-  description = "The MCP venue in which the cluster will be deployed (dev, test, prod)"
-  type        = string
-}
-
-variable "service_area" {
-  description = "The service area owner of the resources being deployed"
-  type        = string
-  default     = "sps"
-}
-
 variable "counter" {
   description = "value"
-  type        = number
+  type        = string
+  default     = ""
 }
 
 variable "docker_images" {
   description = "Docker images for the Unity SPS containers"
   type        = map(string)
   default = {
-    hysds_core         = "ghcr.io/unity-sds/unity-sps-prototype/hysds-core:unity-v0.0.1"
-    hysds_ui           = "ghcr.io/unity-sds/unity-sps-prototype/hysds-ui-remote:unity-v0.0.1"
-    hysds_mozart       = "ghcr.io/unity-sds/unity-sps-prototype/hysds-mozart:unity-v0.0.1"
-    hysds_grq2         = "ghcr.io/unity-sds/unity-sps-prototype/hysds-grq2:unity-v0.0.1"
-    hysds_verdi        = "ghcr.io/unity-sds/unity-sps-prototype/hysds-verdi:unity-v0.0.1"
-    hysds_factotum     = "ghcr.io/unity-sds/unity-sps-prototype/hysds-factotum:unity-v0.0.1"
-    ades_wpst_api      = "ghcr.io/unity-sds/unity-sps-prototype/ades-wpst-api:unity-v0.0.1"
-    sps_api            = "ghcr.io/unity-sds/unity-sps-prototype/sps-api:unity-v0.0.1"
-    sps_hysds_pge_base = "ghcr.io/unity-sds/unity-sps-prototype/sps-hysds-pge-base:unity-v0.0.1"
+    hysds_core         = "ghcr.io/unity-sds/unity-sps-prototype/hysds-core:unity-v1.0.0"
+    hysds_ui           = "ghcr.io/unity-sds/unity-sps-prototype/hysds-ui-remote:unity-v1.0.0"
+    hysds_mozart       = "ghcr.io/unity-sds/unity-sps-prototype/hysds-mozart:unity-v1.0.0"
+    hysds_grq2         = "ghcr.io/unity-sds/unity-sps-prototype/hysds-grq2:unity-v1.0.0"
+    hysds_verdi        = "ghcr.io/unity-sds/unity-sps-prototype/hysds-verdi:unity-v1.0.0"
+    hysds_factotum     = "ghcr.io/unity-sds/unity-sps-prototype/hysds-factotum:unity-v1.0.0"
+    ades_wpst_api      = "ghcr.io/unity-sds/unity-sps-prototype/ades-wpst-api:unity-v1.0.0"
+    sps_api            = "ghcr.io/unity-sds/unity-sps-prototype/sps-api:unity-v1.0.0"
+    sps_hysds_pge_base = "ghcr.io/unity-sds/unity-sps-prototype/sps-hysds-pge-base:unity-v1.0.0"
     logstash           = "docker.elastic.co/logstash/logstash:7.10.2"
-    rabbitmq           = "rabbitmq:3-management"
-    busybox            = "k8s.gcr.io/busybox"
-    redis              = "redis:latest"
+    rabbitmq           = "rabbitmq:3.11.13-management"
+    busybox            = "busybox:1.36.0"
+    redis              = "redis:7.0.10"
+    dind               = "docker:23.0.3-dind"
   }
 }
 
@@ -99,20 +106,16 @@ variable "celeryconfig_filename" {
   default     = "celeryconfig_remote.py"
 }
 
-variable "deployment_environment" {
-  description = "value"
-  type        = string
-  default     = "mcp"
-}
-
 variable "container_registry_server" {
   description = "value"
   type        = string
+  default     = "ghcr.io"
 }
 
 variable "container_registry_username" {
   description = "value"
   type        = string
+  default     = "drewm-jpl"
 }
 
 variable "container_registry_pat" {
@@ -123,6 +126,7 @@ variable "container_registry_pat" {
 variable "container_registry_owner" {
   description = "value"
   type        = string
+  default     = "unity-sds/unity-sps-prototype"
 }
 
 variable "uds_staging_bucket" {
@@ -143,10 +147,43 @@ variable "uds_dapa_api" {
 variable "uads_development_efs_fsmt_id" {
   description = "value"
   type        = string
+  default     = null
 }
-
 
 variable "elb_subnet" {
   description = "value"
   type        = string
+}
+
+# TODO - Consolidate these verdi variables
+variable "default_group_node_group_name" {
+  description = "value"
+  type        = string
+}
+
+variable "default_group_node_group_launch_template_name" {
+  description = "value"
+  type        = string
+}
+
+variable "verdi_node_group_capacity_type" {
+  description = "value"
+  type        = string
+  default     = "ON_DEMAND"
+}
+
+variable "verdi_node_group_scaling_config" {
+  description = "value"
+  type        = map(number)
+  default = {
+    "desired_size" = 3
+    "min_size"     = 0
+    "max_size"     = 10
+  }
+}
+
+variable "verdi_node_group_instance_types" {
+  description = "value"
+  type        = list(string)
+  default     = ["m3.medium"]
 }

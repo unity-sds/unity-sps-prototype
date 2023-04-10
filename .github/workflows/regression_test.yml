@@ -1,4 +1,4 @@
-name: U-SPS Smoke Test
+name: U-SPS Regression Test
 
 on:
   schedule:
@@ -27,7 +27,7 @@ jobs:
           echo "Base URL for the WPS-T API endpoint (i.e. http://abc.def.ghi:port-number): ${{ github.event.inputs.PROCESS_SERVICE_ENDPOINT || vars.PROCESS_SERVICE_ENDPOINT }}"
           echo "Base URL for the SPS API endpoint (i.e. http://abc.def.ghi:port-number): ${{ github.event.inputs.SPS_API_SERVICE_ENDPOINT || vars.SPS_API_SERVICE_ENDPOINT }}"
           echo "The Sounder SIPS PGEs to test (L1A, L1B, chirp): ${{ github.event.inputs.SOUNDER_SIPS_PROCESS_SELECTION || vars.SOUNDER_SIPS_PROCESS_SELECTION }}"
-  smoke_test:
+  regression_test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -40,7 +40,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt --use-pep517
-      - name: Run the smoke test
+      - name: Run the regression test
         working-directory: ${{ github.workspace }}/unity-test/step_defs
         run: >
           pytest -s

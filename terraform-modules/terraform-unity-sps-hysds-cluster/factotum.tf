@@ -23,6 +23,9 @@ resource "kubernetes_deployment" "factotum-job-worker" {
       }
 
       spec {
+        node_selector = {
+          "eks.amazonaws.com/nodegroup" = var.default_group_node_group_name
+        }
         # init_container {
         #   name    = "changeume-ownership"
         #   image   = var.docker_images.busybox
@@ -48,7 +51,7 @@ resource "kubernetes_deployment" "factotum-job-worker" {
           # After starting, the Docker socket is made available to the Vedri container
           # so that Verdi can execute Docker commands vs this engine
           name  = "dind-daemon"
-          image = "docker:dind"
+          image = var.docker_images.dind
           #image = "docker:dind-rootless"
           env {
             name  = "DOCKER_TLS_CERTDIR"

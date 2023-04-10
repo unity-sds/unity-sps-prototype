@@ -4,12 +4,12 @@ resource "aws_ssm_parameter" "ghcr_pat" {
   type        = "SecureString"
   value       = var.ghcr_pat
   overwrite   = true
-  tags = {
-    project      = var.project
-    venue        = var.venue
-    service_area = var.service_area
-    capability   = "deployment"
-  }
+  tags = merge(local.common_tags, {
+    # Add or overwrite specific tags for this resource
+    Name      = "${var.project}-${var.venue}-${var.service_area}-Deployment-GHCRPAT"
+    Component = "Deployment"
+    Stack     = "Deployment"
+  })
 }
 
 resource "aws_ssm_parameter" "uds_staging_bucket" {
@@ -18,12 +18,12 @@ resource "aws_ssm_parameter" "uds_staging_bucket" {
   type        = "SecureString"
   value       = var.uds_staging_bucket
   overwrite   = true
-  tags = {
-    project      = var.project
-    venue        = var.venue
-    service_area = var.service_area
-    capability   = "deployment"
-  }
+  tags = merge(local.common_tags, {
+    # Add or overwrite specific tags for this resource
+    Name      = "${var.project}-${var.venue}-${var.service_area}-Deployment-UDSStagingBucket"
+    Component = "Deployment"
+    Stack     = "Deployment"
+  })
 }
 
 resource "aws_ssm_parameter" "uds_client_id" {
@@ -32,12 +32,12 @@ resource "aws_ssm_parameter" "uds_client_id" {
   type        = "SecureString"
   value       = var.uds_client_id
   overwrite   = true
-  tags = {
-    project      = var.project
-    venue        = var.venue
-    service_area = var.service_area
-    capability   = "deployment"
-  }
+  tags = merge(local.common_tags, {
+    # Add or overwrite specific tags for this resource
+    Name      = "${var.project}-${var.venue}-${var.service_area}-Deployment-UDSClientID"
+    Component = "Deployment"
+    Stack     = "Deployment"
+  })
 }
 
 resource "aws_ssm_parameter" "uds_dapa_api" {
@@ -46,10 +46,10 @@ resource "aws_ssm_parameter" "uds_dapa_api" {
   type        = "SecureString"
   value       = var.uds_dapa_api
   overwrite   = true
-  tags = {
-    project      = var.project
-    venue        = var.venue
-    service_area = var.service_area
-    capability   = "deployment"
-  }
+  tags = merge(local.common_tags, {
+    # Add or overwrite specific tags for this resource
+    Name      = "${var.project}-${var.venue}-${var.service_area}-Deployment-UDSDAPAAPI"
+    Component = "Deployment"
+    Stack     = "Deployment"
+  })
 }

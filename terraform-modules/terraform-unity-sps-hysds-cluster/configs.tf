@@ -192,17 +192,6 @@ resource "kubernetes_config_map" "supervisord-user-rules" {
   }
 }
 
-# note: these are fake AWS credentials for access to MINIO S3 buckets
-resource "kubernetes_config_map" "aws-credentials" {
-  metadata {
-    name      = "aws-credentials"
-    namespace = kubernetes_namespace.unity-sps.metadata[0].name
-  }
-  data = {
-    "aws-credentials" = "${file("${path.module}/../../hysds/configs/aws-credentials")}"
-  }
-}
-
 
 # https://github.com/hashicorp/terraform-provider-kubernetes/issues/1329
 locals {

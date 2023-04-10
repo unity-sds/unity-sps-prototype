@@ -112,20 +112,20 @@ def start_prewarm_post_request_body():
     return request_body
 
 
-@given("the prewarm request has been created", target_fixture="request_id")
+@given("the prewarm request has been created", target_fixture="prewarm_request_id")
 def prewarm_request_has_been_created(
     sps_api_service_endpoint, start_prewarm_post_request_body
 ):
     url = urljoin(sps_api_service_endpoint, "sps/prewarm")
     start_prewarm_response = requests.post(url, json=start_prewarm_post_request_body)
     start_prewarm_response.raise_for_status()
-    return start_prewarm_response.json()["request_id"]
+    return start_prewarm_response.json()["prewarm_request_id"]
 
 
 @then("the HTTP response body contains a request id")
 def response_contains_request_id(response):
     response_json = response.json()
-    assert "request_id" in response_json
+    assert "prewarm_request_id" in response_json
 
 
 def _is_process_deployed(process_service_endpoint, process_name):
@@ -195,7 +195,7 @@ def created_response(response):
 
 
 @given(
-    parsers.parse("a WPS-T request is made to execute the process"),
+    "a WPS-T request is made to execute the process",
     target_fixture="response",
 )
 def request_job_execution(process_service_endpoint, project_process_dict):

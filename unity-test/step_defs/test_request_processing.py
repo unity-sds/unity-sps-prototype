@@ -11,7 +11,7 @@ def test_request_processing_of_a_deployed_algorithm_process():
 
 
 @when(
-    parsers.parse("a WPS-T request is made to execute the process"),
+    "a WPS-T request is made to execute the process",
     target_fixture="response",
 )
 def request_job_execution(process_service_endpoint, project_process_dict):
