@@ -150,15 +150,15 @@ variable "uads_development_efs_fsmt_id" {
   default     = null
 }
 
-variable "subnets.private" {
+variable "subnets" {
   description = "value"
-  type        = string
+  type        = map(any)
 }
 
 # TODO - Consolidate these verdi variables
-variable "eks_node_groups.default[0]" {
+variable "eks_node_groups" {
   description = "value"
-  type        = string
+  type        = map(any)
 }
 
 variable "default_group_node_group_launch_template_name" {
