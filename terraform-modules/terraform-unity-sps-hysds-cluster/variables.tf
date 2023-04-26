@@ -150,13 +150,13 @@ variable "uads_development_efs_fsmt_id" {
   default     = null
 }
 
-variable "elb_subnet" {
+variable "subnets.private" {
   description = "value"
   type        = string
 }
 
 # TODO - Consolidate these verdi variables
-variable "default_group_node_group_name" {
+variable "eks_node_groups.default[0]" {
   description = "value"
   type        = string
 }

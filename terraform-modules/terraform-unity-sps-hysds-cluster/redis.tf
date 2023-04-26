@@ -39,7 +39,7 @@ resource "kubernetes_deployment" "redis" {
       }
       spec {
         node_selector = {
-          "eks.amazonaws.com/nodegroup" = var.default_group_node_group_name
+          "eks.amazonaws.com/nodegroup" = var.eks_node_groups.default[0]
         }
         container {
           image             = var.docker_images.redis
