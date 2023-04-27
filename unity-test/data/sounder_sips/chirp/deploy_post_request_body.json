@@ -7,7 +7,7 @@
         "offering": {
           "code": "http://www.opengis.net/eoc/applicationContext/cwl",
           "content": {
-            "href": "https://raw.githubusercontent.com/drewm-jpl/sounder-sips-chirp-workflows/main/chirp-rebinning-e2e-workflow.cwl"
+            "href": "https://raw.githubusercontent.com/unity-sds/sounder-sips-chirp-workflows/main/chirp-rebinning-e2e-workflow.cwl"
           }
         }
       },
