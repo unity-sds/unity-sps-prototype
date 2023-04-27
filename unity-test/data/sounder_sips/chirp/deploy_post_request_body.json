@@ -7,13 +7,23 @@
         "offering": {
           "code": "http://www.opengis.net/eoc/applicationContext/cwl",
           "content": {
-            "href": "https://raw.githubusercontent.com/unity-sds/unity-sps-workflows/main/sounder_sips/chirp/chirp-rebinning-e2e-workflow.cwl"
+            "href": "https://raw.githubusercontent.com/unity-sds/sounder-sips-chirp-workflows/main/chirp-rebinning-e2e-workflow.cwl"
           }
         }
       },
       "abstract": "chirp",
       "keywords": [],
       "inputs": [
+        {
+          "id": "input_processing_labels",
+          "title": "input_processing_labels",
+          "formats": [
+            {
+              "mimeType": "text",
+              "default": true
+            }
+          ]
+        },
         {
           "id": "input_cmr_collection_name",
           "title": "input_cmr_collection_name",
@@ -45,8 +55,8 @@
           ]
         },
         {
-          "id": "input_cmr_edl_user",
-          "title": "input_cmr_edl_user",
+          "id": "output_collection_id",
+          "title": "output_collection_id",
           "formats": [
             {
               "mimeType": "text",
@@ -55,8 +65,28 @@
           ]
         },
         {
-          "id": "input_cmr_edl_pass",
-          "title": "input_cmr_edl_pass",
+          "id": "output_data_bucket",
+          "title": "output_data_bucket",
+          "formats": [
+            {
+              "mimeType": "text",
+              "default": true
+            }
+          ]
+        },
+        {
+          "id": "input_daac_collection_shortname",
+          "title": "input_daac_collection_shortname",
+          "formats": [
+            {
+              "mimeType": "text",
+              "default": true
+            }
+          ]
+        },
+        {
+          "id": "input_daac_collection_sns",
+          "title": "input_daac_collection_sns",
           "formats": [
             {
               "mimeType": "text",
@@ -65,18 +95,7 @@
           ]
         }
       ],
-      "outputs": [
-        {
-          "id": "products",
-          "title": "CHIRP Rebinned Products",
-          "formats": [
-            {
-              "mimeType": "text/plain",
-              "default": true
-            }
-          ]
-        }
-      ]
+      "outputs": []
     },
     "processVersion": "develop",
     "jobControlOptions": ["async-execute"],

@@ -3,24 +3,36 @@
   "response": "document",
   "inputs": [
     {
+      "id": "input_processing_labels",
+      "data": ["label1", "label2"]
+    },
+    {
       "id": "input_cmr_collection_name",
-      "data": "my_input_coll"
+      "data": "C2011289787-GES_DISC"
     },
     {
       "id": "input_cmr_search_start_time",
-      "data": "2023-01-01"
+      "data": "2016-08-22T00:10:00Z"
     },
     {
       "id": "input_cmr_search_stop_time",
-      "data": "2023-01-31"
+      "data": "2016-09-06T23:59:59Z"
     },
     {
-      "id": "input_cmr_edl_user",
-      "data": "abc"
+      "id": "output_collection_id",
+      "data": "CHIRP_OUTPUT_COLLECTION"
     },
     {
-      "id": "input_cmr_edl_pass",
-      "data": "def"
+      "id": "output_data_bucket",
+      "data": "s3://unity-data-bucket"
+    },
+    {
+      "id": "input_daac_collection_shortname",
+      "data": "CHIRP_L1B"
+    },
+    {
+      "id": "input_daac_collection_sns",
+      "data": "arn:://SNS-arn"
     }
   ],
   "outputs": [

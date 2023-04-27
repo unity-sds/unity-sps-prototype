@@ -18,10 +18,6 @@ env:
   REMOTE_UI_IMAGE_NAME: ${{ github.repository }}/hysds-ui-remote
   REMOTE_UI_AUTH_IMAGE_NAME: ${{ github.repository }}/hysds-ui-remote-auth
   ADES_WPST_API_IMAGE_NAME: ${{ github.repository }}/ades-wpst-api
-
-  ADES_WPST_API_MCP_DEV_TMP_IMAGE_NAME: ${{ github.repository }}/ades-wpst-api-mcp-dev-tmp
-  ADES_WPST_API_MCP_TEST_TMP_IMAGE_NAME: ${{ github.repository }}/ades-wpst-api-mcp-test-tmp
-
   SPS_API_IMAGE_NAME: ${{ github.repository }}/sps-api
   SPS_HYSDS_PGE_BASE_IMAGE_NAME: ${{ github.repository }}/sps-hysds-pge-base
 
@@ -202,62 +198,6 @@ jobs:
           tags: ${{ env.REGISTRY }}/${{ env.ADES_WPST_API_IMAGE_NAME }}:${{ env.TAG }}
           labels: ${{ steps.metaades.outputs.labels }}
 
-  build-ades-wpst-api-mcp-dev-tmp:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-        with:
-          repository: unity-sds/ades_wpst
-          ref: MCP_DEV_TMP
-      - name: Log in to the container registry
-        uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Extract metadata (tags, labels) for ADES WPST API MCP Dev Tmp Docker image
-        id: metaades
-        uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
-        with:
-          images: ${{ env.REGISTRY }}/${{ env.ADES_WPST_API_MCP_DEV_TMP_IMAGE_NAME }}
-      - name: Build and push ADES WPST API MCP Dev Tmp Docker image
-        uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
-        with:
-          context: .
-          file: docker/Dockerfile
-          push: true
-          tags: ${{ env.REGISTRY }}/${{ env.ADES_WPST_API_MCP_DEV_TMP_IMAGE_NAME }}:${{ env.TAG }}
-          labels: ${{ steps.metaades.outputs.labels }}
-
-  build-ades-wpst-api-mcp-test-tmp:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-        with:
-          repository: unity-sds/ades_wpst
-          ref: MCP_TEST_TMP
-      - name: Log in to the container registry
-        uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Extract metadata (tags, labels) for ADES WPST API MCP Test Tmp Docker image
-        id: metaades
-        uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
-        with:
-          images: ${{ env.REGISTRY }}/${{ env.ADES_WPST_API_MCP_TEST_TMP_IMAGE_NAME }}
-      - name: Build and push ADES WPST API MCP Test Tmp Docker image
-        uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
-        with:
-          context: .
-          file: docker/Dockerfile
-          push: true
-          tags: ${{ env.REGISTRY }}/${{ env.ADES_WPST_API_MCP_TEST_TMP_IMAGE_NAME }}:${{ env.TAG }}
-          labels: ${{ steps.metaades.outputs.labels }}
-
   build-sps-api:
     runs-on: ubuntu-latest
     steps:
@@ -302,7 +242,7 @@ jobs:
         id: metasps
         uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
         with:
-          images: ${{ env.REGISTRY }}/${{ env.SPS_API_IMAGE_NAME }}
+          images: ${{ env.REGISTRY }}/${{ env.SPS_HYSDS_PGE_BASE_IMAGE_NAME }}
       - name: Build and push SPS HySDS base PGE Docker image
         uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
         with:
