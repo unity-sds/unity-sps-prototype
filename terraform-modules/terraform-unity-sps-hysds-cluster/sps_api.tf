@@ -3,7 +3,7 @@ resource "kubernetes_service" "sps-api-service" {
     name      = "sps-api"
     namespace = kubernetes_namespace.unity-sps.metadata[0].name
     annotations = {
-      "service.beta.kubernetes.io/aws-load-balancer-subnets" = var.subnets.private
+      "service.beta.kubernetes.io/aws-load-balancer-subnets" = join(", ", var.subnets.private)
     }
   }
   spec {
