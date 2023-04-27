@@ -4,7 +4,7 @@
   "inputs": [
     {
       "id": "input_processing_labels",
-      "data": ["lable1", "label2"]
+      "data": ["label1", "label2"]
     },
     {
       "id": "input_cmr_collection_name",
