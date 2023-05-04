@@ -34,4 +34,5 @@ module "unity-sps-hysds-cluster" {
   verdi_node_group_capacity_type                = var.verdi_node_group_capacity_type
   verdi_node_group_scaling_config               = var.verdi_node_group_scaling_config
   verdi_node_group_instance_types               = var.verdi_node_group_instance_types
+  mcp_linux_eks_optimized_ami                   = var.mcp_linux_eks_optimized_ami
 }

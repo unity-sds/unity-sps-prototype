@@ -139,6 +139,7 @@ variable "elb_subnet" {
 variable "default_group_node_group_name" {
   description = "value"
   type        = string
+  default     = "defaultgroupNodeGroup"
 }
 
 variable "default_group_node_group_launch_template_name" {
@@ -166,4 +167,10 @@ variable "verdi_node_group_instance_types" {
   description = "value"
   type        = list(string)
   default     = ["m3.medium"]
+}
+
+variable "mcp_linux_eks_optimized_ami" {
+  description = "value"
+  type        = string
+  default     = "ami-04db7a1ae7708642e"
 }
