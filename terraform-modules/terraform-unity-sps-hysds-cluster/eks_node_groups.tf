@@ -17,7 +17,7 @@ locals {
 }
 
 data "aws_launch_template" "default_group_node_group" {
-  name = var.default_group_node_group_launch_template_name
+  name = var.eks_node_group_names[0]
 }
 
 resource "aws_iam_role" "eks_verdi_node_role" {
