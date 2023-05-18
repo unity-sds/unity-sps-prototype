@@ -24,7 +24,7 @@ resource "kubernetes_deployment" "factotum-job-worker" {
 
       spec {
         node_selector = {
-          "eks.amazonaws.com/nodegroup" = var.eks_node_groups.default[0]
+          "eks.amazonaws.com/nodegroup" = var.eks_node_groups
         }
         # init_container {
         #   name    = "changeume-ownership"

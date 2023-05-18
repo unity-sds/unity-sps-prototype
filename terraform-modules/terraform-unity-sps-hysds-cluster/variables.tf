@@ -152,13 +152,13 @@ variable "uads_development_efs_fsmt_id" {
 
 variable "subnets" {
   description = "value"
-  type        = map(any)
+  type        = string
 }
 
 # TODO - Consolidate these verdi variables
 variable "eks_node_groups" {
   description = "value"
-  type        = map(any)
+  type        = string
 }
 
 variable "default_group_node_group_launch_template_name" {

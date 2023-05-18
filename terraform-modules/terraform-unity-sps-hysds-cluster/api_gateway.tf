@@ -1,6 +1,6 @@
 # Rest API ID from project api gateway deployment, needed to add resources, methods, and integrations to api gateway
 data "aws_ssm_parameter" "api_gateway_rest_api_id" {
-  name = "/unity/${var.venue}/api-gateway/rest-api-id"
+  name = "/unity/cs/routing/api-gateway/rest-api-id"
 }
 
 # Rest API root resource ID from project api gateway deployment, needed by child resources

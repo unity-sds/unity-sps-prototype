@@ -44,7 +44,7 @@ resource "kubernetes_deployment" "mozart" {
 
       spec {
         node_selector = {
-          "eks.amazonaws.com/nodegroup" = var.eks_node_groups.default[0]
+          "eks.amazonaws.com/nodegroup" = var.eks_node_groups
         }
         container {
           image = var.docker_images.hysds_mozart

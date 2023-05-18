@@ -46,7 +46,7 @@ locals {
   mozart_es_values = {
     clusterName = "mozart-es"
     node_selector = {
-      "eks.amazonaws.com/nodegroup" = var.eks_node_groups.default[0]
+      "eks.amazonaws.com/nodegroup" = var.eks_node_groups
     }
     # Permit co-located instances for solitary minikube virtual machines.
     antiAffinity = "soft"
@@ -155,7 +155,7 @@ locals {
   grq2_es_values = {
     clusterName = "grq-es"
     node_selector = {
-      "eks.amazonaws.com/nodegroup" = var.eks_node_groups.default[0]
+      "eks.amazonaws.com/nodegroup" = var.eks_node_groups
     }
     # Permit co-located instances for solitary minikube virtual machines.
     antiAffinity = "soft"
@@ -273,7 +273,7 @@ resource "helm_release" "mozart-es" {
     yamlencode({
       "service" = {
         "annotations" = {
-          "service.beta.kubernetes.io/aws-load-balancer-subnets" = join(", ", var.subnets.private)
+          "service.beta.kubernetes.io/aws-load-balancer-subnets" = var.subnets
         }
       }
     })
@@ -293,7 +293,7 @@ resource "helm_release" "grq2-es" {
     yamlencode({
       "service" = {
         "annotations" = {
-          "service.beta.kubernetes.io/aws-load-balancer-subnets" = join(", ", var.subnets.private)
+          "service.beta.kubernetes.io/aws-load-balancer-subnets" = var.subnets
         }
       }
     })
