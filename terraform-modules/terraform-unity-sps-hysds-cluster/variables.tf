@@ -10,6 +10,11 @@ variable "service_area" {
   default     = "sps"
 }
 
+variable "deployment_name" {
+  description = "Unique name of this deployment in the account."
+  type        = string
+}
+
 variable "venue" {
   description = "The MCP venue in which the cluster will be deployed (dev, test, prod)"
   type        = string

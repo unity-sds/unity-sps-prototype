@@ -4,6 +4,11 @@ variable "service_area" {
   default     = "sps"
 }
 
+variable "deployment_name" {
+  description = "Unique name of this deployment in the account."
+  type        = string
+}
+
 variable "release" {
   description = "The SPS release version"
   type        = string
