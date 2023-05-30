@@ -174,3 +174,9 @@ variable "verdi_node_group_instance_types" {
   type        = list(string)
   default     = ["m3.medium"]
 }
+
+variable "add_routes_to_api_gateway" {
+  description = "If true, adds routes to api gateway configured in account"
+  type        = bool
+  default     = false
+}
