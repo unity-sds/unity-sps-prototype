@@ -1,3 +1,9 @@
+variable "project" {
+  description = "The project or mission deploying Unity SPS"
+  type        = string
+  default     = null
+}
+
 variable "service_area" {
   description = "The service area owner of the resources being deployed"
   type        = string
@@ -7,6 +13,12 @@ variable "service_area" {
 variable "deployment_name" {
   description = "Unique name of this deployment in the account."
   type        = string
+}
+
+variable "venue" {
+  description = "The MCP venue in which the cluster will be deployed (dev, test, prod)"
+  type        = string
+  default     = null
 }
 
 variable "release" {
@@ -116,6 +128,29 @@ variable "container_registry_owner" {
   description = "value"
   type        = string
   default     = "unity-sds/unity-sps-prototype"
+}
+
+variable "uads_development_efs_fsmt_id" {
+  description = "value"
+  type        = string
+  default     = null
+}
+
+variable "subnets" {
+  description = "value"
+  type        = string
+  default     = null
+}
+variable "default_group_node_group_launch_template_name" {
+  description = "value"
+  type        = string
+  default     = null
+}
+
+variable "eks_node_groups" {
+  description = "value"
+  type       = string
+  default    = null
 }
 
 variable "verdi_node_group_capacity_type" {
