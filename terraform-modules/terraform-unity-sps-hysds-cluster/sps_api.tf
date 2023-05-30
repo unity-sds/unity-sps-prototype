@@ -20,17 +20,17 @@ resource "kubernetes_service" "sps-api-service" {
 }
 
 resource "aws_ssm_parameter" "sps-api-hostname-param" {
-  name = "/unity/sps/${var.deployment_name}/spsApi/hostname"
+  name        = "/unity/sps/${var.deployment_name}/spsApi/hostname"
   description = "Hostname of sps api load balancer"
-  type = "String"
-  value = kubernetes_service.sps-api-service.status[0].load_balancer[0].ingress[0].hostname
+  type        = "String"
+  value       = kubernetes_service.sps-api-service.status[0].load_balancer[0].ingress[0].hostname
 }
 
 resource "aws_ssm_parameter" "sps-api-port-param" {
-  name = "/unity/sps/${var.deployment_name}/spsApi/port"
+  name        = "/unity/sps/${var.deployment_name}/spsApi/port"
   description = "Port used by sps api"
-  type = "String"
-  value = var.service_port_map.sps_api_service 
+  type        = "String"
+  value       = var.service_port_map.sps_api_service
 }
 
 resource "kubernetes_deployment" "sps-api" {

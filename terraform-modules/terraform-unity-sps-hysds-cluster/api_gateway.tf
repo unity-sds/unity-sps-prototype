@@ -28,7 +28,7 @@ resource "aws_api_gateway_resource" "api_gateway_ades_wpst_proxy_resource" {
 }
 
 resource "aws_api_gateway_method" "api_gateway_ades_wpst_proxy_method" {
-  count       = var.add_routes_to_api_gateway ? 1 : 0
+  count         = var.add_routes_to_api_gateway ? 1 : 0
   rest_api_id   = data.aws_ssm_parameter.api_gateway_rest_api_id.value
   resource_id   = aws_api_gateway_resource.api_gateway_ades_wpst_proxy_resource[0].id
   http_method   = "ANY"
@@ -41,7 +41,7 @@ resource "aws_api_gateway_method" "api_gateway_ades_wpst_proxy_method" {
 }
 
 resource "aws_api_gateway_integration" "api_gateway_ades_wpst_proxy_integration" {
-  count       = var.add_routes_to_api_gateway ? 1 : 0
+  count                   = var.add_routes_to_api_gateway ? 1 : 0
   rest_api_id             = data.aws_ssm_parameter.api_gateway_rest_api_id.value
   resource_id             = aws_api_gateway_resource.api_gateway_ades_wpst_proxy_resource[0].id
   http_method             = aws_api_gateway_method.api_gateway_ades_wpst_proxy_method[0].http_method
@@ -101,8 +101,8 @@ resource "aws_api_gateway_deployment" "api_gateway_deployment" {
     create_before_destroy = true
   }
   triggers = {
-    region = var.region
-    venue  = var.venue
+    region      = var.region
+    venue       = var.venue
     rest_api_id = data.aws_ssm_parameter.api_gateway_rest_api_id.value
     redployment = sha1(jsonencode([
       aws_api_gateway_resource.api_gateway_ades_wpst_resource[0]
@@ -115,7 +115,7 @@ resource "aws_api_gateway_deployment" "api_gateway_deployment" {
   # Creates a new deployment and sets the stage to use it, this allows terraform to delete this deployment object. Without this step,
   # attempts to delete the deployment may fail because the stage is still associated with it.
   provisioner "local-exec" {
-    when = destroy
+    when    = destroy
     command = <<EOF
 aws apigateway update-stage --region ${self.triggers.region} --rest-api-id ${self.triggers.rest_api_id} \
 --stage-name=${self.triggers.venue} --patch-operations op='replace',path='/deploymentId',value=\
@@ -131,7 +131,7 @@ EOF
 }
 
 resource "null_resource" "api_gateway_stage_update_resource" {
-  count       = var.add_routes_to_api_gateway ? 1 : 0
+  count = var.add_routes_to_api_gateway ? 1 : 0
   provisioner "local-exec" {
     command = "aws apigateway update-stage --region ${var.region} --rest-api-id ${data.aws_ssm_parameter.api_gateway_rest_api_id.value} --stage-name=${var.venue} --patch-operations op='replace',path='/deploymentId',value='${aws_api_gateway_deployment.api_gateway_deployment[0].id}'"
   }

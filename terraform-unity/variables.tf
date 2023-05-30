@@ -149,8 +149,8 @@ variable "default_group_node_group_launch_template_name" {
 
 variable "eks_node_groups" {
   description = "value"
-  type       = string
-  default    = null
+  type        = string
+  default     = null
 }
 
 variable "verdi_node_group_capacity_type" {
