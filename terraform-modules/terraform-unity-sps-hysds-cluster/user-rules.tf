@@ -24,7 +24,7 @@ resource "kubernetes_deployment" "user-rules" {
 
       spec {
         node_selector = {
-          "eks.amazonaws.com/nodegroup" = var.eks_node_groups
+          "eks.amazonaws.com/nodegroup" = var.default_group_node_group_name
         }
         security_context {
           run_as_user  = 0

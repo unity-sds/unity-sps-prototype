@@ -17,12 +17,12 @@ data "aws_ssm_parameter" "default_group_node_group_launch_template_name" {
 }
 
 data "aws_ssm_parameter" "default_node_group_name" {
-  count = var.eks_node_groups == null ? 1 : 0
+  count = var.default_group_node_group_name == null ? 1 : 0
   name  = "/unity/extensions/eks/${var.eks_cluster_name}/nodeGroups/default/name"
 }
 
 data "aws_ssm_parameter" "eks_private_subnets" {
-  count = var.subnets == null ? 1 : 0
+  count = var.elb_subnets == null ? 1 : 0
   name  = "/unity/extensions/eks/${var.eks_cluster_name}/networking/subnets/privateIds"
 }
 

@@ -136,7 +136,7 @@ variable "uads_development_efs_fsmt_id" {
   default     = null
 }
 
-variable "subnets" {
+variable "elb_subnets" {
   description = "value"
   type        = string
   default     = null
@@ -147,7 +147,7 @@ variable "default_group_node_group_launch_template_name" {
   default     = null
 }
 
-variable "eks_node_groups" {
+variable "default_group_node_group_name" {
   description = "value"
   type        = string
   default     = null

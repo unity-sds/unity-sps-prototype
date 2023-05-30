@@ -28,8 +28,8 @@ module "unity-sps-hysds-cluster" {
   uds_dapa_api                                  = data.aws_ssm_parameter.uds_dapa_api.value
   uads_development_efs_fsmt_id                  = var.uads_development_efs_fsmt_id == null ? data.aws_ssm_parameter.uads_development_efs_fsmt_id[0].value : var.uads_development_efs_fsmt_id
   eks_cluster_name                              = var.eks_cluster_name
-  subnets                                       = var.subnets == null ? data.aws_ssm_parameter.eks_private_subnets[0].value : var.subnets
-  eks_node_groups                               = var.eks_node_groups == null ? data.aws_ssm_parameter.default_node_group_name[0].value : var.eks_node_groups
+  elb_subnets                                   = var.elb_subnets == null ? data.aws_ssm_parameter.eks_private_subnets[0].value : var.elb_subnets
+  default_group_node_group_name                 = var.default_group_node_group_name == null ? data.aws_ssm_parameter.default_node_group_name[0].value : var.default_group_node_group_name
   default_group_node_group_launch_template_name = var.default_group_node_group_launch_template_name == null ? data.aws_ssm_parameter.default_group_node_group_launch_template_name[0].value : var.default_group_node_group_launch_template_name
   deployment_name                               = var.deployment_name
   verdi_node_group_capacity_type                = var.verdi_node_group_capacity_type
