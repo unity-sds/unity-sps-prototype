@@ -22,6 +22,7 @@ env:
   SPS_API_IMAGE_NAME: ${{ github.repository }}/sps-api
   SPS_HYSDS_PGE_BASE_IMAGE_NAME: ${{ github.repository }}/sps-hysds-pge-base
   SPS_HYSDS_PGE_BASE_DEVELOP_IMAGE_NAME: ${{ github.repository }}/sps-hysds-pge-base-develop
+  SPS_JOB_PUBLISHER_IMAGE_NAME: ${{ github.repository }}/sps-job-publisher
 
 jobs:
   build-hysds-core:
@@ -308,4 +309,32 @@ jobs:
           file: docker/Dockerfile_sps-hysds-pge-base
           push: true
           tags: ${{ env.REGISTRY }}/${{ env.SPS_HYSDS_PGE_BASE_DEVELOP_IMAGE_NAME }}:${{ env.TAG }}
+          labels: ${{ steps.metasps.outputs.labels }}
+
+  build-sps-job-publisher:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          repository: unity-sds/unity-sps-register_job
+          ref: MCP_DEV_SNS_ENV_VAR
+      - name: Log in to the container registry
+        uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Extract metadata (tags, labels) for SPS Job Publisher Docker image
+        id: metasps
+        uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.SPS_JOB_PUBLISHER_IMAGE_NAME }}
+      - name: Build and push SPS Job Publisher Docker image
+        uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
+        with:
+          context: .
+          file: docker/Dockerfile_publish_job
+          push: true
+          tags: ${{ env.REGISTRY }}/${{ env.SPS_JOB_PUBLISHER_IMAGE_NAME }}:${{ env.TAG }}
           labels: ${{ steps.metasps.outputs.labels }}
