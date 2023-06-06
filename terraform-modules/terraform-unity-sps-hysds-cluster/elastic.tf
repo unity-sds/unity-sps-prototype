@@ -273,7 +273,7 @@ resource "helm_release" "mozart-es" {
     yamlencode({
       "service" = {
         "annotations" = {
-          "service.beta.kubernetes.io/aws-load-balancer-subnets" = var.elb_subnet
+          "service.beta.kubernetes.io/aws-load-balancer-subnets" = var.elb_subnets
         }
       }
     })
@@ -293,7 +293,7 @@ resource "helm_release" "grq2-es" {
     yamlencode({
       "service" = {
         "annotations" = {
-          "service.beta.kubernetes.io/aws-load-balancer-subnets" = var.elb_subnet
+          "service.beta.kubernetes.io/aws-load-balancer-subnets" = var.elb_subnets
         }
       }
     })
