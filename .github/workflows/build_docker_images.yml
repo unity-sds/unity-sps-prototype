@@ -22,7 +22,7 @@ env:
   SPS_API_IMAGE_NAME: ${{ github.repository }}/sps-api
   SPS_HYSDS_PGE_BASE_IMAGE_NAME: ${{ github.repository }}/sps-hysds-pge-base
   SPS_HYSDS_PGE_BASE_DEVELOP_IMAGE_NAME: ${{ github.repository }}/sps-hysds-pge-base-develop
-  SPS_JOB_PUBLISHER_IMAGE_NAME: ${{ github.repository }}/sps-job-publisher-develop
+  SPS_JOB_PUBLISHER_IMAGE_NAME: ${{ github.repository }}/sps-job-publisher
 
 jobs:
   build-hysds-core:
