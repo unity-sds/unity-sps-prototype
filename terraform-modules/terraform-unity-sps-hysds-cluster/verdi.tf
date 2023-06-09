@@ -31,6 +31,7 @@ resource "kubernetes_daemonset" "verdi" {
             <<-EOT
             chown -R 1000:1000 /tmp;
             chown -R 1000:1000 /tmp/SOUNDER_SIPS/STATIC_DATA;
+            chown -R 1000:1000 /stage;
             cp -r /cwl-src/. /src;
             EOT
           ]
@@ -45,6 +46,10 @@ resource "kubernetes_daemonset" "verdi" {
           volume_mount {
             name       = "src"
             mount_path = "/src"
+          }
+          volume_mount {
+            name = "stage"
+            mount_path = "/stage"
           }
           dynamic "volume_mount" {
             for_each = var.uads_development_efs_fsmt_id != null ? [1] : []
@@ -227,6 +232,10 @@ resource "kubernetes_daemonset" "verdi" {
             name       = "tmp-dir"
             mount_path = "/tmp"
           }
+          volume_mount {
+            name       = "stage"
+            mount_path = "/stage"
+          }
         }
         # volume {
         #   name = "docker-sock"
@@ -250,6 +259,12 @@ resource "kubernetes_daemonset" "verdi" {
           name = kubernetes_config_map.supervisord-verdi.metadata[0].name
           config_map {
             name = kubernetes_config_map.supervisord-verdi.metadata[0].name
+          }
+        }
+        volume {
+          name = "stage"
+          persistent_volume_claim {
+            claim_name = kubernetes_persistent_volume_claim.verdi-worker-pv-claim.metadata[0].name
           }
         }
         # Shared direcrtory holding the Docker socket
@@ -295,5 +310,27 @@ resource "kubernetes_daemonset" "verdi" {
         }
       }
     }
+  }
+}
+
+resource "kubernetes_persistent_volume_claim" "verdi-worker-pv-claim" {
+  metadata {
+    name      = "verdi-worker-pv-claim"
+    namespace = kubernetes_namespace.unity-sps.metadata[0].name
+    labels = {
+      app = "verdi-worker-pv-claim"
+    }
+  }
+
+  spec {
+    storage_class_name = kubernetes_storage_class.efs_storage_class.metadata[0].name
+    access_modes       = ["ReadWriteMany"]
+    resources {
+      requests = {
+        # TODO: test this limit, don't think this actually applies because EFS
+        storage = "500Gi"
+      }
+    }
+    volume_name = kubernetes_persistent_volume.verdi-stage-efs-pv.metadata[0].name
   }
 }
