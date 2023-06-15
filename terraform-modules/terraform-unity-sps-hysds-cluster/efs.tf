@@ -121,7 +121,7 @@ resource "kubernetes_persistent_volume" "verdi-stage-efs-pv" {
 }
 
 resource "aws_security_group" "verdi-efs-sg" {
-  name = "verdi-efs-sg"
+  name = "verdi-${var.deployment_name}-efs-sg"
   vpc_id = data.aws_eks_cluster.sps-cluster.vpc_config[0].vpc_id
   tags = local.common_tags
 }
