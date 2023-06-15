@@ -125,22 +125,9 @@ resource "kubernetes_daemonset" "verdi" {
           image_pull_policy = "Always"
           command           = ["supervisord", "--nodaemon"]
           env {
-            name  = "STAGING_BUCKET"
-            value = var.uds_staging_bucket
-          }
-          env {
-            name  = "CLIENT_ID"
-            value = var.uds_client_id
-          }
-          env {
-            name  = "DAPA_API"
-            value = var.uds_dapa_api
-          }
-          env {
             name  = "DOCKER_HOST"
             value = "tcp://localhost:2375"
           }
-
           lifecycle {
             post_start {
               exec {

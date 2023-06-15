@@ -1,5 +1,3 @@
-# resource "random_uuid" "boundary_uuid" {}
-
 locals {
   aws_managed_policies = [
     "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy",
@@ -8,14 +6,18 @@ locals {
     "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy",
     "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore",
     "arn:aws:iam::aws:policy/AmazonSSMFullAccess",
-    "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy",
-    "arn:aws:iam::aws:policy/AmazonSNSFullAccess"
+    "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
   ]
   customer_managed_policies = [
     "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/DatalakeKinesisPolicy",
     "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/McpToolsAccessPolicy"
   ]
 }
+
+# data "aws_eks_node_group" "default_node_group" {
+#   cluster_name    = var.eks_cluster_name
+#   node_group_name = "defaultgroupNodeGroup"
+# }
 
 data "aws_launch_template" "default_group_node_group" {
   name = var.default_group_node_group_launch_template_name
@@ -58,87 +60,71 @@ resource "aws_iam_role_policy_attachment" "eks_verdi_node_role_customer_policies
   role       = aws_iam_role.eks_verdi_node_role.name
 }
 
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+resource "aws_iam_role_policy_attachment" "eks_verdi_node_role_sns_policy" {
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSNSFullAccess"
+  role       = aws_iam_role.eks_verdi_node_role.name
+}
 
-# data "aws_security_groups" "sps-cluster-sg" {
-#   # filter {
-#   #   name   = "vpc-id"
-#   #   values = [data.aws_eks_cluster.sps-cluster.vpc_config[0].vpc_id]
-#   # }
-#   filter {
-#     name   = "tag:aws:eks:cluster-name"
-#     values = [var.eks_cluster_name]
-#   }
-# }
+data "aws_security_groups" "sps-cluster-sg" {
+  filter {
+    name   = "tag:aws:eks:cluster-name"
+    values = [var.eks_cluster_name]
+  }
+}
 
-# resource "aws_launch_template" "verdi_node_group_launch_template" {
-#   name = "${var.project}-${var.venue}-${var.service_area}-EC2-VerdiNodeGroupLaunchTemplate"
-#   # name_prefix = "${var.project}-${var.venue}-${var.service_area}-EC2-VerdiNodeGroupLaunchTemplate"
+resource "aws_launch_template" "verdi_node_group_launch_template" {
+  name = "${var.project}-${var.venue}-${var.service_area}-EC2-VerdiNodeGroupLaunchTemplate"
 
-#   # image_id    = "ami-0ccc65ecd1024bf4c" # Test
-#   image_id = "ami-0886544fa915698f0" # Dev
+  image_id = var.mcp_linux_eks_optimized_ami
 
-#   block_device_mappings {
-#     device_name = "/dev/xvda"
+  block_device_mappings {
+    device_name = "/dev/xvda"
 
-#     ebs {
-#       encrypted   = false
-#       iops        = 3000
-#       throughput  = 125
-#       volume_size = "80"
-#       volume_type = "gp3"
-#     }
-#   }
+    ebs {
+      encrypted   = false
+      iops        = 3000
+      throughput  = 125
+      volume_size = "80"
+      volume_type = "gp3"
+    }
+  }
 
-#   # vpc_security_group_ids = ["sg-0c41c3e5e6a999a13"] # get from the EKS cluster
-#   vpc_security_group_ids = data.aws_security_groups.sps-cluster-sg.ids
+  vpc_security_group_ids = data.aws_security_groups.sps-cluster-sg.ids
 
-#   user_data = base64encode(<<-EOF
-#     MIME-Version: 1.0
-#     Content-Type: multipart/mixed;
-#     boundary=${random_uuid.boundary_uuid.result}
+  user_data = base64encode(<<-EOF
+      #!/bin/bash
+      /etc/eks/bootstrap.sh ${data.aws_eks_cluster.sps-cluster.name}
+      EOF
+  )
 
-#     --${random_uuid.boundary_uuid.result}
-#     Content-Type: text/x-shellscript
-#     Content-Type: charset="us-ascii"
-
-#     #!/bin/bash
-#     /etc/eks/bootstrap.sh ${data.aws_eks_cluster.sps-cluster.name}
-
-#     --${random_uuid.boundary_uuid.result}--
-#     EOF
-#   )
-
-#   # Add your tags for EC2 instances here
-#   tag_specifications {
-#     resource_type = "instance"
-#     tags = merge(local.common_tags, {
-#       # Add or overwrite specific tags for this resource
-#       Name      = "${var.project}-${var.venue}-${var.service_area}-EC2-VerdiNodeGroupLaunchTemplate"
-#       Component = "EC2"
-#       Stack     = "EC2"
-#     })
-#   }
-#   # Add your tags for EBS volumes here
-#   tag_specifications {
-#     resource_type = "volume"
-#     tags = merge(local.common_tags, {
-#       # Add or overwrite specific tags for this resource
-#       Name      = "${var.project}-${var.venue}-${var.service_area}-EBS-VerdiNodeGroupLaunchTemplate"
-#       Component = "EBS"
-#       Stack     = "EBS"
-#     })
-#   }
-# }
-
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # Add your tags for EC2 instances here
+  tag_specifications {
+    resource_type = "instance"
+    tags = merge(local.common_tags, {
+      # Add or overwrite specific tags for this resource
+      Name      = "${var.project}-${var.venue}-${var.service_area}-EC2-VerdiNodeGroup-Node"
+      Component = "EC2"
+      Stack     = "EC2"
+    })
+  }
+  # Add your tags for EBS volumes here
+  tag_specifications {
+    resource_type = "volume"
+    tags = merge(local.common_tags, {
+      # Add or overwrite specific tags for this resource
+      Name      = "${var.project}-${var.venue}-${var.service_area}-EBS-VerdiNodeGroup-Node"
+      Component = "EBS"
+      Stack     = "EBS"
+    })
+  }
+}
 
 # Create the Verdi node group in the existing EKS cluster
 resource "aws_eks_node_group" "verdi" {
   cluster_name    = data.aws_eks_cluster.sps-cluster.name
   node_group_name = "${var.project}-${var.venue}-${var.service_area}-EKS-VerdiNodeGroup"
   node_role_arn   = aws_iam_role.eks_verdi_node_role.arn
-  subnet_ids      = tolist(data.aws_subnets.eks_subnets.ids) # TODO maybe try subsetting the IDs included here
+  subnet_ids      = tolist(data.aws_subnets.eks_subnets.ids)
 
   capacity_type  = var.verdi_node_group_capacity_type
   instance_types = var.verdi_node_group_instance_types
@@ -148,11 +134,10 @@ resource "aws_eks_node_group" "verdi" {
     max_size     = var.verdi_node_group_scaling_config.max_size
   }
   launch_template {
-    # TODO Debug why my launch template won't work
-    # id      = aws_launch_template.verdi_node_group_launch_template.id
-    # version = aws_launch_template.verdi_node_group_launch_template.latest_version
     id      = data.aws_launch_template.default_group_node_group.id
     version = data.aws_launch_template.default_group_node_group.latest_version
+    # id      = aws_launch_template.verdi_node_group_launch_template.id
+    # version = aws_launch_template.verdi_node_group_launch_template.latest_version
   }
   tags = merge(local.common_tags, {
     # Add or overwrite specific tags for this resource
@@ -238,6 +223,53 @@ resource "aws_iam_role_policy_attachment" "eks_sps_api_node_group_scaling_policy
   role       = aws_iam_role.eks_sps_api_node_role.name
 }
 
+resource "aws_launch_template" "sps_api_node_group_launch_template" {
+  name = "${var.project}-${var.venue}-${var.service_area}-EC2-SPSPAPINodeGroupLaunchTemplate"
+
+  image_id = var.mcp_linux_eks_optimized_ami
+
+  block_device_mappings {
+    device_name = "/dev/xvda"
+
+    ebs {
+      encrypted   = false
+      iops        = 3000
+      throughput  = 125
+      volume_size = "80"
+      volume_type = "gp3"
+    }
+  }
+
+  vpc_security_group_ids = data.aws_security_groups.sps-cluster-sg.ids
+
+  user_data = base64encode(<<-EOF
+      #!/bin/bash
+      /etc/eks/bootstrap.sh ${data.aws_eks_cluster.sps-cluster.name}
+      EOF
+  )
+
+  # Add your tags for EC2 instances here
+  tag_specifications {
+    resource_type = "instance"
+    tags = merge(local.common_tags, {
+      # Add or overwrite specific tags for this resource
+      Name      = "${var.project}-${var.venue}-${var.service_area}-EC2-SPSPAPINodeGroup-Node"
+      Component = "EC2"
+      Stack     = "EC2"
+    })
+  }
+  # Add your tags for EBS volumes here
+  tag_specifications {
+    resource_type = "volume"
+    tags = merge(local.common_tags, {
+      # Add or overwrite specific tags for this resource
+      Name      = "${var.project}-${var.venue}-${var.service_area}-EBS-SPSPAPINodeGroup-Node"
+      Component = "EBS"
+      Stack     = "EBS"
+    })
+  }
+}
+
 # Create the SPS API node group in the existing EKS cluster
 resource "aws_eks_node_group" "sps_api" {
   cluster_name    = data.aws_eks_cluster.sps-cluster.name
@@ -255,6 +287,8 @@ resource "aws_eks_node_group" "sps_api" {
   launch_template {
     id      = data.aws_launch_template.default_group_node_group.id
     version = data.aws_launch_template.default_group_node_group.latest_version
+    # id      = aws_launch_template.sps_api_node_group_launch_template.id
+    # version = aws_launch_template.sps_api_node_group_launch_template.latest_version
   }
   tags = merge(local.common_tags, {
     # Add or overwrite specific tags for this resource

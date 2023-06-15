@@ -3,6 +3,10 @@
   "response": "document",
   "inputs": [
     {
+      "id": "job_id",
+      "data": "abc123"
+    },
+    {
       "id": "input_processing_labels",
       "data": ["label1", "label2"]
     },
@@ -12,11 +16,19 @@
     },
     {
       "id": "input_cmr_search_start_time",
-      "data": "2016-08-22T00:10:00Z"
+      "data": "2016-08-22"
     },
     {
       "id": "input_cmr_search_stop_time",
-      "data": "2016-09-06T23:59:59Z"
+      "data": "2016-09-06"
+    },
+    {
+      "id": "input_cmr_edl_user",
+      "data": "cmr_user"
+    },
+    {
+      "id": "input_cmr_edl_pass",
+      "data": "cmr_pass"
     },
     {
       "id": "output_collection_id",

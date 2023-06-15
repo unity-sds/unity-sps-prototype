@@ -91,6 +91,7 @@ variable "service_port_map" {
     "sps_api_service"                   = 5002
     "grq2_es"                           = 9201
     "mozart_es"                         = 9200
+    "jobs_es"                           = 9202
   }
 }
 

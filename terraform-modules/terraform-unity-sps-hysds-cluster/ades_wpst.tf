@@ -194,7 +194,7 @@ resource "kubernetes_deployment" "ades-wpst-api" {
                   "-c",
                   <<-EOT
                   cd / && \
-                  git clone -b MCP_${upper(var.venue)} https://github.com/unity-sds/unity-sps-register_job.git && \
+                  git clone https://github.com/unity-sds/unity-sps-register_job.git && \
                   git clone -b  v1.0.5 https://github.com/hysds/lightweight-jobs.git && \
                   python3 /flask_ades_wpst/utils/register_lightweight_jobs.py --image-name lightweight-jobs --image-tag v1.0.5 --register-job-location /lightweight-jobs
                   EOT
@@ -237,6 +237,10 @@ resource "kubernetes_deployment" "ades-wpst-api" {
           env {
             name  = "DOCKER_HOST"
             value = "tcp://localhost:2375"
+          }
+          env {
+            name  = "JOBS_DATA_SNS_TOPIC_ARN"
+            value = aws_sns_topic.jobs_data.arn
           }
           port {
             container_port = 5000
