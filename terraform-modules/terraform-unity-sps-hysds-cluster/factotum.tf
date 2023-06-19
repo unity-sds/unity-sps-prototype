@@ -26,25 +26,21 @@ resource "kubernetes_deployment" "factotum-job-worker" {
         node_selector = {
           "eks.amazonaws.com/nodegroup" = var.default_group_node_group_name
         }
-        # init_container {
-        #   name    = "changeume-ownership"
-        #   image   = var.docker_images.busybox
-        #   command = ["/bin/sh", "-c"]
-        #   # args = [
-        #   #   <<-EOT
-        #   #   chown -R 1000:1000 /tmp/data;
-        #   #   EOT
-        #   # ]
-        #   # command = ["/bin/sh", "-c", "chmod 777 /var/run/docker.sock; chown -R 1000:1000 /tmp/data;"]
-        #   # volume_mount {
-        #   #   name       = "docker-sock"
-        #   #   mount_path = "/var/run/docker.sock"
-        #   # }
-        #   # volume_mount {
-        #   #   name       = "data-work"
-        #   #   mount_path = "/tmp/data"
-        #   # }
-        # }
+        init_container {
+          name    = "change-ownership"
+          image   = var.docker_images.busybox
+          command = ["/bin/sh", "-c"]
+          # https://stackoverflow.com/questions/56155495/how-do-i-copy-a-kubernetes-configmap-to-a-write-enabled-area-of-a-pod
+          args = [
+            <<-EOT
+            chown -R 1000:1000 /tmp;
+            EOT
+          ]
+          volume_mount {
+            name       = "tmp"
+            mount_path = "/tmp"
+          }
+        }
 
         container {
           # Docker container that runs a Docker engine ("Docker-IN-Docker" pattern)
@@ -89,6 +85,10 @@ resource "kubernetes_deployment" "factotum-job-worker" {
             name       = "docker-sock-dir"
             mount_path = "/var/run"
             sub_path   = "docker.sock"
+          }
+          volume_mount {
+            name       = "tmp"
+            mount_path = "/tmp"
           }
         }
 
@@ -135,11 +135,11 @@ resource "kubernetes_deployment" "factotum-job-worker" {
             sub_path   = "supervisord.conf"
             read_only  = false
           }
-          # volume_mount {
-          #   name       = "data-work"
-          #   mount_path = "/tmp/data"
-          #   read_only  = false
-          # }
+          volume_mount {
+            name       = "tmp"
+            mount_path = "/tmp"
+            read_only  = false
+          }
         }
 
         # volume {
@@ -169,12 +169,10 @@ resource "kubernetes_deployment" "factotum-job-worker" {
           }
         }
 
-        # volume {
-        #   name = "data-work"
-        #   host_path {
-        #     path = "/tmp/data"
-        #   }
-        # }
+        volume {
+          name = "tmp"
+          empty_dir {}
+        }
         # Shared direcrtory holding the Docker socket
         volume {
           name = "docker-sock-dir"
