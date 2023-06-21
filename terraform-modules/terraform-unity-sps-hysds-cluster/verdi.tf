@@ -115,6 +115,10 @@ resource "kubernetes_daemonset" "verdi" {
             name       = "tmp-dir"
             mount_path = "/tmp"
           }
+          volume_mount {
+            name = "stage"
+            mount_path = "/stage"
+          }
           dynamic "volume_mount" {
             for_each = var.uads_development_efs_fsmt_id != null ? [1] : []
             content {
