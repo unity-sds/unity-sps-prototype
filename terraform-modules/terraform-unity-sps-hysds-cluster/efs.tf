@@ -84,7 +84,7 @@ resource "kubernetes_persistent_volume_claim" "uads-development-efs" {
 }
 
 resource "aws_efs_file_system" "verdi-stage-efs"{
-  creation_token = "unity-sps-verdi-stage-efs"
+  creation_token = "unity-sps-${var.deployment_name}-verdi-stage-efs"
   tags = local.common_tags
 }
 
