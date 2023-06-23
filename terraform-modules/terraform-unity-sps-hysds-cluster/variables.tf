@@ -10,6 +10,11 @@ variable "service_area" {
   default     = "sps"
 }
 
+variable "deployment_name" {
+  description = "Unique name of this deployment in the account."
+  type        = string
+}
+
 variable "venue" {
   description = "The MCP venue in which the cluster will be deployed (dev, test, prod)"
   type        = string
@@ -151,7 +156,7 @@ variable "uads_development_efs_fsmt_id" {
   default     = null
 }
 
-variable "elb_subnet" {
+variable "elb_subnets" {
   description = "value"
   type        = string
 }
@@ -194,4 +199,9 @@ variable "mcp_linux_eks_optimized_ami" {
   description = "value"
   type        = string
   default     = "ami-04db7a1ae7708642e"
+}
+variable "add_routes_to_api_gateway" {
+  description = "If true, adds routes to api gateway configured in account"
+  type        = bool
+  default     = false
 }

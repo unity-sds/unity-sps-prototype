@@ -19,6 +19,7 @@
 | <a name="provider_aws"></a> [aws](#provider\_aws) | 4.57.1 |
 | <a name="provider_helm"></a> [helm](#provider\_helm) | 2.6.0 |
 | <a name="provider_kubernetes"></a> [kubernetes](#provider\_kubernetes) | 2.19.0 |
+| <a name="provider_null"></a> [null](#provider\_null) | 3.1.1 |
 | <a name="provider_random"></a> [random](#provider\_random) | 3.4.3 |
 
 ## Modules
@@ -29,6 +30,11 @@ No modules.
 
 | Name | Type |
 |------|------|
+| [aws_api_gateway_deployment.api_gateway_deployment](https://registry.terraform.io/providers/hashicorp/aws/4.57.1/docs/resources/api_gateway_deployment) | resource |
+| [aws_api_gateway_integration.api_gateway_ades_wpst_proxy_integration](https://registry.terraform.io/providers/hashicorp/aws/4.57.1/docs/resources/api_gateway_integration) | resource |
+| [aws_api_gateway_method.api_gateway_ades_wpst_proxy_method](https://registry.terraform.io/providers/hashicorp/aws/4.57.1/docs/resources/api_gateway_method) | resource |
+| [aws_api_gateway_resource.api_gateway_ades_wpst_proxy_resource](https://registry.terraform.io/providers/hashicorp/aws/4.57.1/docs/resources/api_gateway_resource) | resource |
+| [aws_api_gateway_resource.api_gateway_ades_wpst_resource](https://registry.terraform.io/providers/hashicorp/aws/4.57.1/docs/resources/api_gateway_resource) | resource |
 | [aws_eks_node_group.sps_api](https://registry.terraform.io/providers/hashicorp/aws/4.57.1/docs/resources/eks_node_group) | resource |
 | [aws_eks_node_group.verdi](https://registry.terraform.io/providers/hashicorp/aws/4.57.1/docs/resources/eks_node_group) | resource |
 | [aws_iam_policy.eks_sps_api_policy](https://registry.terraform.io/providers/hashicorp/aws/4.57.1/docs/resources/iam_policy) | resource |
@@ -41,7 +47,8 @@ No modules.
 | [aws_iam_role_policy_attachment.eks_verdi_node_role_managed_policies](https://registry.terraform.io/providers/hashicorp/aws/4.57.1/docs/resources/iam_role_policy_attachment) | resource |
 | [aws_security_group_rule.efs_egress](https://registry.terraform.io/providers/hashicorp/aws/4.57.1/docs/resources/security_group_rule) | resource |
 | [aws_security_group_rule.efs_ingress](https://registry.terraform.io/providers/hashicorp/aws/4.57.1/docs/resources/security_group_rule) | resource |
-| [aws_ssm_parameter.update_ades_wpst_url_stage_variable_of_api_gateway](https://registry.terraform.io/providers/hashicorp/aws/4.57.1/docs/resources/ssm_parameter) | resource |
+| [aws_ssm_parameter.sps-api-hostname-param](https://registry.terraform.io/providers/hashicorp/aws/4.57.1/docs/resources/ssm_parameter) | resource |
+| [aws_ssm_parameter.sps-api-port-param](https://registry.terraform.io/providers/hashicorp/aws/4.57.1/docs/resources/ssm_parameter) | resource |
 | [helm_release.grq2-es](https://registry.terraform.io/providers/hashicorp/helm/2.6.0/docs/resources/release) | resource |
 | [helm_release.mozart-es](https://registry.terraform.io/providers/hashicorp/helm/2.6.0/docs/resources/release) | resource |
 | [kubernetes_config_map.celeryconfig](https://registry.terraform.io/providers/hashicorp/kubernetes/2.19.0/docs/resources/config_map) | resource |
@@ -88,11 +95,15 @@ No modules.
 | [kubernetes_service_account.sps-api](https://registry.terraform.io/providers/hashicorp/kubernetes/2.19.0/docs/resources/service_account) | resource |
 | [kubernetes_stateful_set.rabbitmq_statefulset](https://registry.terraform.io/providers/hashicorp/kubernetes/2.19.0/docs/resources/stateful_set) | resource |
 | [kubernetes_storage_class.efs_storage_class](https://registry.terraform.io/providers/hashicorp/kubernetes/2.19.0/docs/resources/storage_class) | resource |
+| [null_resource.api_gateway_stage_update_resource](https://registry.terraform.io/providers/hashicorp/null/3.1.1/docs/resources/resource) | resource |
 | [random_id.counter](https://registry.terraform.io/providers/hashicorp/random/3.4.3/docs/resources/id) | resource |
 | [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/4.57.1/docs/data-sources/caller_identity) | data source |
 | [aws_efs_mount_target.uads-development-efs-fsmt](https://registry.terraform.io/providers/hashicorp/aws/4.57.1/docs/data-sources/efs_mount_target) | data source |
 | [aws_eks_cluster.sps-cluster](https://registry.terraform.io/providers/hashicorp/aws/4.57.1/docs/data-sources/eks_cluster) | data source |
 | [aws_launch_template.default_group_node_group](https://registry.terraform.io/providers/hashicorp/aws/4.57.1/docs/data-sources/launch_template) | data source |
+| [aws_ssm_parameter.api_gateway_rest_api_id](https://registry.terraform.io/providers/hashicorp/aws/4.57.1/docs/data-sources/ssm_parameter) | data source |
+| [aws_ssm_parameter.api_gateway_rest_api_lambda_authorizer_id](https://registry.terraform.io/providers/hashicorp/aws/4.57.1/docs/data-sources/ssm_parameter) | data source |
+| [aws_ssm_parameter.api_gateway_rest_api_root_resource_id](https://registry.terraform.io/providers/hashicorp/aws/4.57.1/docs/data-sources/ssm_parameter) | data source |
 | [aws_subnets.eks_subnets](https://registry.terraform.io/providers/hashicorp/aws/4.57.1/docs/data-sources/subnets) | data source |
 | [aws_vpc.eks_vpc](https://registry.terraform.io/providers/hashicorp/aws/4.57.1/docs/data-sources/vpc) | data source |
 | [kubernetes_service.grq-es](https://registry.terraform.io/providers/hashicorp/kubernetes/2.19.0/docs/data-sources/service) | data source |
@@ -102,6 +113,7 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
+| <a name="input_add_routes_to_api_gateway"></a> [add\_routes\_to\_api\_gateway](#input\_add\_routes\_to\_api\_gateway) | If true, adds routes to api gateway configured in account | `bool` | `false` | no |
 | <a name="input_celeryconfig_filename"></a> [celeryconfig\_filename](#input\_celeryconfig\_filename) | value | `string` | `"celeryconfig_remote.py"` | no |
 | <a name="input_container_registry_owner"></a> [container\_registry\_owner](#input\_container\_registry\_owner) | value | `string` | `"unity-sds/unity-sps-prototype"` | no |
 | <a name="input_container_registry_pat"></a> [container\_registry\_pat](#input\_container\_registry\_pat) | value | `string` | n/a | yes |
@@ -110,10 +122,11 @@ No modules.
 | <a name="input_counter"></a> [counter](#input\_counter) | value | `string` | `""` | no |
 | <a name="input_datasets_filename"></a> [datasets\_filename](#input\_datasets\_filename) | value | `string` | `"datasets.remote.template.json"` | no |
 | <a name="input_default_group_node_group_launch_template_name"></a> [default\_group\_node\_group\_launch\_template\_name](#input\_default\_group\_node\_group\_launch\_template\_name) | value | `string` | n/a | yes |
-| <a name="input_default_group_node_group_name"></a> [default\_group\_node\_group\_name](#input\_default\_group\_node\_group\_name) | value | `string` | n/a | yes |
+| <a name="input_deployment_name"></a> [deployment\_name](#input\_deployment\_name) | Unique name of this deployment in the account. | `string` | n/a | yes |
 | <a name="input_docker_images"></a> [docker\_images](#input\_docker\_images) | Docker images for the Unity SPS containers | `map(string)` | <pre>{<br>  "ades_wpst_api": "ghcr.io/unity-sds/unity-sps-prototype/ades-wpst-api:unity-v1.0.0",<br>  "busybox": "busybox:1.36.0",<br>  "dind": "docker:23.0.3-dind",<br>  "hysds_core": "ghcr.io/unity-sds/unity-sps-prototype/hysds-core:unity-v1.0.0",<br>  "hysds_factotum": "ghcr.io/unity-sds/unity-sps-prototype/hysds-factotum:unity-v1.0.0",<br>  "hysds_grq2": "ghcr.io/unity-sds/unity-sps-prototype/hysds-grq2:unity-v1.0.0",<br>  "hysds_mozart": "ghcr.io/unity-sds/unity-sps-prototype/hysds-mozart:unity-v1.0.0",<br>  "hysds_ui": "ghcr.io/unity-sds/unity-sps-prototype/hysds-ui-remote:unity-v1.0.0",<br>  "hysds_verdi": "ghcr.io/unity-sds/unity-sps-prototype/hysds-verdi:unity-v1.0.0",<br>  "logstash": "docker.elastic.co/logstash/logstash:7.10.2",<br>  "rabbitmq": "rabbitmq:3.11.13-management",<br>  "redis": "redis:7.0.10",<br>  "sps_api": "ghcr.io/unity-sds/unity-sps-prototype/sps-api:unity-v1.0.0",<br>  "sps_hysds_pge_base": "ghcr.io/unity-sds/unity-sps-prototype/sps-hysds-pge-base:unity-v1.0.0"<br>}</pre> | no |
 | <a name="input_eks_cluster_name"></a> [eks\_cluster\_name](#input\_eks\_cluster\_name) | value | `string` | n/a | yes |
-| <a name="input_elb_subnet"></a> [elb\_subnet](#input\_elb\_subnet) | value | `string` | n/a | yes |
+| <a name="input_eks_node_groups"></a> [eks\_node\_groups](#input\_eks\_node\_groups) | value | `string` | n/a | yes |
+| <a name="input_elb_subnets"></a> [elb\_subnets](#input\_elb\_subnets) | value | `string` | n/a | yes |
 | <a name="input_kubeconfig_filepath"></a> [kubeconfig\_filepath](#input\_kubeconfig\_filepath) | Path to the kubeconfig file for the Kubernetes cluster | `string` | n/a | yes |
 | <a name="input_namespace"></a> [namespace](#input\_namespace) | Namespace for the Unity SPS HySDS-related Kubernetes resources | `string` | `"unity-sps"` | no |
 | <a name="input_project"></a> [project](#input\_project) | The project or mission deploying Unity SPS | `string` | `"unity"` | no |

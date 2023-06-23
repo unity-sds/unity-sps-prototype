@@ -90,7 +90,7 @@ resource "kubernetes_service" "ades-wpst-api-service" {
     namespace = kubernetes_namespace.unity-sps.metadata[0].name
     # todo remove when testing sepereate elb
     annotations = {
-      "service.beta.kubernetes.io/aws-load-balancer-subnets" = var.elb_subnet
+      "service.beta.kubernetes.io/aws-load-balancer-subnets" = var.elb_subnets
     }
   }
   spec {
