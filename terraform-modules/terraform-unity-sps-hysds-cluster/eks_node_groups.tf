@@ -73,7 +73,7 @@ data "aws_security_groups" "sps-cluster-sg" {
 }
 
 resource "aws_launch_template" "verdi_node_group_launch_template" {
-  name = "${var.project}-${var.venue}-${var.service_area}-EC2-VerdiNodeGroupLaunchTemplate"
+  name = "${var.project}-${var.venue}-${var.service_area}-${var.deployment_name}-EC2-VerdiNodeGroupLaunchTemplate"
 
   image_id = var.mcp_linux_eks_optimized_ami
 
@@ -224,7 +224,7 @@ resource "aws_iam_role_policy_attachment" "eks_sps_api_node_group_scaling_policy
 }
 
 resource "aws_launch_template" "sps_api_node_group_launch_template" {
-  name = "${var.project}-${var.venue}-${var.service_area}-EC2-SPSPAPINodeGroupLaunchTemplate"
+  name = "${var.project}-${var.venue}-${var.service_area}-${var.deployment_name}-EC2-SPSPAPINodeGroupLaunchTemplate"
 
   image_id = var.mcp_linux_eks_optimized_ami
 

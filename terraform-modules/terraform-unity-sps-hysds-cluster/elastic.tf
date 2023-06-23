@@ -377,7 +377,7 @@ resource "helm_release" "mozart-es" {
     yamlencode({
       "service" = {
         "annotations" = {
-          "service.beta.kubernetes.io/aws-load-balancer-subnets" = var.elb_subnet
+          "service.beta.kubernetes.io/aws-load-balancer-subnets" = var.elb_subnets
           "service.beta.kubernetes.io/aws-load-balancer-name"    = "${var.project}-${var.venue}-${var.service_area}-mozart-LoadBalancer-${local.counter}"
           "service.beta.kubernetes.io/aws-load-balancer-tags" = jsonencode(merge(local.common_tags, {
             Name      = "${var.project}-${var.venue}-${var.service_area}-mozart-LoadBalancer-${local.counter}"
@@ -403,7 +403,7 @@ resource "helm_release" "grq2-es" {
     yamlencode({
       "service" = {
         "annotations" = {
-          "service.beta.kubernetes.io/aws-load-balancer-subnets" = var.elb_subnet
+          "service.beta.kubernetes.io/aws-load-balancer-subnets" = var.elb_subnets
           "service.beta.kubernetes.io/aws-load-balancer-name"    = "${var.project}-${var.venue}-${var.service_area}-GRQ-LoadBalancer-${local.counter}"
           "service.beta.kubernetes.io/aws-load-balancer-tags" = jsonencode(merge(local.common_tags, {
             Name      = "${var.project}-${var.venue}-${var.service_area}-GRQ-LoadBalancer-${local.counter}"
@@ -429,7 +429,7 @@ resource "helm_release" "jobs-es" {
     yamlencode({
       "service" = {
         "annotations" = {
-          "service.beta.kubernetes.io/aws-load-balancer-subnets" = var.elb_subnet
+          "service.beta.kubernetes.io/aws-load-balancer-subnets" = var.elb_subnets
           "service.beta.kubernetes.io/aws-load-balancer-name"    = "${var.project}-${var.venue}-${var.service_area}-jobs-LoadBalancer-${local.counter}"
           "service.beta.kubernetes.io/aws-load-balancer-tags" = jsonencode(merge(local.common_tags, {
             Name      = "${var.project}-${var.venue}-${var.service_area}-jobs-LoadBalancer-${local.counter}"
