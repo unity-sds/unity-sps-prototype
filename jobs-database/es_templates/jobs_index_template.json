@@ -1,0 +1,28 @@
+{
+  "index_patterns": ["jobs*"],
+  "template": {
+    "settings": {
+      "number_of_shards": 1,
+      "number_of_replicas": 1
+    },
+    "mappings": {
+      "dynamic": "true",
+      "properties": {
+        "id": {
+          "type": "keyword"
+        },
+        "inputs": {
+          "type": "nested",
+          "dynamic": "true"
+        },
+        "outputs": {
+          "type": "nested",
+          "dynamic": "true"
+        },
+        "status": {
+          "type": "keyword"
+        }
+      }
+    }
+  }
+}
