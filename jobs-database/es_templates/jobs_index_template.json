@@ -12,15 +12,16 @@
           "type": "keyword"
         },
         "inputs": {
-          "type": "nested",
-          "dynamic": "true"
+          "enabled": false
         },
         "outputs": {
-          "type": "nested",
-          "dynamic": "true"
+          "enabled": false
         },
         "status": {
           "type": "keyword"
+        },
+        "tags": {
+          "enabled": false
         }
       }
     }
