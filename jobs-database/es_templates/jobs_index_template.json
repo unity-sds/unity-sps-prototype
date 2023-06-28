@@ -1,0 +1,29 @@
+{
+  "index_patterns": ["jobs*"],
+  "template": {
+    "settings": {
+      "number_of_shards": 1,
+      "number_of_replicas": 1
+    },
+    "mappings": {
+      "dynamic": "true",
+      "properties": {
+        "id": {
+          "type": "keyword"
+        },
+        "inputs": {
+          "enabled": false
+        },
+        "outputs": {
+          "enabled": false
+        },
+        "status": {
+          "type": "keyword"
+        },
+        "tags": {
+          "enabled": false
+        }
+      }
+    }
+  }
+}
