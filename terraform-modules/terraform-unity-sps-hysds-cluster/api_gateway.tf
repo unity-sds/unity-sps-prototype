@@ -1,19 +1,19 @@
 # Rest API ID from project api gateway deployment, needed to add resources, methods, and integrations to api gateway
 data "aws_ssm_parameter" "api_gateway_rest_api_id" {
-  count       = var.add_routes_to_api_gateway ? 1 : 0
-  name = "/unity/cs/routing/api-gateway/rest-api-id"
+  count = var.add_routes_to_api_gateway ? 1 : 0
+  name  = "/unity/cs/routing/api-gateway/rest-api-id"
 }
 
 # Rest API root resource ID from project api gateway deployment, needed by child resources
 data "aws_ssm_parameter" "api_gateway_rest_api_root_resource_id" {
-  count       = var.add_routes_to_api_gateway ? 1 : 0
-  name = "/unity/${var.venue}/api-gateway/rest-api-root-resource-id"
+  count = var.add_routes_to_api_gateway ? 1 : 0
+  name  = "/unity/${var.venue}/api-gateway/rest-api-root-resource-id"
 }
 
 # Lambda authorizer ID in Rest API, needed by methods authorizing with CS custom authorizer
 data "aws_ssm_parameter" "api_gateway_rest_api_lambda_authorizer_id" {
-  count       = var.add_routes_to_api_gateway ? 1 : 0
-  name = "/unity/${var.venue}/api-gateway/rest-api-lambda-authorizer-id"
+  count = var.add_routes_to_api_gateway ? 1 : 0
+  name  = "/unity/${var.venue}/api-gateway/rest-api-lambda-authorizer-id"
 }
 
 resource "aws_api_gateway_resource" "api_gateway_ades_wpst_resource" {

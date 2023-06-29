@@ -83,25 +83,25 @@ resource "kubernetes_persistent_volume_claim" "uads-development-efs" {
   }
 }
 
-resource "aws_efs_file_system" "verdi-stage-efs"{
+resource "aws_efs_file_system" "verdi-stage-efs" {
   creation_token = "unity-sps-${var.deployment_name}-verdi-stage-efs"
-  tags = local.common_tags
+  tags           = local.common_tags
 }
 
-resource "aws_efs_mount_target" "verdi-stage-efs-mnt-target"{
-  file_system_id = aws_efs_file_system.verdi-stage-efs.id
-  subnet_id = split(",", var.elb_subnets)[0]
+resource "aws_efs_mount_target" "verdi-stage-efs-mnt-target" {
+  file_system_id  = aws_efs_file_system.verdi-stage-efs.id
+  subnet_id       = split(",", var.elb_subnets)[0]
   security_groups = toset([aws_security_group.verdi-efs-sg.id])
 }
 
 resource "kubernetes_persistent_volume" "verdi-stage-efs-pv" {
-  depends_on = [ aws_security_group_rule.verdi_efs_egress, aws_security_group_rule.verdi_efs_ingress ]
+  depends_on = [aws_security_group_rule.verdi_efs_egress, aws_security_group_rule.verdi_efs_ingress]
   metadata {
     name = "verdi-stage-efs"
   }
 
   spec {
-    access_modes = ["ReadWriteMany"]
+    access_modes       = ["ReadWriteMany"]
     storage_class_name = kubernetes_storage_class.efs_storage_class.metadata[0].name
 
     capacity = {
@@ -112,8 +112,8 @@ resource "kubernetes_persistent_volume" "verdi-stage-efs-pv" {
 
     persistent_volume_source {
       nfs {
-        server = aws_efs_mount_target.verdi-stage-efs-mnt-target.ip_address
-        path = "/"
+        server    = aws_efs_mount_target.verdi-stage-efs-mnt-target.ip_address
+        path      = "/"
         read_only = false
       }
     }
@@ -121,9 +121,9 @@ resource "kubernetes_persistent_volume" "verdi-stage-efs-pv" {
 }
 
 resource "aws_security_group" "verdi-efs-sg" {
-  name = "verdi-${var.deployment_name}-efs-sg"
+  name   = "verdi-${var.deployment_name}-efs-sg"
   vpc_id = data.aws_eks_cluster.sps-cluster.vpc_config[0].vpc_id
-  tags = local.common_tags
+  tags   = local.common_tags
 }
 
 resource "aws_security_group_rule" "verdi_efs_ingress" {

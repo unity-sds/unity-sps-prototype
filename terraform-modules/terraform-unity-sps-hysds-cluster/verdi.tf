@@ -48,7 +48,7 @@ resource "kubernetes_daemonset" "verdi" {
             mount_path = "/src"
           }
           volume_mount {
-            name = "stage"
+            name       = "stage"
             mount_path = "/stage"
           }
           dynamic "volume_mount" {
@@ -116,7 +116,7 @@ resource "kubernetes_daemonset" "verdi" {
             mount_path = "/tmp"
           }
           volume_mount {
-            name = "stage"
+            name       = "stage"
             mount_path = "/stage"
           }
           dynamic "volume_mount" {
