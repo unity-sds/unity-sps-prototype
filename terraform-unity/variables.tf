@@ -97,6 +97,7 @@ variable "service_port_map" {
     "sps_api_service"                   = 5002
     "grq2_es"                           = 9201
     "mozart_es"                         = 9200
+    "jobs_es"                           = 9202
   }
 }
 
@@ -175,6 +176,11 @@ variable "verdi_node_group_instance_types" {
   default     = ["m3.medium"]
 }
 
+variable "mcp_linux_eks_optimized_ami" {
+  description = "value"
+  type        = string
+  default     = "ami-04db7a1ae7708642e"
+}
 variable "add_routes_to_api_gateway" {
   description = "If true, adds routes to api gateway configured in account"
   type        = bool

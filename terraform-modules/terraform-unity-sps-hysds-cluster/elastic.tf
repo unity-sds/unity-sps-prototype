@@ -42,6 +42,28 @@ resource "kubernetes_persistent_volume" "grq-es-pv" {
   }
 }
 
+resource "kubernetes_persistent_volume" "jobs-es-pv" {
+  metadata {
+    name = "jobs-es-pv"
+  }
+
+  spec {
+    storage_class_name = "gp2"
+    access_modes       = ["ReadWriteOnce"]
+    capacity = {
+      storage = "5Gi"
+    }
+
+    persistent_volume_reclaim_policy = "Delete"
+
+    persistent_volume_source {
+      host_path {
+        path = "/data/jobs-es"
+      }
+    }
+  }
+}
+
 locals {
   mozart_es_values = {
     clusterName = "mozart-es"
@@ -253,6 +275,128 @@ locals {
       }
     }
   }
+  jobs_es_values = {
+    clusterName = "jobs-es"
+    node_selector = {
+      "eks.amazonaws.com/nodegroup" = var.default_group_node_group_name
+    }
+    # Permit co-located instances for solitary minikube virtual machines.
+    antiAffinity = "soft"
+    # Shrink default JVM heap.
+    esJavaOpts = "-Xmx512m -Xms512m"
+    # Allocate smaller chunks of memory per pod.
+    resources = {
+      requests = {
+        cpu    = "500m"
+        memory = "1Gi"
+      }
+      limits = {
+        cpu    = "500m"
+        memory = "1Gi"
+      }
+    }
+    extraInitContainers = [
+      {
+        name    = "file-permissions"
+        image   = var.docker_images.busybox
+        command = ["chown", "-R", "1000:1000", "/usr/share/elasticsearch/"]
+        volumeMounts = [
+          {
+            mountPath = "/usr/share/elasticsearch/data"
+            name      = "jobs-es-master"
+          }
+        ]
+        securityContext = {
+          privileged = true
+          runAsUser  = 0
+        }
+      },
+      {
+        name    = "remove-files"
+        image   = var.docker_images.busybox
+        command = ["sh", "-c", "rm -rf /usr/share/elasticsearch/data/*"]
+        volumeMounts = [
+          {
+            mountPath = "/usr/share/elasticsearch/data"
+            name      = "jobs-es-master"
+          }
+        ]
+        securityContext = {
+          privileged = true
+          runAsUser  = 0
+        }
+      }
+    ]
+    # Request smaller persistent volumes.
+    volumeClaimTemplate = {
+      volumeName       = kubernetes_persistent_volume.jobs-es-pv.metadata[0].name
+      accessModes      = ["ReadWriteOnce"]
+      storageClassName = "gp2"
+      resources = {
+        requests = {
+          storage = "5Gi"
+        }
+      }
+    }
+    # elasticsearch:
+    masterService = "jobs-es"
+    # because we're using 1 node the cluster health will be YELLOW instead of GREEN after data is ingested
+    clusterHealthCheckParams = "wait_for_status=yellow&timeout=1s"
+    replicas                 = 1
+    service = {
+      type = var.service_type
+      port = var.service_port_map.jobs_es
+    }
+    httpPort      = var.service_port_map.jobs_es
+    transportPort = 9300
+    esConfig = {
+      "elasticsearch.yml" = <<-EOT
+      http.cors.enabled : true
+      http.cors.allow-origin: "*"
+      http.port: ${var.service_port_map.jobs_es}
+      EOT
+    }
+  }
+}
+
+resource "null_resource" "upload_jobs_template" {
+  provisioner "local-exec" {
+    command = <<-EOT
+      set -x
+      ES_URL=${data.kubernetes_service.jobs-es.status[0].load_balancer[0].ingress[0].hostname}:${var.service_port_map.jobs_es}
+      while [[ "$(curl -s -o /dev/null -w '%%{http_code}\n' $ES_URL)" != "200" ]]; do sleep 1; done
+      jobs_es_template='{
+        "index_patterns": ["jobs*"],
+        "template": {
+          "settings": {
+            "number_of_shards": 1,
+            "number_of_replicas": 1
+          },
+          "mappings": {
+            "dynamic": "true",
+            "properties": {
+              "id": {
+                "type": "keyword"
+              },
+              "inputs": {
+                "enabled": false
+              },
+              "outputs": {
+                "enabled": false
+              },
+              "status": {
+                "type": "keyword"
+              },
+              "tags": {
+                "enabled": false
+              }
+            }
+          }
+        }
+      }'
+      curl -X PUT "$ES_URL/_index_template/jobs_template" -H 'Content-Type: application/json' -d "$jobs_es_template"
+    EOT
+  }
 }
 
 /*
@@ -274,6 +418,12 @@ resource "helm_release" "mozart-es" {
       "service" = {
         "annotations" = {
           "service.beta.kubernetes.io/aws-load-balancer-subnets" = var.elb_subnets
+          "service.beta.kubernetes.io/aws-load-balancer-name"    = "${var.project}-${var.venue}-${var.service_area}-mozart-LoadBalancer-${local.counter}"
+          "service.beta.kubernetes.io/aws-load-balancer-tags" = jsonencode(merge(local.common_tags, {
+            Name      = "${var.project}-${var.venue}-${var.service_area}-mozart-LoadBalancer-${local.counter}"
+            Component = "mozart"
+            Stack     = "mozart"
+          }))
         }
       }
     })
@@ -294,6 +444,38 @@ resource "helm_release" "grq2-es" {
       "service" = {
         "annotations" = {
           "service.beta.kubernetes.io/aws-load-balancer-subnets" = var.elb_subnets
+          "service.beta.kubernetes.io/aws-load-balancer-name"    = "${var.project}-${var.venue}-${var.service_area}-GRQ-LoadBalancer-${local.counter}"
+          "service.beta.kubernetes.io/aws-load-balancer-tags" = jsonencode(merge(local.common_tags, {
+            Name      = "${var.project}-${var.venue}-${var.service_area}-GRQ-LoadBalancer-${local.counter}"
+            Component = "GRQ"
+            Stack     = "GRQ"
+          }))
+        }
+      }
+    })
+  ]
+}
+
+resource "helm_release" "jobs-es" {
+  name       = "jobs-es"
+  namespace  = kubernetes_namespace.unity-sps.metadata[0].name
+  repository = "https://helm.elastic.co"
+  chart      = "elasticsearch"
+  version    = "7.9.3"
+  wait       = true
+  timeout    = 600
+  values = [
+    yamlencode(local.jobs_es_values),
+    yamlencode({
+      "service" = {
+        "annotations" = {
+          "service.beta.kubernetes.io/aws-load-balancer-subnets" = var.elb_subnets
+          "service.beta.kubernetes.io/aws-load-balancer-name"    = "${var.project}-${var.venue}-${var.service_area}-jobs-LoadBalancer-${local.counter}"
+          "service.beta.kubernetes.io/aws-load-balancer-tags" = jsonencode(merge(local.common_tags, {
+            Name      = "${var.project}-${var.venue}-${var.service_area}-jobs-LoadBalancer-${local.counter}"
+            Component = "jobs"
+            Stack     = "jobs"
+          }))
         }
       }
     })

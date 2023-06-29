@@ -7,13 +7,23 @@
         "offering": {
           "code": "http://www.opengis.net/eoc/applicationContext/cwl",
           "content": {
-            "href": "https://raw.githubusercontent.com/unity-sds/sounder-sips-chirp-workflows/main/chirp-rebinning-e2e-workflow.cwl"
+            "href": "https://raw.githubusercontent.com/unity-sds/unity-sps-workflows/main/sounder_sips/chirp/chirp-rebinning-e2e-workflow-wrapper.cwl"
           }
         }
       },
       "abstract": "chirp",
       "keywords": [],
       "inputs": [
+        {
+          "id": "job_id",
+          "title": "job_id",
+          "formats": [
+            {
+              "mimeType": "text",
+              "default": true
+            }
+          ]
+        },
         {
           "id": "input_processing_labels",
           "title": "input_processing_labels",
@@ -47,6 +57,26 @@
         {
           "id": "input_cmr_search_stop_time",
           "title": "input_cmr_search_stop_time",
+          "formats": [
+            {
+              "mimeType": "text",
+              "default": true
+            }
+          ]
+        },
+        {
+          "id": "input_cmr_edl_user",
+          "title": "input_cmr_edl_user",
+          "formats": [
+            {
+              "mimeType": "text",
+              "default": true
+            }
+          ]
+        },
+        {
+          "id": "input_cmr_edl_pass",
+          "title": "input_cmr_edl_pass",
           "formats": [
             {
               "mimeType": "text",

@@ -247,3 +247,4 @@ override.tf.json
 terraform.rc
 
 dev_data/
+lambdas/*.zip
