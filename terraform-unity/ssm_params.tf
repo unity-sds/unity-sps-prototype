@@ -23,7 +23,7 @@ data "aws_ssm_parameter" "default_node_group_name" {
 
 data "aws_ssm_parameter" "eks_private_subnets" {
   count = var.elb_subnets == null ? 1 : 0
-  name  = "/unity/extensions/eks/${var.eks_cluster_name}/networking/subnets/privateIds"
+  name  = "/unity/extensions/eks/${var.eks_cluster_name}/networking/subnets/publicIds"
 }
 
 data "aws_ssm_parameter" "uads_development_efs_fsmt_id" {
