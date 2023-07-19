@@ -387,7 +387,7 @@ resource "null_resource" "upload_jobs_template" {
               "status": {
                 "type": "keyword"
               },
-              "tags": {
+              "labels": {
                 "enabled": false
               }
             }

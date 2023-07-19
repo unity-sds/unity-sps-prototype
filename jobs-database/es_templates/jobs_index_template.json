@@ -20,7 +20,7 @@
         "status": {
           "type": "keyword"
         },
-        "tags": {
+        "labels": {
           "enabled": false
         }
       }
