@@ -1,4 +1,3 @@
-
 ############################################################################################################################
 # Docker image for running CWL-Airflow conformance tests                                                                   #
 ############################################################################################################################
@@ -38,26 +37,13 @@ COPY ./scripts/start_scheduler.sh /usr/local/bin/start_scheduler.sh
 COPY ./scripts/start_apiserver.sh /usr/local/bin/start_apiserver.sh
 
 RUN echo "Installing dependencies" && \
-    apt-get update && apt-get install -y \
-    gcc \
-    build-essential \
-    git \
-    wget \
-    curl \
-    zlib1g-dev \
-    libmysqlclient-dev \
-    libffi-dev \
-    libssl-dev \
-    ca-certificates \
-    nodejs \
-    mysql-client \
-    apt-transport-https \
-    libsqlite3-dev \
-    gnupg-agent \
-    software-properties-common && \
-    echo "Dependencies installed successfully"
-
-RUN echo "Installing Python" && \
+    apt-get update && \
+    apt-get install -y gcc build-essential \
+                       git wget curl zlib1g-dev libmysqlclient-dev libffi-dev libssl-dev \
+                       ca-certificates \
+                       nodejs mysql-client apt-transport-https libsqlite3-dev \
+                       gnupg-agent software-properties-common && \
+    echo "Installing Python" && \
     wget ${PYTHON_URL} && \
     tar xzf Python-${PYTHON_VERSION}.tgz && \
     cd Python-${PYTHON_VERSION} && \
@@ -65,16 +51,12 @@ RUN echo "Installing Python" && \
     make && \
     make install && \
     cd .. && \
-    echo "Python installed successfully"
-
-RUN echo "Installing docker-ce-cli" && \
+    echo "Installing docker-ce-cli" && \
     curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add - && \
-    add-apt-repository "deb [arch=arm64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" && \
+    add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" && \
     apt-get update && \
     apt-get -y install docker-ce-cli && \
-    echo "docker-ce-cli installed successfully"
-
-RUN echo "Installing cwl-airflow" && \
+    echo "Installing cwl-airflow" && \
     pip3 install -U pip && \
     git clone ${CWL_AIRFLOW_URL} && \
     cd cwl-airflow && \
@@ -82,11 +64,8 @@ RUN echo "Installing cwl-airflow" && \
     export SHORT_PYTHON_VERSION=$(echo ${PYTHON_VERSION} | cut -d "." -f 1,2) && \
     pip3 install ".[mysql]" --constraint ./packaging/constraints/constraints-${SHORT_PYTHON_VERSION}.txt && \
     cd .. && \
-    echo "cwl-airflow installed successfully"
-
-RUN echo "Cleaning up" && \
+    echo "Cleaning up" && \
     apt-get clean && \
     apt-get purge && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/* && \
-    strip /usr/local/bin/*; true && \
-    echo "Cleanup completed successfully"
+    strip /usr/local/bin/*; true
