@@ -16,7 +16,7 @@
 # can be provided through --build-arg PARAM=value
 ARG UBUNTU_VERSION="20.04"
 ARG PYTHON_VERSION="3.8.10"
-ARG CWL_AIRFLOW_VERSION="master"
+ARG CWL_AIRFLOW_VERSION="modified_setup"
 
 FROM ubuntu:${UBUNTU_VERSION}
 LABEL maintainer="misha.kotliar@gmail.com"
@@ -29,7 +29,7 @@ WORKDIR /tmp
 ARG PYTHON_VERSION
 ARG CWL_AIRFLOW_VERSION
 
-ENV CWL_AIRFLOW_URL "https://github.com/Barski-lab/cwl-airflow"
+ENV CWL_AIRFLOW_URL "https://github.com/drewm-jpl/cwl-airflow"
 ENV PYTHON_URL "https://www.python.org/ftp/python/${PYTHON_VERSION}/Python-${PYTHON_VERSION}.tgz"
 
 COPY ./scripts/start_webserver.sh /usr/local/bin/start_webserver.sh
