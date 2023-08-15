@@ -88,8 +88,13 @@ resource "kubernetes_service" "ades-wpst-api-service" {
   metadata {
     name      = "ades-wpst-api"
     namespace = kubernetes_namespace.unity-sps.metadata[0].name
-    # todo remove when testing sepereate elb
     annotations = {
+      "service.beta.kubernetes.io/aws-load-balancer-name" = "${var.project}-${var.venue}-${var.service_area}-adeswpst-RestApiLoadBalancer-${local.counter}"
+      "service.beta.kubernetes.io/aws-load-balancer-additional-resource-tags" = join(",", [for k, v in merge(local.common_tags, {
+        "Name"      = "${var.project}-${var.venue}-${var.service_area}-adeswpst-RestApiLoadBalancer-${local.counter}"
+        "Component" = "adeswpst"
+        "Stack"     = "adeswpst"
+      }) : format("%s=%s", k, v)])
       "service.beta.kubernetes.io/aws-load-balancer-subnets" = var.elb_subnets
     }
   }

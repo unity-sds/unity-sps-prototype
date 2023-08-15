@@ -417,13 +417,13 @@ resource "helm_release" "mozart-es" {
     yamlencode({
       "service" = {
         "annotations" = {
+          "service.beta.kubernetes.io/aws-load-balancer-name" = "${var.project}-${var.venue}-${var.service_area}-mozart-ElasticsearchLoadBalancer-${local.counter}"
+          "service.beta.kubernetes.io/aws-load-balancer-additional-resource-tags" = join(",", [for k, v in merge(local.common_tags, {
+            "Name"      = "${var.project}-${var.venue}-${var.service_area}-mozart-ElasticsearchLoadBalancer-${local.counter}"
+            "Component" = "mozart"
+            "Stack"     = "mozart"
+          }) : format("%s=%s", k, v)])
           "service.beta.kubernetes.io/aws-load-balancer-subnets" = var.elb_subnets
-          "service.beta.kubernetes.io/aws-load-balancer-name"    = "${var.project}-${var.venue}-${var.service_area}-mozart-LoadBalancer-${local.counter}"
-          "service.beta.kubernetes.io/aws-load-balancer-tags" = jsonencode(merge(local.common_tags, {
-            Name      = "${var.project}-${var.venue}-${var.service_area}-mozart-LoadBalancer-${local.counter}"
-            Component = "mozart"
-            Stack     = "mozart"
-          }))
         }
       }
     })
@@ -443,13 +443,13 @@ resource "helm_release" "grq2-es" {
     yamlencode({
       "service" = {
         "annotations" = {
+          "service.beta.kubernetes.io/aws-load-balancer-name" = "${var.project}-${var.venue}-${var.service_area}-grq-ElasticsearchLoadBalancer-${local.counter}"
+          "service.beta.kubernetes.io/aws-load-balancer-additional-resource-tags" = join(",", [for k, v in merge(local.common_tags, {
+            "Name"      = "${var.project}-${var.venue}-${var.service_area}-grq-ElasticsearchLoadBalancer-${local.counter}"
+            "Component" = "grq"
+            "Stack"     = "grq"
+          }) : format("%s=%s", k, v)])
           "service.beta.kubernetes.io/aws-load-balancer-subnets" = var.elb_subnets
-          "service.beta.kubernetes.io/aws-load-balancer-name"    = "${var.project}-${var.venue}-${var.service_area}-GRQ-LoadBalancer-${local.counter}"
-          "service.beta.kubernetes.io/aws-load-balancer-tags" = jsonencode(merge(local.common_tags, {
-            Name      = "${var.project}-${var.venue}-${var.service_area}-GRQ-LoadBalancer-${local.counter}"
-            Component = "GRQ"
-            Stack     = "GRQ"
-          }))
         }
       }
     })
@@ -469,13 +469,13 @@ resource "helm_release" "jobs-es" {
     yamlencode({
       "service" = {
         "annotations" = {
+          "service.beta.kubernetes.io/aws-load-balancer-name" = "${var.project}-${var.venue}-${var.service_area}-jobs-ElasticsearchLoadBalancer-${local.counter}"
+          "service.beta.kubernetes.io/aws-load-balancer-additional-resource-tags" = join(",", [for k, v in merge(local.common_tags, {
+            "Name"      = "${var.project}-${var.venue}-${var.service_area}-jobs-ElasticsearchLoadBalancer-${local.counter}"
+            "Component" = "jobs"
+            "Stack"     = "jobs"
+          }) : format("%s=%s", k, v)])
           "service.beta.kubernetes.io/aws-load-balancer-subnets" = var.elb_subnets
-          "service.beta.kubernetes.io/aws-load-balancer-name"    = "${var.project}-${var.venue}-${var.service_area}-jobs-LoadBalancer-${local.counter}"
-          "service.beta.kubernetes.io/aws-load-balancer-tags" = jsonencode(merge(local.common_tags, {
-            Name      = "${var.project}-${var.venue}-${var.service_area}-jobs-LoadBalancer-${local.counter}"
-            Component = "jobs"
-            Stack     = "jobs"
-          }))
         }
       }
     })

@@ -26,7 +26,6 @@ output "load_balancer_hostnames" {
     grq_es        = data.kubernetes_service.grq-es.status[0].load_balancer[0].ingress[0].hostname,
     jobs_es       = data.kubernetes_service.jobs-es.status[0].load_balancer[0].ingress[0].hostname,
     ades_wpst_api = kubernetes_service.ades-wpst-api-service.status[0].load_balancer[0].ingress[0].hostname,
-    # ades_wpst_api = aws_elb.ades_wpst_api_elb.dns_name
-    sps_api = kubernetes_service.sps-api-service.status[0].load_balancer[0].ingress[0].hostname,
+    sps_api       = kubernetes_service.sps-api-service.status[0].load_balancer[0].ingress[0].hostname,
   }
 }

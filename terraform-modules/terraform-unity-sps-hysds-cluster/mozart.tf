@@ -3,7 +3,6 @@ resource "kubernetes_service" "mozart-service" {
     name      = "mozart"
     namespace = kubernetes_namespace.unity-sps.metadata[0].name
   }
-
   spec {
     selector = {
       app = "mozart"
@@ -14,8 +13,6 @@ resource "kubernetes_service" "mozart-service" {
     }
   }
 }
-
-
 
 resource "kubernetes_deployment" "mozart" {
   metadata {
