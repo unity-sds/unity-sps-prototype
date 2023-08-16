@@ -25,12 +25,17 @@ def pytest_addoption(parser):
         help="Base URL for the SPS API service endpoint",
     )
     parser.addoption(
+        "--jobs-database-endpoint",
+        action="store",
+        help="Base URL for the Jobs Database endpoint",
+        required=True,
+    )
+    parser.addoption(
         "--sounder-sips-process-selection",
         action="store",
         help="The Sounder SIPS processes to test (L1A, L1B, chirp)",
         required=True,
     )
-
 
 @pytest.fixture(scope="module", autouse=True)
 def process_service_endpoint(request):
@@ -43,7 +48,7 @@ def sps_api_service_endpoint(request):
 
 @pytest.fixture()
 def jobs_database_endpoint(request):
-    return request.config.getoption("--job-database-endpoint")
+    return request.config.getoption("--jobs-database-endpoint")
 
 @pytest.fixture()
 def jobs_database_client(jobs_database_endpoint):
