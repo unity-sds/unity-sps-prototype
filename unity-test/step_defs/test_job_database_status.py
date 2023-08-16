@@ -38,7 +38,7 @@ def fatal_status(e):
     return fatal
 
 @given(
-    "the job runs successfully"
+    "the job is running"
 )
 @backoff.on_exception(
     backoff.constant,
@@ -85,7 +85,7 @@ def request_job_status_by_id_succeeded(process_service_endpoint, project_process
     assert job_status == "succeeded"
 
 @when(
-    "the status of the job is monitored through the jobs database",
+    "the status of the job is queried through the jobs database",
     target_fixture="job_from_database"
 )
 def request_job_by_id_jobs_database(jobs_database_client, job_id):
