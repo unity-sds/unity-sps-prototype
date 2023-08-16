@@ -1,5 +1,6 @@
 import pytest
 from pytest_bdd import given, then, parsers
+from elasticsearch import Elasticsearch
 import requests
 from urllib.parse import urljoin
 import re
@@ -40,12 +41,26 @@ def process_service_endpoint(request):
 def sps_api_service_endpoint(request):
     return request.config.getoption("--sps-api-service-endpoint")
 
+@pytest.fixture()
+def jobs_database_endpoint(request):
+    return request.config.getoption("--job-database-endpoint")
+
+@pytest.fixture()
+def jobs_database_client(jobs_database_endpoint):
+    return Elasticsearch(jobs_database_endpoint)
 
 @pytest.fixture
 def projects():
     data = reader.request_body("", "", reader.projects)
     return data
 
+@pytest.fixture
+def job_request_body(project_process_dict):
+    return reader.request_body(
+        project_process_dict["project_name"],
+        project_process_dict["process_name"],
+        reader.execution_post_request_body,
+    )
 
 @pytest.fixture
 def user_selected_processes(request, projects):
@@ -238,3 +253,7 @@ def location_header_contains_job_id(location_header):
     job_id = location_header.rsplit("/jobs/", 1)[-1]
     assert job_id
     return job_id
+
+@given("the HTTP response contains a status code of 201")
+def created_response(response):
+    assert response.status_code == 201
