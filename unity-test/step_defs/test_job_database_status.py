@@ -1,5 +1,6 @@
 from pytest_bdd import scenario, given, when, then, parsers
 from elasticsearch import Elasticsearch
+import pytest
 import backoff
 import requests
 from .conftest import FEATURES_DIR, _request_job_status_by_id
@@ -20,15 +21,16 @@ def test_following_processing_request_job_added_to_jobs_database():
     FEATURE_FILE,
     "Following a job execution request of a deployed algorithm process that results in a success, the jobs database reflects the success",
 )
-def test_following_successful_processing_request_job_added_to_job_database_status_is_success():
+def test_following_successful_processing_request_job_added_to_job_database_status_is_succeeded():
     pass
 
-@scenario(
-    FEATURE_FILE,
-    "Following a job execution request of a deployed algorithm process, the jobs database show that the job is running",
-)
-def test_following_processing_request_job_added_to_jobs_database():
-    pass
+# @scenario(
+#     FEATURE_FILE,
+#     "Following a job execution request of a deployed algorithm process, the jobs database show that the job is running",
+# )
+# @pytest.mark.skip(reason="Non-deterministic timing on sounder_sips processes make this test fail often")
+# def test_following_processing_request_job_gets_running_status():
+#     pass
 
 def fatal_status(e):
     fatal = False

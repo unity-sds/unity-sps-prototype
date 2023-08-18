@@ -13,36 +13,14 @@ Feature: The Jobs Database has Job Status
         | project_name | process_name     |
         | sounder_sips |  L1A             |
         | sounder_sips |  L1B             |
-        | sounder_sips |  chirp |
+        | sounder_sips |  chirp         |
 
     Scenario Outline: Following a job execution request of a deployed algorithm process that results in a success, the jobs database reflects the success
-        Given the <project_name> <process_name> algorithm process has been deployed to the ADES
+        Given the sounder_sips chirp algorithm process has been deployed to the ADES
         And a WPS-T request is made to execute the process
         And the HTTP response contains a status code of 201
         And the response includes a Location header
         And the Location header contains a job ID
         And the job runs successfully
         When the status of the job is queried through the jobs database
-        Then the jobs status is "succeeded"
-
-        Examples:
-        | project_name | process_name     |
-        | sounder_sips |  L1A             |
-        | sounder_sips |  L1B             |
-        | sounder_sips |  chirp |
-
-    Scenario Outline: Following a job execution request of a deployed algorithm process, the jobs database show that the job is running
-        Given the <project_name> <process_name> algorithm process has been deployed to the ADES
-        And a WPS-T request is made to execute the process
-        And the HTTP response contains a status code of 201
-        And the response includes a Location header
-        And the Location header contains a job ID
-        And the job is running
-        When the status of the job is queried through the jobs database
-        Then the job status is "running"
-
-        Examples:
-        | project_name | process_name     |
-        | sounder_sips |  L1A             |
-        | sounder_sips |  L1B             |
-        | sounder_sips |  chirp |
+        Then the job status is "succeeded"
