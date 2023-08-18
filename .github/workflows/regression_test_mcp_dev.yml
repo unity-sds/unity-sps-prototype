@@ -13,6 +13,9 @@ on:
       SPS_API_SERVICE_ENDPOINT:
         description: "Base URL for the SPS API endpoint (i.e. http://abc.def.ghi:port-number)"
         type: string
+      JOBS_DATABASE_ENDPOINT:
+        description: "Base URL for the Jobs DB endpoint (i.e. http://abc.def.ghi:port-number)"
+        type: string
       SOUNDER_SIPS_PROCESS_SELECTION:
         description: "The Sounder SIPS process to test (L1A, L1B, chirp)"
         default: ".*"
@@ -26,6 +29,7 @@ jobs:
       - run: |
           echo "Base URL for the WPS-T API endpoint (i.e. http://abc.def.ghi:port-number): ${{ github.event.inputs.PROCESS_SERVICE_ENDPOINT || vars.MCP_DEV_PROCESS_SERVICE_ENDPOINT }}"
           echo "Base URL for the SPS API endpoint (i.e. http://abc.def.ghi:port-number): ${{ github.event.inputs.SPS_API_SERVICE_ENDPOINT || vars.MCP_DEV_SPS_API_SERVICE_ENDPOINT }}"
+          echo "Base URL for the Jobs DB endpoint (i.e. http://abc.def.ghi:port-number): ${{ github.event.inputs.JOBS_DATABASE_ENDPOINT || vars.MCP_DEV_JOBS_DATABASE_ENDPOINT }}"
           echo "The Sounder SIPS PGEs to test (L1A, L1B, chirp): ${{ github.event.inputs.SOUNDER_SIPS_PROCESS_SELECTION || vars.SOUNDER_SIPS_PROCESS_SELECTION }}"
   regression_test:
     runs-on: ubuntu-latest
@@ -46,5 +50,6 @@ jobs:
           pytest -s
           --process-service-endpoint=${{ github.event.inputs.PROCESS_SERVICE_ENDPOINT || vars.MCP_DEV_PROCESS_SERVICE_ENDPOINT }}
           --sps-api-service-endpoint=${{ github.event.inputs.SPS_API_SERVICE_ENDPOINT || vars.MCP_DEV_SPS_API_SERVICE_ENDPOINT }}
+          --jobs-database-endpoint=${{ github.event.inputs.JOBS_DATABASE_ENDPOINT || vars.MCP_TEST_JOBS_DATABASE_ENDPOINT }}
           --sounder-sips-process-selection=${{ github.event.inputs.SOUNDER_SIPS_PROCESS_SELECTION || vars.SOUNDER_SIPS_PROCESS_SELECTION }}
           -rs
