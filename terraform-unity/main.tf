@@ -6,7 +6,7 @@
 # https://www.terraform.io/language/modules/syntax
 
 module "unity-sps-hysds-cluster" {
-  source                                        = "../terraform-modules/terraform-unity-sps-hysds-cluster"
+  source                                        = "./modules/terraform-unity-sps-hysds-cluster"
   release                                       = var.release
   project                                       = var.project == null ? data.aws_ssm_parameter.account_project[0].value : var.project
   namespace                                     = var.namespace
