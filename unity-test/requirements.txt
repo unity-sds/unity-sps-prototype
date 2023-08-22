@@ -1,4 +1,5 @@
 backoff>=2.2.1
+elasticsearch==7.17.9
 pathlib>=1.0.1
 pytest-bdd>=6.1.1
 pytest-dotenv>=0.5.2
