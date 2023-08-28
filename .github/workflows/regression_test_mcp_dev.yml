@@ -50,6 +50,6 @@ jobs:
           pytest -s
           --process-service-endpoint=${{ github.event.inputs.PROCESS_SERVICE_ENDPOINT || vars.MCP_DEV_PROCESS_SERVICE_ENDPOINT }}
           --sps-api-service-endpoint=${{ github.event.inputs.SPS_API_SERVICE_ENDPOINT || vars.MCP_DEV_SPS_API_SERVICE_ENDPOINT }}
-          --jobs-database-endpoint=${{ github.event.inputs.JOBS_DATABASE_ENDPOINT || vars.MCP_TEST_JOBS_DATABASE_ENDPOINT }}
+          --jobs-database-endpoint=${{ github.event.inputs.JOBS_DATABASE_ENDPOINT || vars.MCP_DEV_JOBS_DATABASE_ENDPOINT }}
           --sounder-sips-process-selection=${{ github.event.inputs.SOUNDER_SIPS_PROCESS_SELECTION || vars.SOUNDER_SIPS_PROCESS_SELECTION }}
           -rs
