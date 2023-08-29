@@ -242,6 +242,10 @@ resource "kubernetes_deployment" "ades-wpst-api" {
             name  = "JOBS_DATA_SNS_TOPIC_ARN"
             value = aws_sns_topic.jobs_data.arn
           }
+          env {
+            name = "JOBS_DB_URL"
+            value = "http://${data.kubernetes_service.jobs-es.status[0].load_balancer[0].ingress[0].hostname}:${var.service_port_map.jobs_es}"
+          }
           port {
             container_port = 5000
           }

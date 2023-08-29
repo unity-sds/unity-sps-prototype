@@ -273,6 +273,13 @@ resource "aws_lambda_event_source_mapping" "sqs_event_source_mapping_jobs_data_i
   function_name    = aws_lambda_function.jobs_data_ingest.function_name
 }
 
+resource "aws_ssm_parameter" "jobs-db-url-param" {
+  name        = "/unity/sps/${var.deployment_name}/jobsDb/url"
+  description = "Full URL of the jobs db load balancer, including port for accesing jobs db"
+  type        = "String"
+  value       = "http://${data.kubernetes_service.jobs-es.status[0].load_balancer[0].ingress[0].hostname}:${var.service_port_map.jobs_es}"
+}
+
 # resource "aws_elasticsearch_domain" "jobs_database" {
 #   domain_name           = "${var.project}-${var.venue}-${var.service_area}-es-jobs-${local.counter}"
 #   elasticsearch_version = "7.10"
