@@ -12,3 +12,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - First implementation of HySDS services as Docker containers
 - Shell scripts to deploy/undeploy all Docker containers onto local Kubernetes cluster using the kubectl client
 - Terraform scripts to deploy/undeploy all Docker containers onto local Kubernetes cluster using Terraform
+
+Please see the parent repository's [CHANGELOG.md](https://github.com/unity-sds/unity-sps/blob/main/CHANGELOG.md) for a history of changes.
