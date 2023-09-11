@@ -4,6 +4,13 @@ variable "project" {
   default     = null
 }
 
+variable "tags" {
+  type = map(string)
+}
+
+variable "name" {
+  type = string
+}
 variable "service_area" {
   description = "The service area owner of the resources being deployed"
   type        = string
