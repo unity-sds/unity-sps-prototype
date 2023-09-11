@@ -30,7 +30,6 @@ module "unity-sps-hysds-cluster" {
   eks_cluster_name                              = var.eks_cluster_name
   elb_subnets                                   = var.elb_subnets == null ? data.aws_ssm_parameter.eks_private_subnets[0].value : var.elb_subnets
   default_group_node_group_name                 = var.default_group_node_group_name == null ? data.aws_ssm_parameter.default_node_group_name[0].value : var.default_group_node_group_name
-  default_group_node_group_launch_template_name = var.default_group_node_group_launch_template_name == null ? data.aws_ssm_parameter.default_group_node_group_launch_template_name[0].value : var.default_group_node_group_launch_template_name
   deployment_name                               = var.deployment_name
   verdi_node_group_capacity_type                = var.verdi_node_group_capacity_type
   verdi_node_group_scaling_config               = var.verdi_node_group_scaling_config

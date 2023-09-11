@@ -11,11 +11,6 @@ data "aws_ssm_parameter" "uds_dapa_api" {
   name = format("/%s-%s-%s-deployment-uds_dapa_api", var.project == null ? data.aws_ssm_parameter.account_project[0].value : var.project, var.venue == null ? data.aws_ssm_parameter.account_venue[0].value : var.venue, var.service_area)
 }
 
-data "aws_ssm_parameter" "default_group_node_group_launch_template_name" {
-  count = var.default_group_node_group_launch_template_name == null ? 1 : 0
-  name  = "/unity/extensions/eks/${var.eks_cluster_name}/nodeGroups/default/launchTemplateName"
-}
-
 data "aws_ssm_parameter" "default_node_group_name" {
   count = var.default_group_node_group_name == null ? 1 : 0
   name  = "/unity/extensions/eks/${var.eks_cluster_name}/nodeGroups/default/name"

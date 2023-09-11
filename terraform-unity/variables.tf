@@ -142,11 +142,6 @@ variable "elb_subnets" {
   type        = string
   default     = null
 }
-variable "default_group_node_group_launch_template_name" {
-  description = "value"
-  type        = string
-  default     = null
-}
 
 variable "default_group_node_group_name" {
   description = "value"

@@ -168,11 +168,6 @@ variable "default_group_node_group_name" {
   default     = "defaultgroupNodeGroup"
 }
 
-variable "default_group_node_group_launch_template_name" {
-  description = "value"
-  type        = string
-}
-
 variable "verdi_node_group_capacity_type" {
   description = "value"
   type        = string

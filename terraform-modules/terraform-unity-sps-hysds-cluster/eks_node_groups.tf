@@ -23,10 +23,6 @@ data "aws_ssm_parameter" "mcp_linux_eks_optimized_ami" {
   name = "/unity/account/ami/eksClusterAmi"
 }
 
-data "aws_launch_template" "default_group_node_group" {
-  name = var.default_group_node_group_launch_template_name
-}
-
 resource "aws_iam_role" "eks_verdi_node_role" {
   name = "${var.project}-${var.venue}-${var.service_area}-EKS-VerdiNodeGroupIAMRole-${local.counter}"
   assume_role_policy = jsonencode({
@@ -138,8 +134,6 @@ resource "aws_eks_node_group" "verdi" {
     max_size     = var.verdi_node_group_scaling_config.max_size
   }
   launch_template {
-    # id      = data.aws_launch_template.default_group_node_group.id
-    # version = data.aws_launch_template.default_group_node_group.latest_version
     id      = aws_launch_template.verdi_node_group_launch_template.id
     version = aws_launch_template.verdi_node_group_launch_template.latest_version
   }
@@ -289,8 +283,6 @@ resource "aws_eks_node_group" "sps_api" {
     max_size     = 1
   }
   launch_template {
-    # id      = data.aws_launch_template.default_group_node_group.id
-    # version = data.aws_launch_template.default_group_node_group.latest_version
     id      = aws_launch_template.sps_api_node_group_launch_template.id
     version = aws_launch_template.sps_api_node_group_launch_template.latest_version
   }
