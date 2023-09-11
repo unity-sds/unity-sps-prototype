@@ -14,11 +14,6 @@ locals {
   ]
 }
 
-# data "aws_eks_node_group" "default_node_group" {
-#   cluster_name    = var.eks_cluster_name
-#   node_group_name = "defaultgroupNodeGroup"
-# }
-
 data "aws_ssm_parameter" "mcp_linux_eks_optimized_ami" {
   name = "/unity/account/ami/eksClusterAmi"
 }
