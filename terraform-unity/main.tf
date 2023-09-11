@@ -37,6 +37,4 @@ module "unity-sps-hysds-cluster" {
   verdi_node_group_instance_types               = var.verdi_node_group_instance_types
   mcp_linux_eks_optimized_ami                   = var.mcp_linux_eks_optimized_ami
   add_routes_to_api_gateway                     = var.add_routes_to_api_gateway
-  name                                          = var.name
-  tags                                          = var.tags
 }
