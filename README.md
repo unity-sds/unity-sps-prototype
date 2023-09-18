@@ -3,7 +3,7 @@
 
 <div align="center">
 
-<!-- ☝️ Replace with your logo (if applicable) via ![](https://uri-to-your-logo-image) ☝️ -->
+![logo](https://user-images.githubusercontent.com/3129134/163255685-857aa780-880f-4c09-b08c-4b53bf4af54d.png)
 <!-- ☝️ If you see logo rendering errors, make sure you're not using indentation, or try an HTML IMG tag -->
 
 <h1 align="center">Unity SPS Prototype</h1>
@@ -19,6 +19,8 @@
 <!-- ☝️ Add badges via: https://shields.io e.g. ![](https://img.shields.io/github/your_chosen_action/your_org/your_repo) ☝️ -->
 
 <!-- ☝️ Screenshot of your software (if applicable) via ![](https://uri-to-your-screenshot) ☝️ -->
+
+[Unity Docs](https://unity-sds.gitbook.io/docs/) | [Unity-SPS Docs](https://unity-sds.gitbook.io/docs/developer-docs/science-processing) | [Issue Tracker](https://github.com/unity-sds/unity-sps-prototype/issues)
 
 For detailed information about this repository and its purpose, please refer to the parent repository, Unity SPS, at [https://github.com/unity-sds/unity-sps](https://github.com/unity-sds/unity-sps).
 
