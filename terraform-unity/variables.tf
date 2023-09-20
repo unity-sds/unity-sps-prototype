@@ -142,11 +142,6 @@ variable "elb_subnets" {
   type        = string
   default     = null
 }
-variable "default_group_node_group_launch_template_name" {
-  description = "value"
-  type        = string
-  default     = null
-}
 
 variable "default_group_node_group_name" {
   description = "value"
@@ -176,11 +171,6 @@ variable "verdi_node_group_instance_types" {
   default     = ["m3.medium"]
 }
 
-variable "mcp_linux_eks_optimized_ami" {
-  description = "value"
-  type        = string
-  default     = "ami-04db7a1ae7708642e"
-}
 variable "add_routes_to_api_gateway" {
   description = "If true, adds routes to api gateway configured in account"
   type        = bool

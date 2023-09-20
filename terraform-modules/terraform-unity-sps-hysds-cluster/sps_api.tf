@@ -3,6 +3,12 @@ resource "kubernetes_service" "sps-api-service" {
     name      = "sps-api"
     namespace = kubernetes_namespace.unity-sps.metadata[0].name
     annotations = {
+      "service.beta.kubernetes.io/aws-load-balancer-name" = "${var.project}-${var.venue}-${var.service_area}-spsapi-RestApiLoadBalancer-${local.counter}"
+      "service.beta.kubernetes.io/aws-load-balancer-additional-resource-tags" = join(",", [for k, v in merge(local.common_tags, {
+        "Name"      = "${var.project}-${var.venue}-${var.service_area}-spsapi-RestApiLoadBalancer-${local.counter}"
+        "Component" = "spsapi"
+        "Stack"     = "spsapi"
+      }) : format("%s=%s", k, v)])
       "service.beta.kubernetes.io/aws-load-balancer-subnets" = var.elb_subnets
     }
   }

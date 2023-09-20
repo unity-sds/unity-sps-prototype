@@ -32,17 +32,18 @@ For detailed information about this repository and its purpose, please refer to 
 
 ## Contents
 
-* [Quick Start](#quick-start)
-* [Changelog](#changelog)
-* [FAQ](#frequently-asked-questions-faq)
-* [Contributing Guide](#contributing)
-* [License](#license)
-* [Support](#support)
+- [Features](#features)
+- [Contents](#contents)
+- [Quick Start](#quick-start)
+- [Changelog](#changelog)
+- [Frequently Asked Questions (FAQ)](#frequently-asked-questions-faq)
+- [Contributing](#contributing)
+- [License](#license)
+- [Support](#support)
 
 ## Quick Start
 
 For comprehensive details, guidelines, and documentation, refer to the parent repository: [unity-sps](https://github.com/unity-sds/unity-sps).
-
 
 ## Changelog
 
