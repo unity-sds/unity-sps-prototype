@@ -8,9 +8,6 @@ variable "tags" {
   type = map(string)
 }
 
-variable "name" {
-  type = string
-}
 variable "service_area" {
   description = "The service area owner of the resources being deployed"
   type        = string
@@ -47,6 +44,7 @@ variable "eks_cluster_name" {
 variable "kubeconfig_filepath" {
   description = "Path to the kubeconfig file for the Kubernetes cluster"
   type        = string
+  default     = "../k8s/kubernetes.yml"
 }
 
 variable "namespace" {
