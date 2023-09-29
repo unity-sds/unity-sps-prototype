@@ -34,6 +34,8 @@ replicas: 1
 
 service:
   type: "LoadBalancer"
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-internal: "true"
 
 httpPort: 9200
 transportPort: 9300
