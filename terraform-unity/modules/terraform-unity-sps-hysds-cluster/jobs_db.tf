@@ -51,7 +51,7 @@ resource "null_resource" "build_lambda_package" {
 
   provisioner "local-exec" {
     command = <<EOF
-      cd ${path.module}/../../lambdas/jobs_data_ingest
+      cd ${path.module}/../../../lambdas/jobs_data_ingest
       python3.9 -m venv venv
       source venv/bin/activate
       pip install -e .
@@ -59,11 +59,11 @@ resource "null_resource" "build_lambda_package" {
       cp -R venv/lib/python3.9/site-packages/* ./lambda_package
       cp -R ./*.py ./lambda_package
       cd lambda_package
-      zip -r ../../lambda_package.zip .
+      zip -r ../../../lambda_package.zip .
       deactivate
       cd ../..
-      rm -rf ${path.module}/../../lambdas/jobs_data_ingest/venv
-      rm -rf ${path.module}/../../lambdas/jobs_data_ingest/lambda_package
+      rm -rf ${path.module}/../../../lambdas/jobs_data_ingest/venv
+      rm -rf ${path.module}/../../../lambdas/jobs_data_ingest/lambda_package
     EOF
   }
 }
@@ -167,8 +167,8 @@ resource "aws_lambda_function" "jobs_data_ingest" {
   timeout       = 10
 
   # Use the created ZIP file as the source of your Lambda function
-  filename = "${path.module}/../../lambdas/lambda_package.zip"
-  #   source_code_hash = filebase64sha256(pathexpand("${path.module}/../../lambdas/jobs_data_ingest/lambda_package.zip"))
+  filename = "${path.module}/../../../lambdas/lambda_package.zip"
+  #   source_code_hash = filebase64sha256(pathexpand("${path.module}/../../../lambdas/jobs_data_ingest/lambda_package.zip"))
 
   environment {
     variables = {
