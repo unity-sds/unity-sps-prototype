@@ -71,11 +71,12 @@ def projects():
     return data
 
 @pytest.fixture
-def job_reques(project_process_dict):
+def job_request_body(project_process_dict, environment):
     return reader.request_body(
         project_process_dict["project_name"],
         project_process_dict["process_name"],
         reader.execution_post_request_body,
+        environment=environment
     )
 
 @pytest.fixture
