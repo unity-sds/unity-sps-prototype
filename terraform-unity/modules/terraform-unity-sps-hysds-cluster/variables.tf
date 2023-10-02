@@ -205,3 +205,9 @@ variable "add_routes_to_api_gateway" {
   type        = bool
   default     = false
 }
+
+variable "lb_scheme" {
+  description = "internal or external facing loadbalancers"
+  type        = string
+  default     = "internal"
+}
