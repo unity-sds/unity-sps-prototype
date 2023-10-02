@@ -50,6 +50,7 @@ resource "null_resource" "build_lambda_package" {
   }
 
   provisioner "local-exec" {
+    interpreter = ["bash", "-c"]
     command = <<EOF
       cd ${path.module}/../../../lambdas/jobs_data_ingest
       python3.9 -m venv venv
