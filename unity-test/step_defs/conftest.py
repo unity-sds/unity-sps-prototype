@@ -36,6 +36,13 @@ def pytest_addoption(parser):
         help="The Sounder SIPS processes to test (L1A, L1B, chirp)",
         required=True,
     )
+    parser.addoption(
+        "--environment",
+        type=str,
+        action="store",
+        help="Environment to run test against. (dev, test)",
+        default=None
+    )
 
 @pytest.fixture(scope="module", autouse=True)
 def process_service_endpoint(request):
@@ -51,6 +58,10 @@ def jobs_database_endpoint(request):
     return request.config.getoption("--jobs-database-endpoint")
 
 @pytest.fixture()
+def environment(request):
+    return request.config.getoption("--environment")
+
+@pytest.fixture()
 def jobs_database_client(jobs_database_endpoint):
     return Elasticsearch(jobs_database_endpoint)
 
@@ -60,7 +71,7 @@ def projects():
     return data
 
 @pytest.fixture
-def job_request_body(project_process_dict):
+def job_reques(project_process_dict):
     return reader.request_body(
         project_process_dict["project_name"],
         project_process_dict["process_name"],
@@ -218,11 +229,12 @@ def created_response(response):
     "a WPS-T request is made to execute the process",
     target_fixture="response",
 )
-def request_job_execution(process_service_endpoint, project_process_dict):
+def request_job_execution(process_service_endpoint, project_process_dict, environment):
     request_body = reader.request_body(
         project_process_dict["project_name"],
         project_process_dict["process_name"],
         reader.execution_post_request_body,
+        environment=environment
     )
     job_execution_response = _request_job_execution(
         process_service_endpoint, project_process_dict["process_name"], request_body
