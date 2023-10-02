@@ -4,6 +4,7 @@ resource "kubernetes_service" "sps-api-service" {
     namespace = kubernetes_namespace.unity-sps.metadata[0].name
     annotations = {
       "service.beta.kubernetes.io/aws-load-balancer-subnets" = var.elb_subnets
+      "service.beta.kubernetes.io/aws-load-balancer-scheme" = var.lb_scheme
     }
   }
   spec {
