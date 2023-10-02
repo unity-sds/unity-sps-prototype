@@ -91,6 +91,7 @@ resource "kubernetes_service" "ades-wpst-api-service" {
     # todo remove when testing sepereate elb
     annotations = {
       "service.beta.kubernetes.io/aws-load-balancer-subnets" = var.elb_subnets
+      "service.beta.kubernetes.io/aws-load-balancer-scheme" = var.lb_scheme
     }
   }
   spec {
