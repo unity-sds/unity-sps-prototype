@@ -168,7 +168,7 @@ resource "aws_lambda_function" "jobs_data_ingest" {
   timeout       = 10
 
   # Use the created ZIP file as the source of your Lambda function
-  filename = "${path.module}/../../../lambdas/lambda_package.zip"
+  filename = "${path.module}/../../../lambda_package.zip"
   #   source_code_hash = filebase64sha256(pathexpand("${path.module}/../../../lambdas/jobs_data_ingest/lambda_package.zip"))
 
   environment {
