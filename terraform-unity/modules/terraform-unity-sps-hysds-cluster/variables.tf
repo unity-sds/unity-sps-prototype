@@ -211,3 +211,9 @@ variable "lb_scheme" {
   type        = string
   default     = "internal"
 }
+
+variable "legacy_lb_internal"{
+  description = "legacy annotation for internal lb"
+  type        = string
+  default     = "true"
+}
