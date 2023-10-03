@@ -92,6 +92,7 @@ resource "kubernetes_service" "ades-wpst-api-service" {
     annotations = {
       "service.beta.kubernetes.io/aws-load-balancer-subnets" = var.elb_subnets
       "service.beta.kubernetes.io/aws-load-balancer-scheme" = var.lb_scheme
+      "service.beta.kubernetes.io/aws-load-balancer-internal" = var.legacy_lb_internal
     }
   }
   spec {
