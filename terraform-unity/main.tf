@@ -35,4 +35,5 @@ module "unity-sps-hysds-cluster" {
   verdi_node_group_scaling_config = var.verdi_node_group_scaling_config
   verdi_node_group_instance_types = var.verdi_node_group_instance_types
   add_routes_to_api_gateway       = var.add_routes_to_api_gateway
+  tags                            = var.tags
 }
