@@ -40,6 +40,7 @@ variable "eks_cluster_name" {
 variable "kubeconfig_filepath" {
   description = "Path to the kubeconfig file for the Kubernetes cluster"
   type        = string
+  default     = "../k8s/kubernetes.yml"
 }
 
 variable "namespace" {
@@ -175,4 +176,10 @@ variable "add_routes_to_api_gateway" {
   description = "If true, adds routes to api gateway configured in account"
   type        = bool
   default     = false
+}
+
+variable "tags" {
+  description = "Applicable extra tags"
+  type = map(string)
+  default = {}
 }
