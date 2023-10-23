@@ -197,13 +197,13 @@ variable "add_routes_to_api_gateway" {
 }
 
 variable "lb_scheme" {
-  description = "internal or external facing loadbalancers"
+  description = "external or external facing loadbalancers"
   type        = string
-  default     = "internal"
+  default     = "external"
 }
 
-variable "legacy_lb_internal"{
-  description = "legacy annotation for internal lb"
+variable "legacy_lb_external" {
+  description = "legacy annotation for external lb"
   type        = string
   default     = "true"
 }
