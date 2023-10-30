@@ -104,7 +104,7 @@ def _process_skip_determination(project_name, process_name, user_selected_proces
 
 
 def _undeploy_all_processes(process_service_endpoint):
-    url = urljoin(process_service_endpoint, "/processes")
+    url = urljoin(process_service_endpoint, "processes")
     get_processes_response = requests.get(url)
     get_processes_response.raise_for_status()
 
@@ -114,7 +114,7 @@ def _undeploy_all_processes(process_service_endpoint):
     for process in processes:
         url = urljoin(
             process_service_endpoint,
-            f"/processes/{process['id']}",
+            f"processes/{process['id']}",
         )
         undeploy_process_response = requests.delete(url)
         undeploy_process_response.raise_for_status()
@@ -253,7 +253,7 @@ def _request_job_execution(endpoint, process_name, request_body):
 def _request_job_status_by_id(endpoint, process_name, job_id):
     url = urljoin(
         endpoint,
-        f"/processes/{process_name.casefold()}:develop/jobs/{job_id}",
+        f"processes/{process_name.casefold()}:develop/jobs/{job_id}",
     )
     job_status_response = requests.get(url)
     job_status_response.raise_for_status()

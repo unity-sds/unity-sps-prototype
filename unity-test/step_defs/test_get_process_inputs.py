@@ -23,7 +23,7 @@ def test_get_the_inputs_for_a_given_algorithm_deployment():
 def describe_process_l1b_algorithm(process_service_endpoint, project_process_dict):
     url = urljoin(
         process_service_endpoint,
-        f'/processes/{project_process_dict["process_name"].casefold()}:develop',
+        f'processes/{project_process_dict["process_name"].casefold()}:develop',
     )
     get_processes_response = requests.get(url)
     get_processes_response.raise_for_status()

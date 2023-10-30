@@ -20,7 +20,7 @@ def delete_request_process_id(process_service_endpoint, project_process_dict):
     process_name = project_process_dict["process_name"]
     url = urljoin(
         process_service_endpoint,
-        f"/processes/{process_name.casefold()}:develop",
+        f"processes/{process_name.casefold()}:develop",
     )
     undeploy_process_response = requests.delete(url)
     undeploy_process_response.raise_for_status()
