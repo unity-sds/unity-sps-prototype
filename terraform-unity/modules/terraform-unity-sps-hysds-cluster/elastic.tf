@@ -409,7 +409,7 @@ resource "helm_release" "mozart-es" {
   namespace  = kubernetes_namespace.unity-sps.metadata[0].name
   repository = "https://helm.elastic.co"
   chart      = "elasticsearch"
-  version    = "7.9.3"
+  version    = "7.10.0"
   wait       = true
   timeout    = 600
   values = [
@@ -435,7 +435,7 @@ resource "helm_release" "grq2-es" {
   namespace  = kubernetes_namespace.unity-sps.metadata[0].name
   repository = "https://helm.elastic.co"
   chart      = "elasticsearch"
-  version    = "7.9.3"
+  version    = "7.10.0"
   wait       = true
   timeout    = 600
   values = [
@@ -461,7 +461,7 @@ resource "helm_release" "jobs-es" {
   namespace  = kubernetes_namespace.unity-sps.metadata[0].name
   repository = "https://helm.elastic.co"
   chart      = "elasticsearch"
-  version    = "7.9.3"
+  version    = "7.10.0"
   wait       = true
   timeout    = 600
   values = [
@@ -475,8 +475,8 @@ resource "helm_release" "jobs-es" {
             "Component" = "jobs"
             "Stack"     = "jobs"
           }) : format("%s=%s", k, v)])
-          "service.beta.kubernetes.io/aws-load-balancer-subnets" = var.elb_subnets
-          "service.beta.kubernetes.io/aws-load-balancer-scheme" = var.lb_scheme
+          "service.beta.kubernetes.io/aws-load-balancer-subnets"  = var.elb_subnets
+          "service.beta.kubernetes.io/aws-load-balancer-scheme"   = var.lb_scheme
           "service.beta.kubernetes.io/aws-load-balancer-internal" = var.legacy_lb_internal
         }
       }
