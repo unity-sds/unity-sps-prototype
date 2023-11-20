@@ -88,6 +88,9 @@ resource "kubernetes_stateful_set" "rabbitmq_statefulset" {
                   rabbitmqctl eval 'application:set_env(rabbit, consumer_timeout, 172800000).'
                   EOT
                 ]
+              }
+            }
+          }
           volume_mount {
             mount_path = "/var/lib/rabbitmq"
             name       = "rabbitmq-data"
