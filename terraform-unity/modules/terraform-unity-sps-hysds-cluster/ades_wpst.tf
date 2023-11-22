@@ -45,31 +45,113 @@ resource "kubernetes_service" "ades-wpst-api-service" {
   metadata {
     name      = "ades-wpst-api"
     namespace = kubernetes_namespace.unity-sps.metadata[0].name
-    annotations = {
-      "service.beta.kubernetes.io/aws-load-balancer-name" = "${var.project}-${var.venue}-${var.service_area}-adeswpst-RestApiLoadBalancer-${local.counter}"
-      "service.beta.kubernetes.io/aws-load-balancer-additional-resource-tags" = join(",", [for k, v in merge(local.common_tags, {
-        "Name"      = "${var.project}-${var.venue}-${var.service_area}-adeswpst-RestApiLoadBalancer-${local.counter}"
-        "Component" = "adeswpst"
-        "Stack"     = "adeswpst"
-      }) : format("%s=%s", k, v)])
-      "service.beta.kubernetes.io/aws-load-balancer-subnets" = var.elb_subnets
-      "service.beta.kubernetes.io/aws-load-balancer-scheme" = var.lb_scheme
-      "service.beta.kubernetes.io/aws-load-balancer-internal" = var.legacy_lb_internal
-    }
   }
   spec {
     selector = {
       app = "ades-wpst-api"
     }
-    # type = "NodePort"
-    type = var.service_type
+    type = "NodePort"
     port {
       protocol    = "TCP"
       port        = var.service_port_map.ades_wpst_api_service
       target_port = 5000
-      # node_port   = 32000
     }
   }
+}
+
+# Define the Network Load Balancer
+resource "aws_lb" "ades-wpst-load-balancer" {
+  name               = "unity-${var.service_area}-wpst-nlb-${local.counter}"
+  internal           = true 
+  load_balancer_type = "network"
+
+  security_groups = toset([aws_security_group.shared-lb-sg.id, aws_security_group.ades-wpst-nlb-sg.id])
+  
+  # Define subnets for the NLB
+  subnets = toset(split(",", var.elb_subnets))
+}
+
+# Define a target group for the NLB
+resource "aws_lb_target_group" "ades-wpst-target-group" {
+  name     = "unity-${var.service_area}-wpst-${local.counter}-tg"
+  port     = 5000
+  protocol = "TCP"
+  target_type = "ip"
+  vpc_id   = data.aws_eks_cluster.sps-cluster.vpc_config[0].vpc_id  
+}
+
+resource "aws_lb_listener" "ades-wpst-k8s-service" {
+  load_balancer_arn = aws_lb.ades-wpst-load-balancer.arn
+  port = "5001"
+  protocol = "TCP"
+  default_action {
+    type = "forward"
+    target_group_arn = aws_lb_target_group.ades-wpst-target-group.arn 
+  }
+}
+
+resource "kubernetes_manifest" "ades-wpst-target-group-binding"{
+  manifest = {
+    "apiVersion" = "elbv2.k8s.aws/v1beta1"
+    "kind" = "TargetGroupBinding"
+    "metadata" = {
+      "name" = "wpst-targetgroup-binding"
+      "namespace" = kubernetes_namespace.unity-sps.metadata[0].name
+    }
+    "spec" = {
+      "serviceRef" = {
+        "name" = "ades-wpst-api"
+        "port" = var.service_port_map.ades_wpst_api_service
+      }
+      "targetGroupARN" = aws_lb_target_group.ades-wpst-target-group.arn
+    }
+  }
+}
+
+resource "aws_security_group" "shared-lb-sg"{
+  name = "${var.service_area}-shared-lb-sg-${local.counter}"
+  description = "Shared sg for all ${var.service_area} load balancers, allows creation of sg rule on cluster security group that affects all load balancers"
+  vpc_id = data.aws_eks_cluster.sps-cluster.vpc_config[0].vpc_id
+  egress {
+    protocol = "All"
+    from_port = 0 # terraform's version of specifying "all"
+    to_port = 0
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+resource "aws_security_group" "ades-wpst-nlb-sg" {
+  name = "${var.service_area}-wpst-nlb-sg-${local.counter}"
+  description = "sg for all ${var.service_area}-wpst load balancer"
+  vpc_id = data.aws_eks_cluster.sps-cluster.vpc_config[0].vpc_id
+  ingress {
+    protocol = "TCP"
+    from_port = var.service_port_map.ades_wpst_api_service
+    to_port = var.service_port_map.ades_wpst_api_service
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  egress {
+    protocol = "TCP"
+    from_port = 0 # terraform's version of specifying "all"
+    to_port = 0
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+resource "aws_vpc_security_group_ingress_rule" "sps-nlb-sgr" {
+
+  security_group_id = data.aws_eks_cluster.sps-cluster.vpc_config[0].cluster_security_group_id
+
+  description = "${var.service_area}-${local.counter} share nlb sgr, allows ingress to cluster form load balancers"
+  ip_protocol = -1 # all protocols, all ports
+  referenced_security_group_id = aws_security_group.shared-lb-sg.id # shared load balancer security group source
+}
+
+resource "aws_api_gateway_vpc_link" "ades-wpst-api-gateway-vpc-link" {
+  name = "unity-${var.service_area}-wpst-${local.counter}"
+  description = "VPC Link for ades-wpst-api load balancer"
+
+  target_arns = [aws_lb.ades-wpst-load-balancer.arn]
 }
 
 resource "kubernetes_deployment" "ades-wpst-api" {
