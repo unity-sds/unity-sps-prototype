@@ -175,7 +175,7 @@ resource "aws_lambda_function" "jobs_data_ingest" {
     variables = {
       REGION = var.region
       # OPENSEARCH_DOMAIN_ENDPOINT = aws_elasticsearch_domain.jobs_database.endpoint
-      ELASTICSEARCH_ENDPOINT = "http://${data.kubernetes_service.jobs-es.status[0].load_balancer[0].ingress[0].hostname}:${var.service_port_map.jobs_es}"
+      ELASTICSEARCH_ENDPOINT = "http://${aws_lb.jobsdb-load-balancer.dns_name}:${var.service_port_map.jobs_es}"
     }
   }
 
@@ -278,7 +278,7 @@ resource "aws_ssm_parameter" "jobs-db-url-param" {
   name        = "/unity/sps/${var.deployment_name}/jobsDb/url"
   description = "Full URL of the jobs db load balancer, including port for accesing jobs db"
   type        = "String"
-  value       = "http://${data.kubernetes_service.jobs-es.status[0].load_balancer[0].ingress[0].hostname}:${var.service_port_map.jobs_es}"
+  value       = "http://${aws_lb.jobsdb-load-balancer.dns_name}:${var.service_port_map.jobs_es}"
 }
 
 # resource "aws_elasticsearch_domain" "jobs_database" {

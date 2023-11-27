@@ -359,45 +359,45 @@ locals {
   }
 }
 
-resource "null_resource" "upload_jobs_template" {
-  provisioner "local-exec" {
-    command = <<-EOT
-      set -x
-      ES_URL=${data.kubernetes_service.jobs-es.status[0].load_balancer[0].ingress[0].hostname}:${var.service_port_map.jobs_es}
-      while [[ "$(curl -s -o /dev/null -w '%%{http_code}\n' $ES_URL)" != "200" ]]; do sleep 1; done
-      jobs_es_template='{
-        "index_patterns": ["jobs*"],
-        "template": {
-          "settings": {
-            "number_of_shards": 1,
-            "number_of_replicas": 1
-          },
-          "mappings": {
-            "dynamic": "true",
-            "properties": {
-              "id": {
-                "type": "keyword"
-              },
-              "inputs": {
-                "enabled": false
-              },
-              "outputs": {
-                "enabled": false
-              },
-              "status": {
-                "type": "keyword"
-              },
-              "labels": {
-                "enabled": false
-              }
-            }
-          }
-        }
-      }'
-      curl -X PUT "$ES_URL/_index_template/jobs_template" -H 'Content-Type: application/json' -d "$jobs_es_template"
-    EOT
-  }
-}
+# resource "null_resource" "upload_jobs_template" {
+#   provisioner "local-exec" {
+#     command = <<-EOT
+#       set -x
+#       ES_URL=${data.kubernetes_service.jobs-es.status[0].load_balancer[0].ingress[0].hostname}:${var.service_port_map.jobs_es}
+#       while [[ "$(curl -s -o /dev/null -w '%%{http_code}\n' $ES_URL)" != "200" ]]; do sleep 1; done
+#       jobs_es_template='{
+#         "index_patterns": ["jobs*"],
+#         "template": {
+#           "settings": {
+#             "number_of_shards": 1,
+#             "number_of_replicas": 1
+#           },
+#           "mappings": {
+#             "dynamic": "true",
+#             "properties": {
+#               "id": {
+#                 "type": "keyword"
+#               },
+#               "inputs": {
+#                 "enabled": false
+#               },
+#               "outputs": {
+#                 "enabled": false
+#               },
+#               "status": {
+#                 "type": "keyword"
+#               },
+#               "labels": {
+#                 "enabled": false
+#               }
+#             }
+#           }
+#         }
+#       }'
+#       curl -X PUT "$ES_URL/_index_template/jobs_template" -H 'Content-Type: application/json' -d "$jobs_es_template"
+#     EOT
+#   }
+# }
 
 /*
 A Release is an instance of a chart running in a Kubernetes cluster.
@@ -468,17 +468,7 @@ resource "helm_release" "jobs-es" {
     yamlencode(local.jobs_es_values),
     yamlencode({
       "service" = {
-        "annotations" = {
-          "service.beta.kubernetes.io/aws-load-balancer-name" = "${var.project}-${var.venue}-${var.service_area}-jobs-ElasticsearchLoadBalancer-${local.counter}"
-          "service.beta.kubernetes.io/aws-load-balancer-additional-resource-tags" = join(",", [for k, v in merge(local.common_tags, {
-            "Name"      = "${var.project}-${var.venue}-${var.service_area}-jobs-ElasticsearchLoadBalancer-${local.counter}"
-            "Component" = "jobs"
-            "Stack"     = "jobs"
-          }) : format("%s=%s", k, v)])
-          "service.beta.kubernetes.io/aws-load-balancer-subnets" = var.elb_subnets
-          "service.beta.kubernetes.io/aws-load-balancer-scheme" = var.lb_scheme
-          "service.beta.kubernetes.io/aws-load-balancer-internal" = var.legacy_lb_internal
-        }
+        "type" = "NodePort"
       }
     })
   ]
