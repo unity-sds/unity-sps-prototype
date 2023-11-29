@@ -428,6 +428,7 @@ resource "helm_release" "mozart-es" {
       }
     })
   ]
+  depends_on = [helm_release.aws-load-balancer-controller]
 }
 
 resource "helm_release" "grq2-es" {
@@ -454,6 +455,7 @@ resource "helm_release" "grq2-es" {
       }
     })
   ]
+  depends_on = [helm_release.aws-load-balancer-controller]
 }
 
 resource "helm_release" "jobs-es" {
@@ -472,4 +474,5 @@ resource "helm_release" "jobs-es" {
       }
     })
   ]
+  depends_on = [helm_release.aws-load-balancer-controller]
 }
