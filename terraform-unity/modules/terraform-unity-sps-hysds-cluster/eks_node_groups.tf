@@ -15,7 +15,7 @@ locals {
 }
 
 data "aws_ssm_parameter" "mcp_linux_eks_optimized_ami" {
-  name = "/unity/account/ami/eksClusterAmi"
+  name = "/mcp/amis/aml2-eks-1-27"
 }
 
 resource "aws_iam_role" "eks_verdi_node_role" {
