@@ -78,7 +78,7 @@ resource "kubernetes_manifest" "ades-wpst-target-group-binding"{
       "targetType" = "ip"
     }
   }
-  #depends_on = [helm_release.aws-load-balancer-controller]
+  depends_on = [helm_release.aws-load-balancer-controller]
 }
 
 # wpst specific security group
@@ -157,7 +157,7 @@ resource "kubernetes_manifest" "jobsdb-target-group-binding"{
       "targetType" = "ip"
     }
   }
-  #depends_on = [helm_release.aws-load-balancer-controller]
+  depends_on = [helm_release.aws-load-balancer-controller]
 }
 
 # lb specific security group
@@ -236,7 +236,7 @@ resource "kubernetes_manifest" "sps-api-target-group-binding"{
       "targetType" = "ip"
     }
   }
-  #depends_on = [helm_release.aws-load-balancer-controller]
+  depends_on = [helm_release.aws-load-balancer-controller]
 }
 
 # wpst specific security group
