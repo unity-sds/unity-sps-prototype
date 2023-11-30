@@ -75,8 +75,10 @@ resource "kubernetes_manifest" "ades-wpst-target-group-binding"{
         "port" = var.service_port_map.ades_wpst_api_service
       }
       "targetGroupARN" = aws_lb_target_group.ades-wpst-target-group.arn
+      "targetType" = "ip"
     }
   }
+  #depends_on = [helm_release.aws-load-balancer-controller]
 }
 
 # wpst specific security group
@@ -152,8 +154,10 @@ resource "kubernetes_manifest" "jobsdb-target-group-binding"{
         "port" = var.service_port_map.jobs_es
       }
       "targetGroupARN" = aws_lb_target_group.jobsdb-target-group.arn
+      "targetType" = "ip"
     }
   }
+  #depends_on = [helm_release.aws-load-balancer-controller]
 }
 
 # lb specific security group
@@ -173,6 +177,13 @@ resource "aws_security_group" "jobsdb-nlb-sg" {
     to_port = 0
     cidr_blocks = ["0.0.0.0/0"]
   }
+}
+
+resource "aws_api_gateway_vpc_link" "sps-api-gateway-vpc-link" {
+  name = "unity-${var.service_area}-sps-api-${local.counter}"
+  description = "VPC Link for sps-api load balancer"
+
+  target_arns = [aws_lb.sps-api-load-balancer.arn]
 }
 
 # Network Load Balancer for wpst
@@ -222,8 +233,10 @@ resource "kubernetes_manifest" "sps-api-target-group-binding"{
         "port" = var.service_port_map.sps_api_service
       }
       "targetGroupARN" = aws_lb_target_group.sps-api-target-group.arn
+      "targetType" = "ip"
     }
   }
+  #depends_on = [helm_release.aws-load-balancer-controller]
 }
 
 # wpst specific security group
@@ -247,7 +260,7 @@ resource "aws_security_group" "sps-api-nlb-sg" {
 
 # Aws Load Balancer Controller Helm Chart
 resource "helm_release" "aws-load-balancer-controller" {
-  name = "aws-load-balancer-controller-${local.counter}"
+  name = "aws-load-balancer-controller"
   repository = "https://aws.github.io/eks-charts"
   chart = "aws-load-balancer-controller"
   version = "1.6.1"
@@ -283,7 +296,7 @@ data "tls_certificate" "eks-cluster-oidc-server-certificate"{
 resource "aws_iam_openid_connect_provider" "eks-cluster-openidc-provider" {
   url = data.aws_eks_cluster.sps-cluster.identity[0].oidc[0].issuer
 
-  client_id_list = ["sts.amazon.com"]
+  client_id_list = ["sts.amazonaws.com"]
 
   thumbprint_list = [data.tls_certificate.eks-cluster-oidc-server-certificate.certificates[0].sha1_fingerprint]
 }
@@ -303,7 +316,7 @@ resource "kubernetes_service_account" "aws-load-balancer-controller-service-acco
 }
 
 locals {
-  openidc_provider_domain_name = trimprefix("https://", data.aws_eks_cluster.sps-cluster.identity[0].oidc[0].issuer) 
+  openidc_provider_domain_name = trimprefix(data.aws_eks_cluster.sps-cluster.identity[0].oidc[0].issuer, "https://") 
 }
 
 data "aws_iam_policy" "aws-managed-load-balancer-policy"{
