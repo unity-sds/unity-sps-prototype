@@ -79,7 +79,7 @@ resource "aws_launch_template" "verdi_node_group_launch_template" {
       encrypted   = false
       iops        = 3000
       throughput  = 125
-      volume_size = "80"
+      volume_size = var.verdi_node_group_ebs_volume_size
       volume_type = "gp3"
     }
   }

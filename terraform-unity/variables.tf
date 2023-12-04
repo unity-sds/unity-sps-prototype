@@ -172,6 +172,12 @@ variable "verdi_node_group_instance_types" {
   default     = ["m3.medium"]
 }
 
+variable "verdi_node_group_ebs_volume_size" {
+  description = "value"
+  type        = number
+  default     = 500
+}
+
 variable "add_routes_to_api_gateway" {
   description = "If true, adds routes to api gateway configured in account"
   type        = bool
@@ -180,6 +186,6 @@ variable "add_routes_to_api_gateway" {
 
 variable "tags" {
   description = "Applicable extra tags"
-  type = map(string)
-  default = {}
+  type        = map(string)
+  default     = {}
 }
