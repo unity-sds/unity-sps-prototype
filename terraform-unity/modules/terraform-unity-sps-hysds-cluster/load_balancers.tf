@@ -288,18 +288,27 @@ resource "helm_release" "aws-load-balancer-controller" {
   
 }
 
+# # Custom Resource Definition for AWS Load Balancer Controller
+# data "http" "load-balancer-controller-custom-resource-definition-yaml"{
+#   url = "https://raw.githubusercontent.com/aws/eks-charts/master/stable/aws-load-balancer-controller/crds/crds.yaml"
+# }
+
+# resource "kubernetes_manifest" "load-balancer-controller-custom-resource-definition" {
+#   manifest = yamldecode(data.http.load-balancer-controller-custom-resource-definition-yaml.response_body)
+# }
+
 # Create IAM OIDC provider for EKS cluster so we can add AWS Load Balancer Controller
-data "tls_certificate" "eks-cluster-oidc-server-certificate"{
-  url = data.aws_eks_cluster.sps-cluster.identity[0].oidc[0].issuer
-}
+# data "tls_certificate" "eks-cluster-oidc-server-certificate"{
+#   url = data.aws_eks_cluster.sps-cluster.identity[0].oidc[0].issuer
+# }
 
-resource "aws_iam_openid_connect_provider" "eks-cluster-openidc-provider" {
-  url = data.aws_eks_cluster.sps-cluster.identity[0].oidc[0].issuer
+# resource "aws_iam_openid_connect_provider" "eks-cluster-openidc-provider" {
+#   url = data.aws_eks_cluster.sps-cluster.identity[0].oidc[0].issuer
 
-  client_id_list = ["sts.amazonaws.com"]
+#   client_id_list = ["sts.amazonaws.com"]
 
-  thumbprint_list = [data.tls_certificate.eks-cluster-oidc-server-certificate.certificates[0].sha1_fingerprint]
-}
+#   thumbprint_list = [data.tls_certificate.eks-cluster-oidc-server-certificate.certificates[0].sha1_fingerprint]
+# }
 
 resource "kubernetes_service_account" "aws-load-balancer-controller-service-account"{
   metadata {
