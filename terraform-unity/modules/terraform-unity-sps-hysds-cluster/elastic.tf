@@ -409,7 +409,7 @@ resource "helm_release" "mozart-es" {
   namespace  = kubernetes_namespace.unity-sps.metadata[0].name
   repository = "https://helm.elastic.co"
   chart      = "elasticsearch"
-  version    = "7.9.3"
+  version    = "7.17.1"
   wait       = true
   timeout    = 600
   values = [
@@ -436,7 +436,7 @@ resource "helm_release" "grq2-es" {
   namespace  = kubernetes_namespace.unity-sps.metadata[0].name
   repository = "https://helm.elastic.co"
   chart      = "elasticsearch"
-  version    = "7.9.3"
+  version    = "7.17.1"
   wait       = true
   timeout    = 600
   values = [
@@ -463,7 +463,7 @@ resource "helm_release" "jobs-es" {
   namespace  = kubernetes_namespace.unity-sps.metadata[0].name
   repository = "https://helm.elastic.co"
   chart      = "elasticsearch"
-  version    = "7.9.3"
+  version    = "7.17.1"
   wait       = true
   timeout    = 600
   values = [

@@ -15,7 +15,7 @@ locals {
 }
 
 data "aws_ssm_parameter" "mcp_linux_eks_optimized_ami" {
-  name = "/unity/account/ami/eksClusterAmi"
+  name = "/mcp/amis/aml2-eks-1-27"
 }
 
 resource "aws_iam_role" "eks_verdi_node_role" {
@@ -79,7 +79,7 @@ resource "aws_launch_template" "verdi_node_group_launch_template" {
       encrypted   = false
       iops        = 3000
       throughput  = 125
-      volume_size = "80"
+      volume_size = var.verdi_node_group_ebs_volume_size
       volume_type = "gp3"
     }
   }
