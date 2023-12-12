@@ -88,6 +88,7 @@ resource "aws_launch_template" "verdi_node_group_launch_template" {
 
   user_data = base64encode(<<-EOF
       #!/bin/bash
+      sudo sed -i 's/^net.ipv4.ip_forward = 0/net.ipv4.ip_forward = 1/' /etc/sysctl.conf && sudo sysctl -p |true
       /etc/eks/bootstrap.sh ${data.aws_eks_cluster.sps-cluster.name}
       EOF
   )
@@ -237,6 +238,7 @@ resource "aws_launch_template" "sps_api_node_group_launch_template" {
 
   user_data = base64encode(<<-EOF
       #!/bin/bash
+      sudo sed -i 's/^net.ipv4.ip_forward = 0/net.ipv4.ip_forward = 1/' /etc/sysctl.conf && sudo sysctl -p |true
       /etc/eks/bootstrap.sh ${data.aws_eks_cluster.sps-cluster.name}
       EOF
   )
