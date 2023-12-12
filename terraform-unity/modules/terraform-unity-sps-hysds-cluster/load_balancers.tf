@@ -13,8 +13,8 @@ resource "aws_security_group" "shared-lb-sg"{
 
 # This security group rule adds the shared load balancer security group to the eks cluster security group so that load balancers can forward traffic to eks
 resource "aws_vpc_security_group_ingress_rule" "sps-nlb-sgr" {
-
-  security_group_id = data.aws_eks_cluster.sps-cluster.vpc_config[0].cluster_security_group_id
+  for_each = toset(data.aws_eks_cluster.sps-cluster.vpc_config[0].security_group_ids)
+  security_group_id = each.key
 
   description = "${var.service_area}-${local.counter} share nlb sgr, allows ingress to cluster form load balancers"
   ip_protocol = -1 # all protocols, all ports
