@@ -63,7 +63,7 @@ variable "docker_images" {
     hysds_grq2         = "ghcr.io/unity-sds/unity-sps-prototype/hysds-grq2:unity-v1.1.0"
     hysds_verdi        = "ghcr.io/unity-sds/unity-sps-prototype/hysds-verdi:unity-v1.1.0"
     hysds_factotum     = "ghcr.io/unity-sds/unity-sps-prototype/hysds-factotum:unity-v1.1.0"
-    ades_wpst_api      = "ghcr.io/unity-sds/unity-sps-prototype/ades-wpst-api:unity-v1.1.0"
+    ades_wpst_api      = "ghcr.io/unity-sds/unity-sps-prototype/ades-wpst-api:develop"
     sps_api            = "ghcr.io/unity-sds/unity-sps-prototype/sps-api:unity-v1.1.0"
     sps_hysds_pge_base = "ghcr.io/unity-sds/unity-sps-prototype/sps-hysds-pge-base:develop"
     logstash           = "docker.elastic.co/logstash/logstash:7.10.2"
