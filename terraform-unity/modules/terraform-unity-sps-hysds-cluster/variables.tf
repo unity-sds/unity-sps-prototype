@@ -190,6 +190,12 @@ variable "verdi_node_group_instance_types" {
   default     = ["m3.medium"]
 }
 
+variable "verdi_node_group_ebs_volume_size" {
+  description = "value"
+  type        = number
+  default     = 500
+}
+
 variable "add_routes_to_api_gateway" {
   description = "If true, adds routes to api gateway configured in account"
   type        = bool
@@ -199,11 +205,11 @@ variable "add_routes_to_api_gateway" {
 variable "lb_scheme" {
   description = "internal or external facing loadbalancers"
   type        = string
-  default     = "internal"
+  default     = "external"
 }
 
-variable "legacy_lb_internal"{
-  description = "legacy annotation for internal lb"
+variable "legacy_lb_external" {
+  description = "legacy annotation for external lb"
   type        = string
   default     = "true"
 }

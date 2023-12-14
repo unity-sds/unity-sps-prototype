@@ -15,7 +15,7 @@ locals {
 }
 
 data "aws_ssm_parameter" "mcp_linux_eks_optimized_ami" {
-  name = "/unity/account/ami/eksClusterAmi"
+  name = "/mcp/amis/aml2-eks-1-27"
 }
 
 resource "aws_iam_role" "eks_verdi_node_role" {
@@ -79,7 +79,7 @@ resource "aws_launch_template" "verdi_node_group_launch_template" {
       encrypted   = false
       iops        = 3000
       throughput  = 125
-      volume_size = "80"
+      volume_size = var.verdi_node_group_ebs_volume_size
       volume_type = "gp3"
     }
   }
@@ -88,6 +88,7 @@ resource "aws_launch_template" "verdi_node_group_launch_template" {
 
   user_data = base64encode(<<-EOF
       #!/bin/bash
+      sudo sed -i 's/^net.ipv4.ip_forward = 0/net.ipv4.ip_forward = 1/' /etc/sysctl.conf && sudo sysctl -p |true
       /etc/eks/bootstrap.sh ${data.aws_eks_cluster.sps-cluster.name}
       EOF
   )
@@ -237,6 +238,7 @@ resource "aws_launch_template" "sps_api_node_group_launch_template" {
 
   user_data = base64encode(<<-EOF
       #!/bin/bash
+      sudo sed -i 's/^net.ipv4.ip_forward = 0/net.ipv4.ip_forward = 1/' /etc/sysctl.conf && sudo sysctl -p |true
       /etc/eks/bootstrap.sh ${data.aws_eks_cluster.sps-cluster.name}
       EOF
   )

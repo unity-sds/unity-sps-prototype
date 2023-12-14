@@ -158,6 +158,33 @@ resource "aws_iam_policy_attachment" "cloudwatch_logs_access_policy_attachment" 
   policy_arn = aws_iam_policy.cloudwatch_logs_access_policy.arn
 }
 
+resource "aws_iam_policy" "lambda_ec2_policy" {
+  name        = "${var.project}-${var.venue}-${var.service_area}-IAM-EC2NetworkAccessPolicy-${local.counter}"
+  description = "Policy to allow EC2 ENI Creation for VPC constrained lambda"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = [
+          "ec2:DescribeInstances",
+          "ec2:CreateNetworkInterface",
+          "ec2:AttachNetworkInterface",
+          "ec2:DescribeNetworkInterfaces",
+          "ec2:DeleteNetworkInterface"
+        ]
+        Effect   = "Allow"
+        Resource = "*"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_policy_attachment" "lambda_ec2_network_policy_attachment" {
+  name       = "${var.project}-${var.venue}-${var.service_area}-IAM-EC2NetworkAccessPolicyAttachment-${local.counter}"
+  roles      = [aws_iam_role.lambda_role.name]
+  policy_arn = aws_iam_policy.lambda_ec2_policy.arn
+}
 
 resource "aws_lambda_function" "jobs_data_ingest" {
   function_name = "${var.project}-${var.venue}-${var.service_area}-lambda-JobsDataIngest-${local.counter}"
@@ -170,12 +197,16 @@ resource "aws_lambda_function" "jobs_data_ingest" {
   # Use the created ZIP file as the source of your Lambda function
   filename = "${path.module}/../../../lambdas/lambda_package.zip"
   #   source_code_hash = filebase64sha256(pathexpand("${path.module}/../../lambdas/jobs_data_ingest/lambda_package.zip"))
+  vpc_config {
+    subnet_ids = split(",", var.elb_subnets)
+    security_group_ids = toset(data.aws_eks_cluster.sps-cluster.vpc_config[0].security_group_ids)
+  }
 
   environment {
     variables = {
       REGION = var.region
       # OPENSEARCH_DOMAIN_ENDPOINT = aws_elasticsearch_domain.jobs_database.endpoint
-      ELASTICSEARCH_ENDPOINT = "http://${data.kubernetes_service.jobs-es.status[0].load_balancer[0].ingress[0].hostname}:${var.service_port_map.jobs_es}"
+      ELASTICSEARCH_ENDPOINT = "http://${aws_lb.jobsdb-load-balancer.dns_name}:${var.service_port_map.jobs_es}"
     }
   }
 
@@ -278,7 +309,7 @@ resource "aws_ssm_parameter" "jobs-db-url-param" {
   name        = "/unity/sps/${var.deployment_name}/jobsDb/url"
   description = "Full URL of the jobs db load balancer, including port for accesing jobs db"
   type        = "String"
-  value       = "http://${data.kubernetes_service.jobs-es.status[0].load_balancer[0].ingress[0].hostname}:${var.service_port_map.jobs_es}"
+  value       = "http://${aws_lb.jobsdb-load-balancer.dns_name}:${var.service_port_map.jobs_es}"
 }
 
 # resource "aws_elasticsearch_domain" "jobs_database" {

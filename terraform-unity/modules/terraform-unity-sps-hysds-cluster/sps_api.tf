@@ -2,23 +2,12 @@ resource "kubernetes_service" "sps-api-service" {
   metadata {
     name      = "sps-api"
     namespace = kubernetes_namespace.unity-sps.metadata[0].name
-    annotations = {
-      "service.beta.kubernetes.io/aws-load-balancer-name" = "${var.project}-${var.venue}-${var.service_area}-spsapi-RestApiLoadBalancer-${local.counter}"
-      "service.beta.kubernetes.io/aws-load-balancer-additional-resource-tags" = join(",", [for k, v in merge(local.common_tags, {
-        "Name"      = "${var.project}-${var.venue}-${var.service_area}-spsapi-RestApiLoadBalancer-${local.counter}"
-        "Component" = "spsapi"
-        "Stack"     = "spsapi"
-      }) : format("%s=%s", k, v)])
-      "service.beta.kubernetes.io/aws-load-balancer-subnets" = var.elb_subnets
-      "service.beta.kubernetes.io/aws-load-balancer-scheme" = var.lb_scheme
-      "service.beta.kubernetes.io/aws-load-balancer-internal" = var.legacy_lb_internal
-    }
   }
   spec {
     selector = {
       app = "sps-api"
     }
-    type = var.service_type
+    type = "NodePort"
     port {
       protocol    = "TCP"
       port        = var.service_port_map.sps_api_service
@@ -31,7 +20,7 @@ resource "aws_ssm_parameter" "sps-api-hostname-param" {
   name        = "/unity/sps/${var.deployment_name}/spsApi/url"
   description = "Hostname of sps api load balancer"
   type        = "String"
-  value       = "http://${kubernetes_service.sps-api-service.status[0].load_balancer[0].ingress[0].hostname}:${var.service_port_map.sps_api_service}"
+  value       = "http://${aws_lb.sps-api-load-balancer.dns_name}:${var.service_port_map.sps_api_service}"
 }
 
 resource "kubernetes_deployment" "sps-api" {

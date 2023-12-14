@@ -45,29 +45,16 @@ resource "kubernetes_service" "ades-wpst-api-service" {
   metadata {
     name      = "ades-wpst-api"
     namespace = kubernetes_namespace.unity-sps.metadata[0].name
-    annotations = {
-      "service.beta.kubernetes.io/aws-load-balancer-name" = "${var.project}-${var.venue}-${var.service_area}-adeswpst-RestApiLoadBalancer-${local.counter}"
-      "service.beta.kubernetes.io/aws-load-balancer-additional-resource-tags" = join(",", [for k, v in merge(local.common_tags, {
-        "Name"      = "${var.project}-${var.venue}-${var.service_area}-adeswpst-RestApiLoadBalancer-${local.counter}"
-        "Component" = "adeswpst"
-        "Stack"     = "adeswpst"
-      }) : format("%s=%s", k, v)])
-      "service.beta.kubernetes.io/aws-load-balancer-subnets" = var.elb_subnets
-      "service.beta.kubernetes.io/aws-load-balancer-scheme" = var.lb_scheme
-      "service.beta.kubernetes.io/aws-load-balancer-internal" = var.legacy_lb_internal
-    }
   }
   spec {
     selector = {
       app = "ades-wpst-api"
     }
-    # type = "NodePort"
-    type = var.service_type
+    type = "NodePort"
     port {
       protocol    = "TCP"
       port        = var.service_port_map.ades_wpst_api_service
       target_port = 5000
-      # node_port   = 32000
     }
   }
 }
@@ -208,7 +195,7 @@ resource "kubernetes_deployment" "ades-wpst-api" {
           }
           env {
             name  = "JOBS_DB_URL"
-            value = "http://${data.kubernetes_service.jobs-es.status[0].load_balancer[0].ingress[0].hostname}:${var.service_port_map.jobs_es}"
+            value = "http://${aws_lb.jobsdb-load-balancer.dns_name}:${var.service_port_map.jobs_es}"
           }
           port {
             container_port = 5000
