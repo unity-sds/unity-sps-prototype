@@ -78,6 +78,19 @@ resource "kubernetes_stateful_set" "rabbitmq_statefulset" {
             name  = "RABBITMQ_ERLANG_COOKIE"
             value = "1WqgH8N2v1qDBDZDbNy8Bg9IkPWLEpu79m6q+0t36lQ="
           }
+          lifecycle {
+            post_start {
+              exec {
+                command = [
+                  "/bin/sh",
+                  "-c",
+                  <<-EOT
+                  rabbitmqctl eval 'application:set_env(rabbit, consumer_timeout, 172800000).'
+                  EOT
+                ]
+              }
+            }
+          }
           volume_mount {
             mount_path = "/var/lib/rabbitmq"
             name       = "rabbitmq-data"
