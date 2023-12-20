@@ -85,7 +85,7 @@ resource "kubernetes_stateful_set" "rabbitmq_statefulset" {
                   "/bin/sh",
                   "-c",
                   <<-EOT
-                  rabbitmqctl eval 'application:set_env(rabbit, consumer_timeout, 172800000).'
+                  sleep 5; rabbitmqctl eval 'application:set_env(rabbit, consumer_timeout, 172800000).'
                   EOT
                 ]
               }
