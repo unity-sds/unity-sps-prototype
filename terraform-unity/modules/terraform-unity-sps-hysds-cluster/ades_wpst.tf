@@ -10,7 +10,7 @@ resource "kubernetes_persistent_volume" "ades-wpst-sqlite-pv" {
       storage = "20Gi"
     }
 
-    persistent_volume_reclaim_policy = "Delete"
+    persistent_volume_reclaim_policy = "Recycle"
 
     persistent_volume_source {
       host_path {
