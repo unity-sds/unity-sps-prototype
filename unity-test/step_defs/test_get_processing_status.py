@@ -28,9 +28,9 @@ def created_response(response):
 @backoff.on_exception(
     backoff.constant,
     (requests.exceptions.HTTPError),
-    max_time=3600,
+    max_time=60,
     jitter=None,
-    interval=1,
+    interval=10,
 )
 def request_job_status_by_id(process_service_endpoint, project_process_dict, job_id):
     return _request_job_status_by_id(

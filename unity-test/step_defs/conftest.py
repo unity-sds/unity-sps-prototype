@@ -6,10 +6,12 @@ from urllib.parse import urljoin
 import re
 from . import TEST_BASE_DIR
 from .utils import JsonReader
+import logging
 
 
 FEATURES_DIR = TEST_BASE_DIR.joinpath("features")
 reader = JsonReader()
+logging.getLogger('backoff').setLevel(logging.ERROR)
 
 
 def pytest_addoption(parser):
