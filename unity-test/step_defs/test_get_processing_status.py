@@ -30,6 +30,7 @@ def created_response(response):
     (requests.exceptions.HTTPError),
     max_time=60,
     jitter=None,
+    logger=None,
     interval=10,
 )
 def request_job_status_by_id(process_service_endpoint, project_process_dict, job_id):
