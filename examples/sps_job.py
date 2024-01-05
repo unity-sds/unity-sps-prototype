@@ -1,3 +1,11 @@
+"""
+Example script that exercises SPS functionality related to Jobs.
+The authentication credentials can be read from the environment variables:
+UNITY_USER
+UNITY_PASSWORD
+or can be injected interactively from the command line.
+"""
+
 import requests
 import time
 
