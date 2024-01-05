@@ -28,7 +28,7 @@ def created_response(response):
 @backoff.on_exception(
     backoff.constant,
     (requests.exceptions.HTTPError),
-    max_time=60,
+    max_time=3600,
     jitter=None,
     logger=None,
     interval=10,
