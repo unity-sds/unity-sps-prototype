@@ -48,7 +48,8 @@ def fatal_status(e):
     max_time=3600,
     giveup=fatal_status,
     jitter=None,
-    interval=0.1, # check more frequently since jobs can execute quickly
+    logger=None,
+    interval=1, # check more frequently since jobs can execute quickly
 )
 def request_job_status_by_id_running(process_service_endpoint, project_process_dict, job_id):
     job_status_response = _request_job_status_by_id(
@@ -69,9 +70,10 @@ def request_job_status_by_id_running(process_service_endpoint, project_process_d
 @backoff.on_exception(
     backoff.constant,
     (AssertionError, requests.exceptions.HTTPError),
-    max_time=3600,
+    max_time=60,
     giveup=fatal_status,
     jitter=None,
+    logger=None,
     interval=1,
 )
 def request_job_status_by_id_succeeded(process_service_endpoint, project_process_dict, job_id):

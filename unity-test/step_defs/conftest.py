@@ -7,7 +7,6 @@ import re
 from . import TEST_BASE_DIR
 from .utils import JsonReader
 
-
 FEATURES_DIR = TEST_BASE_DIR.joinpath("features")
 reader = JsonReader()
 
