@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: cwlpod
+spec:
+
+  restartPolicy: Never
+
+  volumes:
+  - name: docker-socket
+    emptyDir: {}
+  - name: tmp-dir
+    emptyDir: {}
+
+  containers:
+  - name: dind
+    image: docker:dind
+    securityContext:
+      privileged: true
+    volumeMounts:
+    - name: docker-socket
+      mountPath: /var/run
+    - name: tmp-dir
+      mountPath: /tmp
+  - name: cwl-docker
+    image: lucacinquini/cwl-docker:latest
+    volumeMounts:
+    - name: docker-socket
+      mountPath: /var/run
+    - name: tmp-dir
+      mountPath: /tmp
+    command: ["sh", "-cx", "cwl-runner https://raw.githubusercontent.com/unity-sds/unity-sps-prototype/cwl-docker/cwl/cwl_workflows/hello_world_from_docker.cwl"]
