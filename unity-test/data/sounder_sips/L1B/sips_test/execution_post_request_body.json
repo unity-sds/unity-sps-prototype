@@ -1,0 +1,28 @@
+{
+  "mode": "async",
+  "response": "document",
+  "inputs": [
+    {
+      "id": "input_collection_id",
+      "data": "SNDR_SNPP_ATMS_L1A___1"
+    },
+    {
+      "id": "start_datetime",
+      "data": "2016-01-14T08:00:00Z"
+    },
+    {
+      "id": "stop_datetime",
+      "data": "2016-01-14T11:59:59Z"
+    },
+    {
+      "id": "output_collection_id",
+      "data": "SNDR_SNPP_ATMS_L1B_OUTPUT___1"
+    }
+  ],
+  "outputs": [
+    {
+      "id": "output",
+      "transmissionMode": "reference"
+    }
+  ]
+}

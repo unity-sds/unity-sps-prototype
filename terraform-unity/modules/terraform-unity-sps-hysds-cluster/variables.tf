@@ -63,9 +63,9 @@ variable "docker_images" {
     hysds_grq2         = "ghcr.io/unity-sds/unity-sps-prototype/hysds-grq2:unity-v1.1.0"
     hysds_verdi        = "ghcr.io/unity-sds/unity-sps-prototype/hysds-verdi:unity-v1.1.0"
     hysds_factotum     = "ghcr.io/unity-sds/unity-sps-prototype/hysds-factotum:unity-v1.1.0"
-    ades_wpst_api      = "ghcr.io/unity-sds/unity-sps-prototype/ades-wpst-api:unity-v1.1.0"
-    sps_api            = "ghcr.io/unity-sds/unity-sps-prototype/sps-api:unity-v1.1.0"
-    sps_hysds_pge_base = "ghcr.io/unity-sds/unity-sps-prototype/sps-hysds-pge-base:unity-v1.1.0"
+    ades_wpst_api      = "ghcr.io/unity-sds/unity-sps-prototype/ades-wpst-api:unity-v1.3.0"
+    sps_api            = "ghcr.io/unity-sds/unity-sps-prototype/sps-api:unity-v1.2.0"
+    sps_hysds_pge_base = "ghcr.io/unity-sds/unity-sps-prototype/sps-hysds-pge-base:unity-v1.3.0"
     logstash           = "docker.elastic.co/logstash/logstash:7.10.2"
     rabbitmq           = "rabbitmq:3.11.13-management"
     busybox            = "busybox:1.36.0"
@@ -168,11 +168,6 @@ variable "default_group_node_group_name" {
   default     = "defaultgroupNodeGroup"
 }
 
-variable "default_group_node_group_launch_template_name" {
-  description = "value"
-  type        = string
-}
-
 variable "verdi_node_group_capacity_type" {
   description = "value"
   type        = string
@@ -195,13 +190,26 @@ variable "verdi_node_group_instance_types" {
   default     = ["m3.medium"]
 }
 
-variable "mcp_linux_eks_optimized_ami" {
+variable "verdi_node_group_ebs_volume_size" {
   description = "value"
-  type        = string
-  default     = "ami-04db7a1ae7708642e"
+  type        = number
+  default     = 500
 }
+
 variable "add_routes_to_api_gateway" {
   description = "If true, adds routes to api gateway configured in account"
   type        = bool
   default     = false
+}
+
+variable "lb_scheme" {
+  description = "internal or external facing loadbalancers"
+  type        = string
+  default     = "external"
+}
+
+variable "legacy_lb_external" {
+  description = "legacy annotation for external lb"
+  type        = string
+  default     = "true"
 }

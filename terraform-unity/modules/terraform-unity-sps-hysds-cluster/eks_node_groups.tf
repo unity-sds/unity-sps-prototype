@@ -14,13 +14,8 @@ locals {
   ]
 }
 
-# data "aws_eks_node_group" "default_node_group" {
-#   cluster_name    = var.eks_cluster_name
-#   node_group_name = "defaultgroupNodeGroup"
-# }
-
-data "aws_launch_template" "default_group_node_group" {
-  name = var.default_group_node_group_launch_template_name
+data "aws_ssm_parameter" "mcp_linux_eks_optimized_ami" {
+  name = "/mcp/amis/aml2-eks-1-27"
 }
 
 resource "aws_iam_role" "eks_verdi_node_role" {
@@ -75,7 +70,7 @@ data "aws_security_groups" "sps-cluster-sg" {
 resource "aws_launch_template" "verdi_node_group_launch_template" {
   name = "${var.project}-${var.venue}-${var.service_area}-${var.deployment_name}-EC2-VerdiNodeGroupLaunchTemplate"
 
-  image_id = var.mcp_linux_eks_optimized_ami
+  image_id = data.aws_ssm_parameter.mcp_linux_eks_optimized_ami.value
 
   block_device_mappings {
     device_name = "/dev/xvda"
@@ -84,7 +79,7 @@ resource "aws_launch_template" "verdi_node_group_launch_template" {
       encrypted   = false
       iops        = 3000
       throughput  = 125
-      volume_size = "80"
+      volume_size = var.verdi_node_group_ebs_volume_size
       volume_type = "gp3"
     }
   }
@@ -93,6 +88,7 @@ resource "aws_launch_template" "verdi_node_group_launch_template" {
 
   user_data = base64encode(<<-EOF
       #!/bin/bash
+      sudo sed -i 's/^net.ipv4.ip_forward = 0/net.ipv4.ip_forward = 1/' /etc/sysctl.conf && sudo sysctl -p |true
       /etc/eks/bootstrap.sh ${data.aws_eks_cluster.sps-cluster.name}
       EOF
   )
@@ -134,10 +130,8 @@ resource "aws_eks_node_group" "verdi" {
     max_size     = var.verdi_node_group_scaling_config.max_size
   }
   launch_template {
-    id      = data.aws_launch_template.default_group_node_group.id
-    version = data.aws_launch_template.default_group_node_group.latest_version
-    # id      = aws_launch_template.verdi_node_group_launch_template.id
-    # version = aws_launch_template.verdi_node_group_launch_template.latest_version
+    id      = aws_launch_template.verdi_node_group_launch_template.id
+    version = aws_launch_template.verdi_node_group_launch_template.latest_version
   }
   tags = merge(local.common_tags, {
     # Add or overwrite specific tags for this resource
@@ -226,7 +220,7 @@ resource "aws_iam_role_policy_attachment" "eks_sps_api_node_group_scaling_policy
 resource "aws_launch_template" "sps_api_node_group_launch_template" {
   name = "${var.project}-${var.venue}-${var.service_area}-${var.deployment_name}-EC2-SPSPAPINodeGroupLaunchTemplate"
 
-  image_id = var.mcp_linux_eks_optimized_ami
+  image_id = data.aws_ssm_parameter.mcp_linux_eks_optimized_ami.value
 
   block_device_mappings {
     device_name = "/dev/xvda"
@@ -244,6 +238,7 @@ resource "aws_launch_template" "sps_api_node_group_launch_template" {
 
   user_data = base64encode(<<-EOF
       #!/bin/bash
+      sudo sed -i 's/^net.ipv4.ip_forward = 0/net.ipv4.ip_forward = 1/' /etc/sysctl.conf && sudo sysctl -p |true
       /etc/eks/bootstrap.sh ${data.aws_eks_cluster.sps-cluster.name}
       EOF
   )
@@ -285,10 +280,8 @@ resource "aws_eks_node_group" "sps_api" {
     max_size     = 1
   }
   launch_template {
-    id      = data.aws_launch_template.default_group_node_group.id
-    version = data.aws_launch_template.default_group_node_group.latest_version
-    # id      = aws_launch_template.sps_api_node_group_launch_template.id
-    # version = aws_launch_template.sps_api_node_group_launch_template.latest_version
+    id      = aws_launch_template.sps_api_node_group_launch_template.id
+    version = aws_launch_template.sps_api_node_group_launch_template.latest_version
   }
   tags = merge(local.common_tags, {
     # Add or overwrite specific tags for this resource

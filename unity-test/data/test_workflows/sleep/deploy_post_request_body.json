@@ -1,0 +1,30 @@
+{
+  "processDescription": {
+    "process": {
+      "id": "sleep",
+      "title": "Sleep Job",
+      "owsContext": {
+        "offering": {
+          "code": "http://www.opengis.net/eoc/applicationContext/cwl",
+          "content": {
+            "href": "https://raw.githubusercontent.com/unity-sds/unity-sps-workflows/main/sounder_sips/utils/sleep_job_wrapper.cwl"
+          }
+        }
+      },
+      "abstract": "sleep",
+      "keywords": [],
+      "inputs": [],
+      "outputs": []
+    },
+    "processVersion": "develop",
+    "jobControlOptions": ["async-execute"],
+    "outputTransmission": ["reference"]
+  },
+  "immediateDeployment": true,
+  "executionUnit": [
+    {
+      "href": "docker.registry/l1b-cwl:latest"
+    }
+  ],
+  "deploymentProfileName": "http://www.opengis.net/profiles/eoc/dockerizedApplication"
+}

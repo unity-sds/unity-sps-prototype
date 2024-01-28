@@ -10,10 +10,13 @@ class JsonReader:
         self.execution_post_request_body = "execution_post_request_body.json"
         self.start_prewarm_post_request_body = "start_prewarm_post_request_body.json"
 
-    def request_body(self, project_name, process_name, request_body_filename):
-        data_file_path = self.data_dir.joinpath(
-            project_name, process_name, request_body_filename
-        )
+    def request_body(self, project_name, process_name, request_body_filename, environment=None):
+        if environment:
+            data_file_path = [project_name, process_name, environment, request_body_filename]
+        else:
+            data_file_path = [project_name, process_name, request_body_filename]
+
+        data_file_path = self.data_dir.joinpath(*data_file_path)
 
         if not data_file_path.exists():
             raise ValueError(f"Data file not found: {data_file_path}")

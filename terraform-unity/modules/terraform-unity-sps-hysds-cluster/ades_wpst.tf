@@ -10,7 +10,7 @@ resource "kubernetes_persistent_volume" "ades-wpst-sqlite-pv" {
       storage = "20Gi"
     }
 
-    persistent_volume_reclaim_policy = "Delete"
+    persistent_volume_reclaim_policy = "Recycle"
 
     persistent_volume_source {
       host_path {
@@ -41,69 +41,20 @@ resource "kubernetes_persistent_volume_claim" "ades-wpst-sqlite-pv-claim" {
   }
 }
 
-# resource "aws_security_group_rule" "allow_elb_ingress" {
-#   type      = "ingress"
-#   from_port = var.service_port_map.ades_wpst_api_service
-#   to_port   = var.service_port_map.ades_wpst_api_service
-#   protocol  = "tcp"
-#   # security_group_id        = "eks-cluster-sg-unity-dev-sps-hysds-eks-nightly-795451454"
-#   security_group_id        = "sg-0650d2b7e1e1ddeac"
-#   source_security_group_id = aws_elb.ades_wpst_api_elb.source_security_group_id
-# }
-
-# resource "aws_security_group_rule" "elb_ingress" {
-#   type      = "ingress"
-#   from_port = var.service_port_map.ades_wpst_api_service
-#   to_port   = var.service_port_map.ades_wpst_api_service
-#   protocol  = "tcp"
-#   # security_group_id = aws_elb.ades_wpst_api_elb.security_groups[0]
-#   security_group_id = aws_elb.ades_wpst_api_elb.source_security_group_id
-#   cidr_blocks       = ["0.0.0.0/0"]
-# }
-
-# resource "aws_elb" "ades_wpst_api_elb" {
-#   name    = "${var.project}-${var.venue}-${var.service_area}-ADES-ELB-${local.counter}"
-#   subnets = data.aws_eks_node_group.default_node_group.subnet_ids
-
-#   listener {
-#     instance_port     = 32000
-#     instance_protocol = "tcp"
-#     lb_port           = var.service_port_map.ades_wpst_api_service
-#     lb_protocol       = "tcp"
-#   }
-
-#   tags = merge(local.common_tags, {
-#     Name      = "${var.project}-${var.venue}-${var.service_area}-ADES-ELB-${local.counter}"
-#     Component = "ADES"
-#     Stack     = "ADES"
-#   })
-# }
-
-# resource "aws_autoscaling_attachment" "ades_wpst_api_elb_attachment" {
-#   autoscaling_group_name = data.aws_eks_node_group.default_node_group.resources[0].autoscaling_groups[0].name
-#   elb                    = aws_elb.ades_wpst_api_elb.id
-# }
-
 resource "kubernetes_service" "ades-wpst-api-service" {
   metadata {
     name      = "ades-wpst-api"
     namespace = kubernetes_namespace.unity-sps.metadata[0].name
-    # todo remove when testing sepereate elb
-    annotations = {
-      "service.beta.kubernetes.io/aws-load-balancer-subnets" = var.elb_subnets
-    }
   }
   spec {
     selector = {
       app = "ades-wpst-api"
     }
-    # type = "NodePort"
-    type = var.service_type
+    type = "NodePort"
     port {
       protocol    = "TCP"
       port        = var.service_port_map.ades_wpst_api_service
       target_port = 5000
-      # node_port   = 32000
     }
   }
 }
@@ -241,6 +192,10 @@ resource "kubernetes_deployment" "ades-wpst-api" {
           env {
             name  = "JOBS_DATA_SNS_TOPIC_ARN"
             value = aws_sns_topic.jobs_data.arn
+          }
+          env {
+            name  = "JOBS_DB_URL"
+            value = "http://${aws_lb.jobsdb-load-balancer.dns_name}:${var.service_port_map.jobs_es}"
           }
           port {
             container_port = 5000

@@ -1,5 +1,6 @@
 import pytest
 from pytest_bdd import given, then, parsers
+from elasticsearch import Elasticsearch
 import requests
 from urllib.parse import urljoin
 import re
@@ -24,12 +25,24 @@ def pytest_addoption(parser):
         help="Base URL for the SPS API service endpoint",
     )
     parser.addoption(
+        "--jobs-database-endpoint",
+        action="store",
+        help="Base URL for the Jobs Database endpoint",
+        required=True,
+    )
+    parser.addoption(
         "--sounder-sips-process-selection",
         action="store",
         help="The Sounder SIPS processes to test (L1A, L1B, chirp)",
         required=True,
     )
-
+    parser.addoption(
+        "--environment",
+        type=str,
+        action="store",
+        help="Environment to run test against. (dev, test)",
+        default=None
+    )
 
 @pytest.fixture(scope="module", autouse=True)
 def process_service_endpoint(request):
@@ -40,12 +53,31 @@ def process_service_endpoint(request):
 def sps_api_service_endpoint(request):
     return request.config.getoption("--sps-api-service-endpoint")
 
+@pytest.fixture()
+def jobs_database_endpoint(request):
+    return request.config.getoption("--jobs-database-endpoint")
+
+@pytest.fixture()
+def environment(request):
+    return request.config.getoption("--environment")
+
+@pytest.fixture()
+def jobs_database_client(jobs_database_endpoint):
+    return Elasticsearch(jobs_database_endpoint)
 
 @pytest.fixture
 def projects():
     data = reader.request_body("", "", reader.projects)
     return data
 
+@pytest.fixture
+def job_request_body(project_process_dict, environment):
+    return reader.request_body(
+        project_process_dict["project_name"],
+        project_process_dict["process_name"],
+        reader.execution_post_request_body,
+        environment=environment
+    )
 
 @pytest.fixture
 def user_selected_processes(request, projects):
@@ -72,7 +104,7 @@ def _process_skip_determination(project_name, process_name, user_selected_proces
 
 
 def _undeploy_all_processes(process_service_endpoint):
-    url = urljoin(process_service_endpoint, "/processes")
+    url = urljoin(process_service_endpoint, "processes")
     get_processes_response = requests.get(url)
     get_processes_response.raise_for_status()
 
@@ -82,7 +114,7 @@ def _undeploy_all_processes(process_service_endpoint):
     for process in processes:
         url = urljoin(
             process_service_endpoint,
-            f"/processes/{process['id']}",
+            f"processes/{process['id']}",
         )
         undeploy_process_response = requests.delete(url)
         undeploy_process_response.raise_for_status()
@@ -198,11 +230,12 @@ def created_response(response):
     "a WPS-T request is made to execute the process",
     target_fixture="response",
 )
-def request_job_execution(process_service_endpoint, project_process_dict):
+def request_job_execution(process_service_endpoint, project_process_dict, environment):
     request_body = reader.request_body(
         project_process_dict["project_name"],
         project_process_dict["process_name"],
         reader.execution_post_request_body,
+        environment=environment
     )
     job_execution_response = _request_job_execution(
         process_service_endpoint, project_process_dict["process_name"], request_body
@@ -220,7 +253,7 @@ def _request_job_execution(endpoint, process_name, request_body):
 def _request_job_status_by_id(endpoint, process_name, job_id):
     url = urljoin(
         endpoint,
-        f"/processes/{process_name.casefold()}:develop/jobs/{job_id}",
+        f"processes/{process_name.casefold()}:develop/jobs/{job_id}",
     )
     job_status_response = requests.get(url)
     job_status_response.raise_for_status()
@@ -238,3 +271,7 @@ def location_header_contains_job_id(location_header):
     job_id = location_header.rsplit("/jobs/", 1)[-1]
     assert job_id
     return job_id
+
+@given("the HTTP response contains a status code of 201")
+def created_response(response):
+    assert response.status_code == 201

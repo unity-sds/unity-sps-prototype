@@ -129,7 +129,7 @@ locals {
     clusterHealthCheckParams = "wait_for_status=yellow&timeout=1s"
     replicas                 = 1
     service = {
-      type = var.service_type
+      type = "NodePort"
       port = var.service_port_map.mozart_es
     }
     httpPort      = var.service_port_map.mozart_es
@@ -239,7 +239,7 @@ locals {
     clusterHealthCheckParams = "wait_for_status=yellow&timeout=1s"
     replicas                 = 1
     service = {
-      type = var.service_type
+      type = "NodePort"
       port = var.service_port_map.grq2_es
     }
     httpPort      = var.service_port_map.grq2_es
@@ -359,45 +359,45 @@ locals {
   }
 }
 
-resource "null_resource" "upload_jobs_template" {
-  provisioner "local-exec" {
-    command = <<-EOT
-      set -x
-      ES_URL=${data.kubernetes_service.jobs-es.status[0].load_balancer[0].ingress[0].hostname}:${var.service_port_map.jobs_es}
-      while [[ "$(curl -s -o /dev/null -w '%%{http_code}\n' $ES_URL)" != "200" ]]; do sleep 1; done
-      jobs_es_template='{
-        "index_patterns": ["jobs*"],
-        "template": {
-          "settings": {
-            "number_of_shards": 1,
-            "number_of_replicas": 1
-          },
-          "mappings": {
-            "dynamic": "true",
-            "properties": {
-              "id": {
-                "type": "keyword"
-              },
-              "inputs": {
-                "enabled": false
-              },
-              "outputs": {
-                "enabled": false
-              },
-              "status": {
-                "type": "keyword"
-              },
-              "labels": {
-                "enabled": false
-              }
-            }
-          }
-        }
-      }'
-      curl -X PUT "$ES_URL/_index_template/jobs_template" -H 'Content-Type: application/json' -d "$jobs_es_template"
-    EOT
-  }
-}
+# resource "null_resource" "upload_jobs_template" {
+#   provisioner "local-exec" {
+#     command = <<-EOT
+#       set -x
+#       ES_URL=${data.kubernetes_service.jobs-es.status[0].load_balancer[0].ingress[0].hostname}:${var.service_port_map.jobs_es}
+#       while [[ "$(curl -s -o /dev/null -w '%%{http_code}\n' $ES_URL)" != "200" ]]; do sleep 1; done
+#       jobs_es_template='{
+#         "index_patterns": ["jobs*"],
+#         "template": {
+#           "settings": {
+#             "number_of_shards": 1,
+#             "number_of_replicas": 1
+#           },
+#           "mappings": {
+#             "dynamic": "true",
+#             "properties": {
+#               "id": {
+#                 "type": "keyword"
+#               },
+#               "inputs": {
+#                 "enabled": false
+#               },
+#               "outputs": {
+#                 "enabled": false
+#               },
+#               "status": {
+#                 "type": "keyword"
+#               },
+#               "labels": {
+#                 "enabled": false
+#               }
+#             }
+#           }
+#         }
+#       }'
+#       curl -X PUT "$ES_URL/_index_template/jobs_template" -H 'Content-Type: application/json' -d "$jobs_es_template"
+#     EOT
+#   }
+# }
 
 /*
 A Release is an instance of a chart running in a Kubernetes cluster.
@@ -409,7 +409,7 @@ resource "helm_release" "mozart-es" {
   namespace  = kubernetes_namespace.unity-sps.metadata[0].name
   repository = "https://helm.elastic.co"
   chart      = "elasticsearch"
-  version    = "7.9.3"
+  version    = "7.17.1"
   wait       = true
   timeout    = 600
   values = [
@@ -417,17 +417,18 @@ resource "helm_release" "mozart-es" {
     yamlencode({
       "service" = {
         "annotations" = {
+          "service.beta.kubernetes.io/aws-load-balancer-name" = "${var.project}-${var.venue}-${var.service_area}-mozart-ElasticsearchLoadBalancer-${local.counter}"
+          "service.beta.kubernetes.io/aws-load-balancer-additional-resource-tags" = join(",", [for k, v in merge(local.common_tags, {
+            "Name"      = "${var.project}-${var.venue}-${var.service_area}-mozart-ElasticsearchLoadBalancer-${local.counter}"
+            "Component" = "mozart"
+            "Stack"     = "mozart"
+          }) : format("%s=%s", k, v)])
           "service.beta.kubernetes.io/aws-load-balancer-subnets" = var.elb_subnets
-          "service.beta.kubernetes.io/aws-load-balancer-name"    = "${var.project}-${var.venue}-${var.service_area}-mozart-LoadBalancer-${local.counter}"
-          "service.beta.kubernetes.io/aws-load-balancer-tags" = jsonencode(merge(local.common_tags, {
-            Name      = "${var.project}-${var.venue}-${var.service_area}-mozart-LoadBalancer-${local.counter}"
-            Component = "mozart"
-            Stack     = "mozart"
-          }))
         }
       }
     })
   ]
+  depends_on = [helm_release.aws-load-balancer-controller]
 }
 
 resource "helm_release" "grq2-es" {
@@ -435,7 +436,7 @@ resource "helm_release" "grq2-es" {
   namespace  = kubernetes_namespace.unity-sps.metadata[0].name
   repository = "https://helm.elastic.co"
   chart      = "elasticsearch"
-  version    = "7.9.3"
+  version    = "7.17.1"
   wait       = true
   timeout    = 600
   values = [
@@ -443,17 +444,18 @@ resource "helm_release" "grq2-es" {
     yamlencode({
       "service" = {
         "annotations" = {
+          "service.beta.kubernetes.io/aws-load-balancer-name" = "${var.project}-${var.venue}-${var.service_area}-grq-ElasticsearchLoadBalancer-${local.counter}"
+          "service.beta.kubernetes.io/aws-load-balancer-additional-resource-tags" = join(",", [for k, v in merge(local.common_tags, {
+            "Name"      = "${var.project}-${var.venue}-${var.service_area}-grq-ElasticsearchLoadBalancer-${local.counter}"
+            "Component" = "grq"
+            "Stack"     = "grq"
+          }) : format("%s=%s", k, v)])
           "service.beta.kubernetes.io/aws-load-balancer-subnets" = var.elb_subnets
-          "service.beta.kubernetes.io/aws-load-balancer-name"    = "${var.project}-${var.venue}-${var.service_area}-GRQ-LoadBalancer-${local.counter}"
-          "service.beta.kubernetes.io/aws-load-balancer-tags" = jsonencode(merge(local.common_tags, {
-            Name      = "${var.project}-${var.venue}-${var.service_area}-GRQ-LoadBalancer-${local.counter}"
-            Component = "GRQ"
-            Stack     = "GRQ"
-          }))
         }
       }
     })
   ]
+  depends_on = [helm_release.aws-load-balancer-controller]
 }
 
 resource "helm_release" "jobs-es" {
@@ -461,23 +463,16 @@ resource "helm_release" "jobs-es" {
   namespace  = kubernetes_namespace.unity-sps.metadata[0].name
   repository = "https://helm.elastic.co"
   chart      = "elasticsearch"
-  version    = "7.9.3"
+  version    = "7.17.1"
   wait       = true
   timeout    = 600
   values = [
     yamlencode(local.jobs_es_values),
     yamlencode({
       "service" = {
-        "annotations" = {
-          "service.beta.kubernetes.io/aws-load-balancer-subnets" = var.elb_subnets
-          "service.beta.kubernetes.io/aws-load-balancer-name"    = "${var.project}-${var.venue}-${var.service_area}-jobs-LoadBalancer-${local.counter}"
-          "service.beta.kubernetes.io/aws-load-balancer-tags" = jsonencode(merge(local.common_tags, {
-            Name      = "${var.project}-${var.venue}-${var.service_area}-jobs-LoadBalancer-${local.counter}"
-            Component = "jobs"
-            Stack     = "jobs"
-          }))
-        }
+        "type" = "NodePort"
       }
     })
   ]
+  depends_on = [helm_release.aws-load-balancer-controller]
 }

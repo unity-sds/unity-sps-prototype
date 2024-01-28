@@ -15,16 +15,6 @@
       "keywords": [],
       "inputs": [
         {
-          "id": "job_id",
-          "title": "job_id",
-          "formats": [
-            {
-              "mimeType": "text",
-              "default": true
-            }
-          ]
-        },
-        {
           "id": "input_processing_labels",
           "title": "input_processing_labels",
           "formats": [

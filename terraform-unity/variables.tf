@@ -40,6 +40,7 @@ variable "eks_cluster_name" {
 variable "kubeconfig_filepath" {
   description = "Path to the kubeconfig file for the Kubernetes cluster"
   type        = string
+  default     = "../k8s/kubernetes.yml"
 }
 
 variable "namespace" {
@@ -64,9 +65,9 @@ variable "docker_images" {
     hysds_grq2         = "ghcr.io/unity-sds/unity-sps-prototype/hysds-grq2:unity-v1.1.0"
     hysds_verdi        = "ghcr.io/unity-sds/unity-sps-prototype/hysds-verdi:unity-v1.1.0"
     hysds_factotum     = "ghcr.io/unity-sds/unity-sps-prototype/hysds-factotum:unity-v1.1.0"
-    ades_wpst_api      = "ghcr.io/unity-sds/unity-sps-prototype/ades-wpst-api:unity-v1.1.0"
-    sps_api            = "ghcr.io/unity-sds/unity-sps-prototype/sps-api:unity-v1.1.0"
-    sps_hysds_pge_base = "ghcr.io/unity-sds/unity-sps-prototype/sps-hysds-pge-base:unity-v1.1.0"
+    ades_wpst_api      = "ghcr.io/unity-sds/unity-sps-prototype/ades-wpst-api:unity-v1.3.0"
+    sps_api            = "ghcr.io/unity-sds/unity-sps-prototype/sps-api:unity-v1.2.0"
+    sps_hysds_pge_base = "ghcr.io/unity-sds/unity-sps-prototype/sps-hysds-pge-base:unity-v1.3.0"
     logstash           = "docker.elastic.co/logstash/logstash:7.10.2"
     rabbitmq           = "rabbitmq:3.11.13-management"
     busybox            = "busybox:1.36.0"
@@ -142,11 +143,6 @@ variable "elb_subnets" {
   type        = string
   default     = null
 }
-variable "default_group_node_group_launch_template_name" {
-  description = "value"
-  type        = string
-  default     = null
-}
 
 variable "default_group_node_group_name" {
   description = "value"
@@ -176,13 +172,20 @@ variable "verdi_node_group_instance_types" {
   default     = ["m3.medium"]
 }
 
-variable "mcp_linux_eks_optimized_ami" {
+variable "verdi_node_group_ebs_volume_size" {
   description = "value"
-  type        = string
-  default     = "ami-04db7a1ae7708642e"
+  type        = number
+  default     = 500
 }
+
 variable "add_routes_to_api_gateway" {
   description = "If true, adds routes to api gateway configured in account"
   type        = bool
   default     = false
+}
+
+variable "tags" {
+  description = "Applicable extra tags"
+  type        = map(string)
+  default     = {}
 }

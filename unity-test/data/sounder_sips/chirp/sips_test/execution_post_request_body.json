@@ -32,11 +32,11 @@
     },
     {
       "id": "output_data_bucket",
-      "data": "uds-test-cumulus-sps"
+      "data": "s3://ssips-test-ds-storage-reproc"
     },
     {
       "id": "input_daac_collection_shortname",
-      "data": "CHIRP_OUTPUT"
+      "data": "CHIRP_L1B"
     },
     {
       "id": "input_daac_collection_sns",

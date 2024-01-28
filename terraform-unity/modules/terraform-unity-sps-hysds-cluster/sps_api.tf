@@ -2,15 +2,12 @@ resource "kubernetes_service" "sps-api-service" {
   metadata {
     name      = "sps-api"
     namespace = kubernetes_namespace.unity-sps.metadata[0].name
-    annotations = {
-      "service.beta.kubernetes.io/aws-load-balancer-subnets" = var.elb_subnets
-    }
   }
   spec {
     selector = {
       app = "sps-api"
     }
-    type = var.service_type
+    type = "NodePort"
     port {
       protocol    = "TCP"
       port        = var.service_port_map.sps_api_service
@@ -20,17 +17,10 @@ resource "kubernetes_service" "sps-api-service" {
 }
 
 resource "aws_ssm_parameter" "sps-api-hostname-param" {
-  name        = "/unity/sps/${var.deployment_name}/spsApi/hostname"
+  name        = "/unity/sps/${var.deployment_name}/spsApi/url"
   description = "Hostname of sps api load balancer"
   type        = "String"
-  value       = kubernetes_service.sps-api-service.status[0].load_balancer[0].ingress[0].hostname
-}
-
-resource "aws_ssm_parameter" "sps-api-port-param" {
-  name        = "/unity/sps/${var.deployment_name}/spsApi/port"
-  description = "Port used by sps api"
-  type        = "String"
-  value       = var.service_port_map.sps_api_service
+  value       = "http://${aws_lb.sps-api-load-balancer.dns_name}:${var.service_port_map.sps_api_service}"
 }
 
 resource "kubernetes_deployment" "sps-api" {

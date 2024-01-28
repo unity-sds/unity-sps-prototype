@@ -28,15 +28,15 @@
     },
     {
       "id": "output_collection_id",
-      "data": "urn:nasa:unity:uds_local_test:TEST1:CHRP_16_DAY_REBIN___1"
+      "data": "CHIRP_OUTPUT_COLLECTION"
     },
     {
       "id": "output_data_bucket",
-      "data": "uds-test-cumulus-sps"
+      "data": "s3://unity-data-bucket"
     },
     {
       "id": "input_daac_collection_shortname",
-      "data": "CHIRP_OUTPUT"
+      "data": "CHIRP_L1B"
     },
     {
       "id": "input_daac_collection_sns",

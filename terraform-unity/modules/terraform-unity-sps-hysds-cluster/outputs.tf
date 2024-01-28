@@ -22,11 +22,10 @@ data "kubernetes_service" "jobs-es" {
 output "load_balancer_hostnames" {
   description = "Load Balancer Ingress Hostnames"
   value = {
-    mozart_es     = data.kubernetes_service.mozart-es.status[0].load_balancer[0].ingress[0].hostname,
-    grq_es        = data.kubernetes_service.grq-es.status[0].load_balancer[0].ingress[0].hostname,
-    jobs_es       = data.kubernetes_service.jobs-es.status[0].load_balancer[0].ingress[0].hostname,
-    ades_wpst_api = kubernetes_service.ades-wpst-api-service.status[0].load_balancer[0].ingress[0].hostname,
-    # ades_wpst_api = aws_elb.ades_wpst_api_elb.dns_name
-    sps_api = kubernetes_service.sps-api-service.status[0].load_balancer[0].ingress[0].hostname,
+    # mozart_es     = data.kubernetes_service.mozart-es.status[0].load_balancer[0].ingress[0].hostname,
+    # grq_es        = data.kubernetes_service.grq-es.status[0].load_balancer[0].ingress[0].hostname,
+    jobs_es       = aws_lb.jobsdb-load-balancer.dns_name,
+    ades_wpst_api = aws_lb.ades-wpst-load-balancer.dns_name,
+    sps_api       = aws_lb.sps-api-load-balancer.dns_name
   }
 }
