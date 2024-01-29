@@ -1,0 +1,20 @@
+# docker:dind Dockerfile: https://github.com/docker-library/docker/blob/master/Dockerfile-dind.template
+FROM docker:dind
+
+# install Python
+RUN apk add --update --no-cache python3 && ln -sf python3 /usr/bin/python
+RUN apk add gcc musl-dev linux-headers python3-dev
+RUN apk add --no-cache python3 py3-pip
+RUN apk add vim
+
+# install CWL libraries
+RUN mkdir /usr/share/cwl \
+    && cd /usr/share/cwl \
+    && python -m venv venv \
+    && source venv/bin/activate \
+    && pip install cwltool cwl-runner docker
+
+COPY cwl_entrypoint.sh /usr/share/cwl/cwl_entrypoint.sh
+
+WORKDIR /usr/share/cwl
+ENTRYPOINT ["/usr/share/cwl/cwl_entrypoint.sh"]
