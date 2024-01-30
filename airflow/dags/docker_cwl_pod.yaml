@@ -10,6 +10,6 @@ spec:
   - name: cwl-docker
     image: lucacinquini/unity-sps-docker-cwl:latest
     command: ["/usr/share/cwl/docker_cwl_entrypoint.sh"]
-    args: ["https://raw.githubusercontent.com/unity-sds/unity-sps-prototype/cwl-docker/cwl/cwl_workflows/hello_world_from_docker.cwl"]
+    # args: ["https://raw.githubusercontent.com/unity-sds/unity-sps-prototype/cwl-docker/cwl/cwl_workflows/hello_world_from_docker.cwl"]
     securityContext:
       privileged: true
