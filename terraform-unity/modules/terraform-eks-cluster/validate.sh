@@ -4,7 +4,7 @@
 
 terraform fmt
 
-CLUSTER_NAME=$(openssl rand -base64 12)
+CLUSTER_NAME=$(openssl rand -base64 12 | tr -dc 'a-zA-Z0-9')
 
 terraform workspace new $CLUSTER_NAME
 
@@ -21,6 +21,8 @@ export KUBECONFIG=./temp_kube_cfg
 
 # validates that the API is reachable and user has permissions
 kubectl get all -A
+
+terraform destroy -auto-approve -var "cluster_name=$CLUSTER_NAME"
 
 rm $KUBECONFIG
 export KUBECONFIG=$OLD_CFG
