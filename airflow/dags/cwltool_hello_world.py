@@ -11,7 +11,8 @@ dag = DAG(
     'cwltool_help_dag',
     default_args=default_args,
     description='A simple DAG to run cwltool --help',
-    schedule_interval=None,  # This DAG is not scheduled and needs to be triggered manually
+    schedule=None,
+    is_paused_upon_creation=False,
 )
 
 run_cwl_help = BashOperator(
