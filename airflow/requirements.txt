@@ -1,0 +1,6 @@
+cwltool
+cwl-runner
+apache-airflow-providers-docker
+apache-airflow-providers-cncf-kubernetes
+#airflow_kubernetes_job_operator
+kubernetes-client

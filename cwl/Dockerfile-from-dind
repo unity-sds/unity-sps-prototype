@@ -14,7 +14,7 @@ RUN mkdir /usr/share/cwl \
     && source venv/bin/activate \
     && pip install cwltool cwl-runner docker
 
-COPY cwl_entrypoint.sh /usr/share/cwl/cwl_entrypoint.sh
+COPY docker_cwl_entrypoint.sh /usr/share/cwl/docker_cwl_entrypoint.sh
 
 WORKDIR /usr/share/cwl
-ENTRYPOINT ["/usr/share/cwl/cwl_entrypoint.sh"]
+ENTRYPOINT ["docker_cwl_entrypoint.sh"]

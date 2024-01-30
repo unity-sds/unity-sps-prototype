@@ -1,0 +1,21 @@
+# Airflow image
+images:
+  airflow:
+    repository: lucacinquini/unity-sps-apache-airflow
+    tag: latest
+    pullPolicy: Always
+
+# Airflow executor
+# executor: "KubernetesExecutor"
+
+# Web Server configuration
+config:
+  webserver:
+    expose_config: 'True'  # by default this is 'False'
+
+# Environment variables for all airflow containers
+env:
+  - name: AIRFLOW__SCHEDULER__DAG_DIR_LIST_INTERVAL
+    value: "10"
+  - name: AIRFLOW__SCHEDULER__MIN_FILE_PROCESS_INTERVAL
+    value: "30"
