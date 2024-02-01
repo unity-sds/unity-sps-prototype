@@ -1,7 +1,7 @@
 data "aws_caller_identity" "current" {}
 
 module "unity-eks" {
-  source          = "git@github.com:unity-sds/unity-cs-infra.git//terraform-unity-eks_module?ref=addons_and_output"
+  source          = "git@github.com:unity-sds/unity-cs-infra.git//terraform-unity-eks_module"
   deployment_name = var.cluster_name
 
   nodegroups = {
