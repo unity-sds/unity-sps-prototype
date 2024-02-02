@@ -17,4 +17,4 @@ RUN mkdir /usr/share/cwl \
 COPY docker_cwl_entrypoint.sh /usr/share/cwl/docker_cwl_entrypoint.sh
 
 WORKDIR /usr/share/cwl
-ENTRYPOINT ["docker_cwl_entrypoint.sh"]
+ENTRYPOINT ["/usr/share/cwl/docker_cwl_entrypoint.sh"]

@@ -1,12 +1,4 @@
 apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: docker-cwl-configmap
-data:
-  job_args.yaml: |
-    name: Earth
----
-apiVersion: v1
 kind: Pod
 metadata:
   name: docker-cwl-pod
@@ -18,18 +10,5 @@ spec:
   - name: cwl-docker
     image: lucacinquini/unity-sps-docker-cwl:latest
     command: ["/usr/share/cwl/docker_cwl_entrypoint.sh"]
-    args: ["https://raw.githubusercontent.com/unity-sds/unity-sps-prototype/cwl-docker/cwl/cwl_workflows/echo_from_docker.cwl"]
-    # args: ["https://raw.githubusercontent.com/unity-sds/unity-sps-prototype/cwl-docker/cwl/cwl_workflows/hello_world_from_docker.cwl"]
     securityContext:
       privileged: true
-    volumeMounts:
-    - name: docker-cwl-pv
-      mountPath: /tmp/job_args.yaml
-
-  volumes:
-  - name: docker-cwl-pv
-    configMap:
-      name: docker-cwl-configmap
-      items:
-      - key: job_args.yaml
-        path: /tmp/job_args.yaml
