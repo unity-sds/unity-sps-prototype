@@ -73,6 +73,7 @@ variable "docker_images" {
     busybox            = "busybox:1.36.0"
     redis              = "redis:7.0.10"
     dind               = "docker:23.0.3-dind"
+    airflow            = "ghcr.io/unity-sds/unity-sps-prototype/sps-airflow:256-airflow"
   }
 }
 

@@ -59,16 +59,64 @@ pgbouncer:
   enabled: true
   replicas: 1
 
-webserver:
-  service:
-    type: ${webserver_service_type}
-
 webserverSecretKeySecretName: ${webserver_secret_name}
+
+webserver:
+  replicas: 1
+
+workers:
+  keda:
+    enabled: true
+    pollingInterval: 1
+    maxReplicaCount: 128
+    # Specify HPA related options
+    # https://github.com/kubernetes/enhancements/blob/master/keps/sig-autoscaling/853-configurable-hpa-scale-velocity/README.md
+    advanced:
+      horizontalPodAutoscalerConfig:
+        behavior:
+          scaleUp:
+            policies:
+            - type: Percent
+              value: 900
+              periodSeconds: 30
+          scaleDown:
+            stabilizationWindowSeconds: 300
+            policies:
+              - type: Percent
+                value: 100
+                periodSeconds: 5
 
 data:
   metadataSecretName: ${metadata_secret_name}
   resultBackendSecretName: ~
 
+config:
+  logging:
+    remote_logging: true
+    logging_level: "INFO"
+    remote_base_log_folder: ${airflow_logs_s3_location}
+    remote_log_conn_id: "aws_default"
+    encrypt_s3_logs: false
+  celery:
+    worker_concurrency: 1
+
 env:
   - name: "AIRFLOW_VAR_KUBERNETES_PIPELINE_NAMESPACE"
     value: "${kubernetes_namespace}"
+
+# https://airflow.apache.org/docs/apache-airflow/stable/administration-and-deployment/security/api.html
+extraEnv: |
+  - name: AIRFLOW__API__AUTH_BACKENDS
+    value: "airflow.api.auth.backend.basic_auth"
+  - name: AIRFLOW__CORE__PARALLELISM
+    value: "128"
+  - name: AIRFLOW__CORE__MAX_ACTIVE_RUNS_PER_DAG
+    value: "64"
+  - name: AIRFLOW__CORE__MAX_ACTIVE_TASKS_PER_DAG
+    value: "64"
+  - name: AIRFLOW__SCHEDULER__MAX_DAGRUNS_TO_CREATE_PER_LOOP
+    value: "64"
+  - name: AIRFLOW__SCHEDULER__SCHEDULER_HEARTBEAT_SEC
+    value: "1"
+  - name: AIRFLOW__KUBERNETES__WORKER_PODS_CREATION_BATCH_SIZE
+    value: "8"
