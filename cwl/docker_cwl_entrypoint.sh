@@ -21,7 +21,6 @@ do
 done
 
 # Execute CWL workflow
-# docker run hello-world
 source /usr/share/cwl/venv/bin/activate
 cwl-runner $cwl_workflow /tmp/job_args.json
 deactivate
