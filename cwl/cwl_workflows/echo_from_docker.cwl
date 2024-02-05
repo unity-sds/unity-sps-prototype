@@ -4,13 +4,18 @@ class: CommandLineTool
 hints:
   DockerRequirement:
     dockerPull: busybox:latest
-baseCommand: ["echo", "Hello"]
+baseCommand: ["echo"]
 
 inputs:
-  name:
+  greeting:
     type: string
-    default: "World"
+    default: "Hola"
     inputBinding:
       position: 1
+  name:
+    type: string
+    default: "Mundo"
+    inputBinding:
+      position: 2
 outputs: []
 
