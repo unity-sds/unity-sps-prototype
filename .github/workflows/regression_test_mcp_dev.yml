@@ -7,19 +7,8 @@ on:
     - cron: "0 7 * * *"
   workflow_dispatch:
     inputs:
-      PROCESS_SERVICE_ENDPOINT:
-        description: "Base URL for the WPS-T API endpoint (i.e. http://abc.def.ghi:port-number)"
-        type: string
-      SPS_API_SERVICE_ENDPOINT:
-        description: "Base URL for the SPS API endpoint (i.e. http://abc.def.ghi:port-number)"
-        type: string
-      JOBS_DATABASE_ENDPOINT:
-        description: "Base URL for the Jobs DB endpoint (i.e. http://abc.def.ghi:port-number)"
-        type: string
-      SOUNDER_SIPS_PROCESS_SELECTION:
-        description: "The Sounder SIPS process to test (L1A, L1B, chirp)"
-        default: ".*"
-        required: false
+      AIRFLOW_ENDPOINT:
+        description: "Base URL for the Airflow endpoint (i.e. http://abc.def.ghi:port-number)"
         type: string
 
 jobs:
@@ -27,10 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: |
-          echo "Base URL for the WPS-T API endpoint (i.e. http://abc.def.ghi:port-number): ${{ github.event.inputs.PROCESS_SERVICE_ENDPOINT || vars.MCP_DEV_PROCESS_SERVICE_ENDPOINT }}"
-          echo "Base URL for the SPS API endpoint (i.e. http://abc.def.ghi:port-number): ${{ github.event.inputs.SPS_API_SERVICE_ENDPOINT || vars.MCP_DEV_SPS_API_SERVICE_ENDPOINT }}"
-          echo "Base URL for the Jobs DB endpoint (i.e. http://abc.def.ghi:port-number): ${{ github.event.inputs.JOBS_DATABASE_ENDPOINT || vars.MCP_DEV_JOBS_DATABASE_ENDPOINT }}"
-          echo "The Sounder SIPS PGEs to test (L1A, L1B, chirp): ${{ github.event.inputs.SOUNDER_SIPS_PROCESS_SELECTION || vars.SOUNDER_SIPS_PROCESS_SELECTION }}"
+          echo "Base URL for the Airflow endpoint (i.e. http://abc.def.ghi:port-number): ${{ github.event.inputs.AIRFLOW_ENDPOINT || vars.MCP_DEV_AIRFLOW_ENDPOINT }}"
   regression_test:
     runs-on: ubuntu-latest
     steps:
@@ -47,10 +33,6 @@ jobs:
       - name: Run the regression test
         working-directory: ${{ github.workspace }}/unity-test/step_defs
         run: >
-          pytest -s
-          --process-service-endpoint=${{ github.event.inputs.PROCESS_SERVICE_ENDPOINT || vars.MCP_DEV_PROCESS_SERVICE_ENDPOINT }}
-          --sps-api-service-endpoint=${{ github.event.inputs.SPS_API_SERVICE_ENDPOINT || vars.MCP_DEV_SPS_API_SERVICE_ENDPOINT }}
-          --jobs-database-endpoint=${{ github.event.inputs.JOBS_DATABASE_ENDPOINT || vars.MCP_DEV_JOBS_DATABASE_ENDPOINT }}
-          --sounder-sips-process-selection=${{ github.event.inputs.SOUNDER_SIPS_PROCESS_SELECTION || vars.SOUNDER_SIPS_PROCESS_SELECTION }}
-          --environment "dev"
-          -rs
+          pytest -s -vv --gherkin-terminal-reporter
+          step_defs/test_airflow_api_health.py
+          --airflow-endpoint=${{ github.event.inputs.AIRFLOW_ENDPOINT || vars.MCP_DEV_AIRFLOW_ENDPOINT }}
