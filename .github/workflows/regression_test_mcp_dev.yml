@@ -34,5 +34,5 @@ jobs:
         working-directory: ${{ github.workspace }}/unity-test/step_defs
         run: >
           pytest -s -vv --gherkin-terminal-reporter
-          step_defs/test_airflow_api_health.py
+          test_airflow_api_health.py
           --airflow-endpoint=${{ github.event.inputs.AIRFLOW_ENDPOINT || vars.MCP_DEV_AIRFLOW_ENDPOINT }}
