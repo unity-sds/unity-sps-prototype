@@ -10,9 +10,9 @@ resource "kubernetes_namespace" "keda" {
 
 resource "helm_release" "keda" {
   name       = "keda"
-  repository = "https://kedacore.github.io/charts"
-  chart      = "keda"
-  version    = "v2.12.1"
+  repository = var.helm_charts.keda.repository
+  chart      = var.helm_charts.keda.chart
+  version    = var.helm_charts.keda.version
   namespace  = kubernetes_namespace.keda.metadata[0].name
 }
 
@@ -110,6 +110,11 @@ resource "random_password" "airflow_db" {
 resource "aws_secretsmanager_secret" "airflow_db" {
   name                    = "${var.project}-${var.venue}-${var.service_area}-airflowdb-${local.counter}"
   recovery_window_in_days = 0
+  tags = merge(local.common_tags, {
+    Name      = "${var.project}-${var.venue}-${var.service_area}-airflow-${local.counter}"
+    Component = "airflow"
+    Stack     = "airflow"
+  })
 }
 
 resource "aws_secretsmanager_secret_version" "airflow_db" {
@@ -119,7 +124,12 @@ resource "aws_secretsmanager_secret_version" "airflow_db" {
 
 resource "aws_db_subnet_group" "airflow_db" {
   name       = "${var.project}-${var.venue}-${var.service_area}-airflowdb-${local.counter}"
-  subnet_ids = split(",", data.aws_ssm_parameter.eks_private_subnets[0].value)
+  subnet_ids = data.aws_subnets.private.ids
+  tags = merge(local.common_tags, {
+    Name      = "${var.project}-${var.venue}-${var.service_area}-airflowdb-${local.counter}"
+    Component = "airflow"
+    Stack     = "airflow"
+  })
 }
 
 # Security group for RDS
@@ -127,6 +137,11 @@ resource "aws_security_group" "rds_sg" {
   name        = "${var.project}-${var.venue}-${var.service_area}-RdsEc2-${local.counter}"
   description = "Security group for RDS instance to allow traffic from EKS nodes"
   vpc_id      = data.aws_eks_cluster.cluster.vpc_config[0].vpc_id
+  tags = merge(local.common_tags, {
+    Name      = "${var.project}-${var.venue}-${var.service_area}-airflow-${local.counter}"
+    Component = "airflow"
+    Stack     = "airflow"
+  })
 }
 
 data "aws_eks_node_group" "example" {
@@ -177,9 +192,14 @@ resource "aws_db_instance" "airflow_db" {
   publicly_accessible    = false
   db_subnet_group_name   = aws_db_subnet_group.airflow_db.name
   vpc_security_group_ids = [aws_security_group.rds_sg.id]
+  tags = merge(local.common_tags, {
+    Name      = "${var.project}-${var.venue}-${var.service_area}-airflow-${local.counter}"
+    Component = "airflow"
+    Stack     = "airflow"
+  })
 }
 
-resource "kubernetes_secret" "airflow_metadata_secret" {
+resource "kubernetes_secret" "airflow_metadata" {
   metadata {
     name      = "airflow-metadata-secret"
     namespace = kubernetes_namespace.airflow.metadata[0].name
@@ -193,25 +213,34 @@ resource "kubernetes_secret" "airflow_metadata_secret" {
 resource "aws_s3_bucket" "airflow_logs" {
   bucket        = "${var.project}-${var.venue}-${var.service_area}-airflowlogs-${local.counter}"
   force_destroy = true
+  tags = merge(local.common_tags, {
+    Name      = "${var.project}-${var.venue}-${var.service_area}-airflow-${local.counter}"
+    Component = "airflow"
+    Stack     = "airflow"
+  })
 }
 
 resource "helm_release" "airflow" {
   name       = "airflow"
-  repository = "https://airflow.apache.org"
-  chart      = "airflow"
-  version    = "1.11.0"
+  repository = var.helm_charts.airflow.repository
+  chart      = var.helm_charts.airflow.chart
+  version    = var.helm_charts.airflow.version
   namespace  = kubernetes_namespace.airflow.metadata[0].name
   values = [
     templatefile("${path.module}/../../../airflow/helm_values/values.tmpl.yaml", {
-      airflow_image_repo       = "ghcr.io/unity-sds/unity-sps-prototype/sps-airflow"
-      airflow_image_tag        = "256-airflow"
+      airflow_image_repo       = var.custom_airflow_docker_image.name
+      airflow_image_tag        = var.custom_airflow_docker_image.tag
       kubernetes_namespace     = kubernetes_namespace.airflow.metadata[0].name
       metadata_secret_name     = "airflow-metadata-secret"
       webserver_secret_name    = "airflow-webserver-secret"
       airflow_logs_s3_location = "s3://${aws_s3_bucket.airflow_logs.id}"
     })
   ]
-  depends_on = [aws_db_instance.airflow_db]
+  set_sensitive {
+    name  = "webserver.defaultUser.password"
+    value = var.airflow_webserver_password
+  }
+  depends_on = [aws_db_instance.airflow_db, helm_release.keda, kubernetes_secret.airflow_metadata, kubernetes_secret.airflow_webserver]
 }
 
 resource "kubernetes_ingress_v1" "airflow_ingress" {
@@ -221,7 +250,7 @@ resource "kubernetes_ingress_v1" "airflow_ingress" {
     annotations = {
       "alb.ingress.kubernetes.io/scheme"           = "internet-facing"
       "alb.ingress.kubernetes.io/target-type"      = "ip"
-      "alb.ingress.kubernetes.io/subnets"          = "subnet-0cde2f69ef0ce1a7d,subnet-014b1b7335cf1f851"
+      "alb.ingress.kubernetes.io/subnets"          = join(",", data.aws_subnets.public.ids)
       "alb.ingress.kubernetes.io/listen-ports"     = "[{\"HTTP\": 5000}]"
       "alb.ingress.kubernetes.io/healthcheck-path" = "/health"
     }
@@ -246,4 +275,10 @@ resource "kubernetes_ingress_v1" "airflow_ingress" {
       }
     }
   }
+  depends_on = [helm_release.airflow]
+}
+
+resource "time_sleep" "wait_for_lb" {
+  depends_on      = [kubernetes_ingress_v1.airflow_ingress]
+  create_duration = "5m"
 }

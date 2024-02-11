@@ -1,13 +1,6 @@
 variable "project" {
   description = "The project or mission deploying Unity SPS"
   type        = string
-  default     = "unity"
-}
-
-variable "service_area" {
-  description = "The service area owner of the resources being deployed"
-  type        = string
-  default     = "sps"
 }
 
 variable "venue" {
@@ -15,10 +8,14 @@ variable "venue" {
   type        = string
 }
 
+variable "service_area" {
+  description = "The service area owner of the resources being deployed"
+  type        = string
+}
+
 variable "counter" {
   description = "value"
   type        = string
-  default     = ""
 }
 
 variable "release" {
@@ -36,12 +33,24 @@ variable "kubeconfig_filepath" {
   type        = string
 }
 
-variable "docker_images" {
-  description = "Docker images for the Unity SPS containers"
-  type        = map(string)
-}
-
-variable "elb_subnets" {
+variable "airflow_webserver_password" {
   description = "value"
   type        = string
+}
+
+variable "helm_charts" {
+  description = "Settings for the required Helm charts."
+  type = map(object({
+    repository = string
+    chart      = string
+    version    = string
+  }))
+}
+
+variable "custom_airflow_docker_image" {
+  description = "Docker image for the customized Airflow image."
+  type = object({
+    name = string
+    tag  = string
+  })
 }
