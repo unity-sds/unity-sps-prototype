@@ -49,5 +49,4 @@ data "kubernetes_ingress_v1" "airflow_ingress" {
     name      = kubernetes_ingress_v1.airflow_ingress.metadata[0].name
     namespace = kubernetes_namespace.airflow.metadata[0].name
   }
-  depends_on = [time_sleep.wait_for_lb]
 }

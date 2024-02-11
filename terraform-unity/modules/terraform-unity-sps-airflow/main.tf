@@ -275,10 +275,6 @@ resource "kubernetes_ingress_v1" "airflow_ingress" {
       }
     }
   }
-  depends_on = [helm_release.airflow]
-}
-
-resource "time_sleep" "wait_for_lb" {
-  depends_on      = [kubernetes_ingress_v1.airflow_ingress]
-  create_duration = "5m"
+  wait_for_load_balancer = true
+  depends_on             = [helm_release.airflow]
 }
