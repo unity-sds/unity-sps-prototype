@@ -31,8 +31,8 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt --use-pep517
       - name: Run the regression test
-        working-directory: ${{ github.workspace }}/unity-test/step_defs
+        working-directory: ${{ github.workspace }}/unity-test
         run: >
           pytest -s -vv --gherkin-terminal-reporter
-          test_airflow_api_health.py
+          step_defs/test_airflow_api_health.py
           --airflow-endpoint=${{ github.event.inputs.AIRFLOW_ENDPOINT || vars.MCP_DEV_AIRFLOW_ENDPOINT }}
