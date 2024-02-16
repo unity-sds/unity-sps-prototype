@@ -1,28 +1,28 @@
 {
-  "mode": "async",
-  "response": "document",
   "inputs": [
     {
-      "id": "input_collection_id",
-      "data": "urn:nasa:unity:uds_local_test:DEV1:SNDR_SNPP_ATMS_L1A___1"
+      "data": "urn:nasa:unity:uds_local_test:DEV1:SNDR_SNPP_ATMS_L1A___1",
+      "id": "input_collection_id"
     },
     {
-      "id": "start_datetime",
-      "data": "2016-01-14T08:00:00Z"
+      "data": "2016-01-14T08:00:00Z",
+      "id": "start_datetime"
     },
     {
-      "id": "stop_datetime",
-      "data": "2016-01-14T11:59:59Z"
+      "data": "2016-01-14T11:59:59Z",
+      "id": "stop_datetime"
     },
     {
-      "id": "output_collection_id",
-      "data": "urn:nasa:unity:uds_local_test:DEV1:SNDR_SNPP_ATMS_L1B_OUTPUT___1"
+      "data": "urn:nasa:unity:uds_local_test:DEV1:SNDR_SNPP_ATMS_L1B_OUTPUT___1",
+      "id": "output_collection_id"
     }
   ],
+  "mode": "async",
   "outputs": [
     {
       "id": "output",
       "transmissionMode": "reference"
     }
-  ]
+  ],
+  "response": "document"
 }

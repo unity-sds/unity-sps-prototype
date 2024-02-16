@@ -1,52 +1,52 @@
 {
   "datasets": [
     {
-      "ipath": "ariamh::data/area_of_interest",
-      "match_pattern": "/(?P<id>AOI_.+)$",
       "alt_match_pattern": null,
-      "extractor": null,
-      "level": "L0",
-      "type": "area_of_interest",
-      "publish": {
+      "browse": {
+        "location": "s3://minio:${minio_service_api_port}/datasets/browse/{id}",
         "s3-profile-name": "default",
+        "urls": [
+          "http://minio:${minio_service_interface_port}/buckets/datasets/browse/products/{id}",
+          "s3://minio:${minio_service_api_port}/datasets/browse/{id}"
+        ]
+      },
+      "extractor": null,
+      "ipath": "ariamh::data/area_of_interest",
+      "level": "L0",
+      "match_pattern": "/(?P<id>AOI_.+)$",
+      "publish": {
         "location": "s3://minio:${minio_service_api_port}/datasets/products/{id}",
+        "s3-profile-name": "default",
         "urls": [
           "http://minio:${minio_service_interface_port}/buckets/datasets/browse/products/{id}",
           "s3://minio:${minio_service_api_port}/datasets/products/{id}"
         ]
       },
-      "browse": {
-        "s3-profile-name": "default",
-        "location": "s3://minio:${minio_service_api_port}/datasets/browse/{id}",
-        "urls": [
-          "http://minio:${minio_service_interface_port}/buckets/datasets/browse/products/{id}",
-          "s3://minio:${minio_service_api_port}/datasets/browse/{id}"
-        ]
-      }
+      "type": "area_of_interest"
     },
     {
+      "alt_match_pattern": null,
+      "browse": {
+        "location": "s3://minio:${minio_service_api_port}/datasets/browse/hello_world/{version}/{year}/{month}/{day}/{id}",
+        "s3-profile-name": "default",
+        "urls": [
+          "http://minio:${minio_service_interface_port}/buckets/datasets/browse/products/hello_world/{version}/{year}/{month}/{day}/{id}",
+          "s3://minio:${minio_service_api_port}/datasets/browse/hello_world/{version}/{year}/{month}/{day}/{id}"
+        ]
+      },
+      "extractor": null,
       "ipath": "hysds::data/hello_world",
       "level": "NA",
-      "type": "hello_world",
       "match_pattern": "/(?P<id>hello_world-product-(?P<year>\\d{4})(?P<month>\\d{2})(?P<day>\\d{2})T.*)$",
-      "alt_match_pattern": null,
-      "extractor": null,
       "publish": {
-        "s3-profile-name": "default",
         "location": "s3://minio:${minio_service_api_port}/datasets/products/hello_world/{version}/{year}/{month}/{day}/{id}",
+        "s3-profile-name": "default",
         "urls": [
           "http://minio:${minio_service_interface_port}/buckets/datasets/browse/products/hello_world/{version}/{year}/{month}/{day}/{id}",
           "s3://minio:${minio_service_api_port}/datasets/products/hello_world/{version}/{year}/{month}/{day}/{id}"
         ]
       },
-      "browse": {
-        "s3-profile-name": "default",
-        "location": "s3://minio:${minio_service_api_port}/datasets/browse/hello_world/{version}/{year}/{month}/{day}/{id}",
-        "urls": [
-          "http://minio:${minio_service_interface_port}/buckets/datasets/browse/products/hello_world/{version}/{year}/{month}/{day}/{id}",
-          "s3://minio:${minio_service_api_port}/datasets/browse/hello_world/{version}/{year}/{month}/{day}/{id}"
-        ]
-      }
+      "type": "hello_world"
     }
   ]
 }

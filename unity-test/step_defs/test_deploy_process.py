@@ -1,7 +1,9 @@
-from pytest_bdd import given, when, then, parsers, scenario
-from .conftest import FEATURES_DIR, _process_skip_determination, reader
 from urllib.parse import urljoin
+
 import requests
+from pytest_bdd import given, parsers, scenario, then, when
+
+from .conftest import FEATURES_DIR, _process_skip_determination, reader
 
 feature_file = "deploy_process.feature"
 FEATURE_FILE = FEATURES_DIR.joinpath(feature_file)

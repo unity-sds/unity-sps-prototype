@@ -124,7 +124,7 @@ resource "aws_secretsmanager_secret_version" "airflow_db" {
 
 resource "aws_db_subnet_group" "airflow_db" {
   name       = "${var.project}-${var.venue}-${var.service_area}-airflowdb-${local.counter}"
-  subnet_ids = data.aws_subnets.private.ids
+  subnet_ids = jsondecode(data.aws_ssm_parameter.subnet_ids.value)["private"]
   tags = merge(local.common_tags, {
     Name      = "${var.project}-${var.venue}-${var.service_area}-airflowdb-${local.counter}"
     Component = "airflow"
@@ -142,11 +142,6 @@ resource "aws_security_group" "rds_sg" {
     Component = "airflow"
     Stack     = "airflow"
   })
-}
-
-data "aws_eks_node_group" "example" {
-  cluster_name    = var.eks_cluster_name
-  node_group_name = "defaultGroup"
 }
 
 data "aws_security_group" "default" {
@@ -250,7 +245,7 @@ resource "kubernetes_ingress_v1" "airflow_ingress" {
     annotations = {
       "alb.ingress.kubernetes.io/scheme"           = "internet-facing"
       "alb.ingress.kubernetes.io/target-type"      = "ip"
-      "alb.ingress.kubernetes.io/subnets"          = join(",", data.aws_subnets.public.ids)
+      "alb.ingress.kubernetes.io/subnets"          = join(",", jsondecode(data.aws_ssm_parameter.subnet_ids.value)["public"])
       "alb.ingress.kubernetes.io/listen-ports"     = "[{\"HTTP\": 5000}]"
       "alb.ingress.kubernetes.io/healthcheck-path" = "/health"
     }

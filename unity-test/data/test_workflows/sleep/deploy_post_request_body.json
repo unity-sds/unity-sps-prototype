@@ -1,8 +1,24 @@
 {
+  "deploymentProfileName": "http://www.opengis.net/profiles/eoc/dockerizedApplication",
+  "executionUnit": [
+    {
+      "href": "docker.registry/l1b-cwl:latest"
+    }
+  ],
+  "immediateDeployment": true,
   "processDescription": {
+    "jobControlOptions": [
+      "async-execute"
+    ],
+    "outputTransmission": [
+      "reference"
+    ],
     "process": {
+      "abstract": "sleep",
       "id": "sleep",
-      "title": "Sleep Job",
+      "inputs": [],
+      "keywords": [],
+      "outputs": [],
       "owsContext": {
         "offering": {
           "code": "http://www.opengis.net/eoc/applicationContext/cwl",
@@ -11,20 +27,8 @@
           }
         }
       },
-      "abstract": "sleep",
-      "keywords": [],
-      "inputs": [],
-      "outputs": []
+      "title": "Sleep Job"
     },
-    "processVersion": "develop",
-    "jobControlOptions": ["async-execute"],
-    "outputTransmission": ["reference"]
-  },
-  "immediateDeployment": true,
-  "executionUnit": [
-    {
-      "href": "docker.registry/l1b-cwl:latest"
-    }
-  ],
-  "deploymentProfileName": "http://www.opengis.net/profiles/eoc/dockerizedApplication"
+    "processVersion": "develop"
+  }
 }

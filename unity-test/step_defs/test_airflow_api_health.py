@@ -3,6 +3,7 @@ from datetime import datetime, timezone
 import backoff
 import requests
 from pytest_bdd import given, scenario, then, when
+
 from .conftest import FEATURES_DIR
 
 feature_file = "airflow_api_health.feature"
@@ -31,13 +32,17 @@ def api_up_and_running():
 )
 def send_get_request(airflow_api_url):
     response = requests.get(f"{airflow_api_url}/health")
-    assert response.status_code == 200, f"Expected status code 200, but got {response.status_code}"
+    assert (
+        response.status_code == 200
+    ), f"Expected status code 200, but got {response.status_code}"
     return response
 
 
 @then("I receive a response with status code 200")
 def check_status_code(response):
-    assert response.status_code == 200, f"Expected status code 200, but got {response.status_code}"
+    assert (
+        response.status_code == 200
+    ), f"Expected status code 200, but got {response.status_code}"
 
 
 @then("each Airflow component is reported as healthy")
@@ -59,4 +64,6 @@ def check_last_heartbeat(response):
             data[c]["latest_{}_heartbeat".format(c)],
             "%Y-%m-%dT%H:%M:%S.%f%z",
         )
-        assert (now - last_heartbeat).total_seconds() < 30, f"Last {c} heartbeat was more than 30 seconds ago"
+        assert (
+            now - last_heartbeat
+        ).total_seconds() < 30, f"Last {c} heartbeat was more than 30 seconds ago"

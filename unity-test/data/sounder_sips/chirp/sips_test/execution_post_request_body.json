@@ -1,52 +1,55 @@
 {
-  "mode": "async",
-  "response": "document",
   "inputs": [
     {
-      "id": "input_processing_labels",
-      "data": ["label1", "label2"]
+      "data": [
+        "label1",
+        "label2"
+      ],
+      "id": "input_processing_labels"
     },
     {
-      "id": "input_cmr_collection_name",
-      "data": "C2011289787-GES_DISC"
+      "data": "C2011289787-GES_DISC",
+      "id": "input_cmr_collection_name"
     },
     {
-      "id": "input_cmr_search_start_time",
-      "data": "2016-08-22T00:10:00Z"
+      "data": "2016-08-22T00:10:00Z",
+      "id": "input_cmr_search_start_time"
     },
     {
-      "id": "input_cmr_search_stop_time",
-      "data": "2016-08-22T00:11:00Z"
+      "data": "2016-08-22T00:11:00Z",
+      "id": "input_cmr_search_stop_time"
     },
     {
-      "id": "input_cmr_edl_user",
-      "data": "cmr_user"
+      "data": "cmr_user",
+      "id": "input_cmr_edl_user"
     },
     {
-      "id": "input_cmr_edl_pass",
-      "data": "cmr_pass"
+      "data": "cmr_pass",
+      "id": "input_cmr_edl_pass"
     },
     {
-      "id": "output_collection_id",
-      "data": "urn:nasa:unity:uds_local_test:TEST1:CHRP_16_DAY_REBIN___1"
+      "data": "urn:nasa:unity:uds_local_test:TEST1:CHRP_16_DAY_REBIN___1",
+      "id": "output_collection_id"
     },
     {
-      "id": "output_data_bucket",
-      "data": "s3://ssips-test-ds-storage-reproc"
+      "data": "s3://ssips-test-ds-storage-reproc",
+      "id": "output_data_bucket"
     },
     {
-      "id": "input_daac_collection_shortname",
-      "data": "CHIRP_L1B"
+      "data": "CHIRP_L1B",
+      "id": "input_daac_collection_shortname"
     },
     {
-      "id": "input_daac_collection_sns",
-      "data": "arn:://SNS-arn"
+      "data": "arn:://SNS-arn",
+      "id": "input_daac_collection_sns"
     }
   ],
+  "mode": "async",
   "outputs": [
     {
       "id": "output",
       "transmissionMode": "reference"
     }
-  ]
+  ],
+  "response": "document"
 }

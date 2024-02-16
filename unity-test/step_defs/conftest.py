@@ -1,8 +1,10 @@
+import os
+
 import pytest
-from . import TEST_BASE_DIR
 from dotenv import load_dotenv
 from requests.auth import HTTPBasicAuth
-import os
+
+from . import TEST_BASE_DIR
 
 # Load environment variables from .env file
 load_dotenv()

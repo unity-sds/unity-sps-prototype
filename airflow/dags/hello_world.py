@@ -5,11 +5,13 @@
 
 # Usage
 """  # noqa: E501
+
 import time
 from datetime import datetime
 
-from airflow import DAG
 from airflow.operators.python import PythonOperator
+
+from airflow import DAG
 
 default_args = {
     "owner": "example",
@@ -31,7 +33,6 @@ with DAG(
     tags=["example"],
 ) as dag:
     hello_world_task = PythonOperator(
-        task_id="hello_world",
-        python_callable=hello_world
+        task_id="hello_world", python_callable=hello_world
     )
     hello_world_task

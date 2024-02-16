@@ -6,13 +6,13 @@
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.3.6 |
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | 4.57.1 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | ~> 5.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | 4.57.1 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | 5.36.0 |
 
 ## Modules
 
@@ -22,10 +22,10 @@ No modules.
 
 | Name | Type |
 |------|------|
-| [aws_ssm_parameter.ghcr_pat](https://registry.terraform.io/providers/hashicorp/aws/4.57.1/docs/resources/ssm_parameter) | resource |
-| [aws_ssm_parameter.uds_client_id](https://registry.terraform.io/providers/hashicorp/aws/4.57.1/docs/resources/ssm_parameter) | resource |
-| [aws_ssm_parameter.uds_dapa_api](https://registry.terraform.io/providers/hashicorp/aws/4.57.1/docs/resources/ssm_parameter) | resource |
-| [aws_ssm_parameter.uds_staging_bucket](https://registry.terraform.io/providers/hashicorp/aws/4.57.1/docs/resources/ssm_parameter) | resource |
+| [aws_ssm_parameter.ghcr_pat](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ssm_parameter) | resource |
+| [aws_ssm_parameter.uds_client_id](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ssm_parameter) | resource |
+| [aws_ssm_parameter.uds_dapa_api](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ssm_parameter) | resource |
+| [aws_ssm_parameter.uds_staging_bucket](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ssm_parameter) | resource |
 
 ## Inputs
 

@@ -1,5 +1,9 @@
 {
   "sounder_sips": {
-    "processes": ["L1A", "L1B", "chirp"]
+    "processes": [
+      "L1A",
+      "L1B",
+      "chirp"
+    ]
   }
 }

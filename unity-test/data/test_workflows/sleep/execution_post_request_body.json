@@ -1,12 +1,15 @@
 {
-  "mode": "async",
-  "response": "document",
   "inputs": [],
+  "labels": [
+    "test",
+    "sleep"
+  ],
+  "mode": "async",
   "outputs": [
     {
       "id": "output",
       "transmissionMode": "reference"
     }
   ],
-  "labels": ["test", "sleep"]
+  "response": "document"
 }

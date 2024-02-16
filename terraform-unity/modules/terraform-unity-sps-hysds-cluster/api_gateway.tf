@@ -16,7 +16,7 @@ data "aws_ssm_parameter" "api_gateway_rest_api_lambda_authorizer_id" {
   name  = "/unity/${var.venue}/api-gateway/rest-api-lambda-authorizer-id"
 }
 
-resource "aws_api_gateway_resource" "deployment_name_resource"{
+resource "aws_api_gateway_resource" "deployment_name_resource" {
   count       = var.add_routes_to_api_gateway ? 1 : 0
   rest_api_id = data.aws_ssm_parameter.api_gateway_rest_api_id[0].value
   parent_id   = data.aws_ssm_parameter.api_gateway_rest_api_root_resource_id[0].value

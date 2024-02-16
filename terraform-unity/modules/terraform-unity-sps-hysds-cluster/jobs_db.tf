@@ -51,7 +51,7 @@ resource "null_resource" "build_lambda_package" {
 
   provisioner "local-exec" {
     interpreter = ["bash", "-c"]
-    command = <<EOF
+    command     = <<EOF
       cd ${path.module}/../../../lambdas/jobs_data_ingest
       python3.9 -m venv venv
       source venv/bin/activate
@@ -198,7 +198,7 @@ resource "aws_lambda_function" "jobs_data_ingest" {
   filename = "${path.module}/../../../lambdas/lambda_package.zip"
   #   source_code_hash = filebase64sha256(pathexpand("${path.module}/../../lambdas/jobs_data_ingest/lambda_package.zip"))
   vpc_config {
-    subnet_ids = split(",", var.elb_subnets)
+    subnet_ids         = split(",", var.elb_subnets)
     security_group_ids = toset(data.aws_eks_cluster.sps-cluster.vpc_config[0].security_group_ids)
   }
 
