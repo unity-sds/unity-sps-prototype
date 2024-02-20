@@ -1,6 +1,8 @@
-from pytest_bdd import scenario, when, then, parsers
-import requests
 from urllib.parse import urljoin
+
+import requests
+from pytest_bdd import scenario, then, when
+
 from .conftest import FEATURES_DIR, _is_process_deployed
 
 feature_file = "undeploy_process.feature"

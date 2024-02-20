@@ -1,6 +1,7 @@
-from pytest_bdd import scenario, when, then
-import requests
 from urllib.parse import urljoin
+
+import requests
+from pytest_bdd import scenario, then, when
 
 from .conftest import FEATURES_DIR
 

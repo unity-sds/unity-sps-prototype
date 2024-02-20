@@ -1,4 +1,5 @@
-from pytest_bdd import scenario, when, then, parsers
+from pytest_bdd import scenario, then, when
+
 from .conftest import FEATURES_DIR, _request_job_execution, reader
 
 feature_file = "request_processing.feature"

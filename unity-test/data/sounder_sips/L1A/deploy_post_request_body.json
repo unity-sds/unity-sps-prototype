@@ -1,8 +1,116 @@
 {
+  "deploymentProfileName": "http://www.opengis.net/profiles/eoc/dockerizedApplication",
+  "executionUnit": [
+    {
+      "href": "docker.registry/ndvims:latest"
+    }
+  ],
+  "immediateDeployment": true,
   "processDescription": {
+    "jobControlOptions": [
+      "async-execute"
+    ],
+    "outputTransmission": [
+      "reference"
+    ],
     "process": {
+      "abstract": "l1a_pge_cwl",
       "id": "l1a",
-      "title": "l1a_pge_cwl",
+      "inputs": [
+        {
+          "formats": [
+            {
+              "default": true,
+              "mimeType": "text"
+            }
+          ],
+          "id": "input_ephatt_collection_id",
+          "title": "input_ephatt_collection_id"
+        },
+        {
+          "formats": [
+            {
+              "default": true,
+              "mimeType": "text"
+            }
+          ],
+          "id": "input_science_collection_id",
+          "title": "input_science_collection_id"
+        },
+        {
+          "formats": [
+            {
+              "default": true,
+              "mimeType": "text"
+            }
+          ],
+          "id": "output_collection_id",
+          "title": "output_collection_id"
+        },
+        {
+          "formats": [
+            {
+              "default": true,
+              "mimeType": "application/json"
+            }
+          ],
+          "id": "static_dir",
+          "title": "static_dir"
+        },
+        {
+          "formats": [
+            {
+              "default": true,
+              "mimeType": "text"
+            }
+          ],
+          "id": "start_datetime",
+          "title": "start_datetime"
+        },
+        {
+          "formats": [
+            {
+              "default": true,
+              "mimeType": "text"
+            }
+          ],
+          "id": "stop_datetime",
+          "title": "stop_datetime"
+        },
+        {
+          "formats": [
+            {
+              "default": true,
+              "mimeType": "text"
+            }
+          ],
+          "id": "ephatt_download_dir",
+          "title": "ephatt_download_dir"
+        },
+        {
+          "formats": [
+            {
+              "default": true,
+              "mimeType": "text"
+            }
+          ],
+          "id": "science_download_dir",
+          "title": "science_download_dir"
+        }
+      ],
+      "keywords": [],
+      "outputs": [
+        {
+          "formats": [
+            {
+              "default": true,
+              "mimeType": "image/tiff"
+            }
+          ],
+          "id": "output",
+          "title": "L1A-product"
+        }
+      ],
       "owsContext": {
         "offering": {
           "code": "http://www.opengis.net/eoc/applicationContext/cwl",
@@ -11,112 +119,8 @@
           }
         }
       },
-      "abstract": "l1a_pge_cwl",
-      "keywords": [],
-      "inputs": [
-        {
-          "id": "input_ephatt_collection_id",
-          "title": "input_ephatt_collection_id",
-          "formats": [
-            {
-              "mimeType": "text",
-              "default": true
-            }
-          ]
-        },
-        {
-          "id": "input_science_collection_id",
-          "title": "input_science_collection_id",
-          "formats": [
-            {
-              "mimeType": "text",
-              "default": true
-            }
-          ]
-        },
-        {
-          "id": "output_collection_id",
-          "title": "output_collection_id",
-          "formats": [
-            {
-              "mimeType": "text",
-              "default": true
-            }
-          ]
-        },
-        {
-          "id": "static_dir",
-          "title": "static_dir",
-          "formats": [
-            {
-              "mimeType": "application/json",
-              "default": true
-            }
-          ]
-        },
-        {
-          "id": "start_datetime",
-          "title": "start_datetime",
-          "formats": [
-            {
-              "mimeType": "text",
-              "default": true
-            }
-          ]
-        },
-        {
-          "id": "stop_datetime",
-          "title": "stop_datetime",
-          "formats": [
-            {
-              "mimeType": "text",
-              "default": true
-            }
-          ]
-        },
-        {
-          "id": "ephatt_download_dir",
-          "title": "ephatt_download_dir",
-          "formats": [
-            {
-              "mimeType": "text",
-              "default": true
-            }
-          ]
-        },
-        {
-          "id": "science_download_dir",
-          "title": "science_download_dir",
-          "formats": [
-            {
-              "mimeType": "text",
-              "default": true
-            }
-          ]
-        }
-      ],
-      "outputs": [
-        {
-          "id": "output",
-          "title": "L1A-product",
-          "formats": [
-            {
-              "mimeType": "image/tiff",
-              "default": true
-            }
-          ]
-        }
-      ]
+      "title": "l1a_pge_cwl"
     },
-    "processVersion": "develop",
-    "jobControlOptions": ["async-execute"],
-    "outputTransmission": ["reference"]
-  },
-  "immediateDeployment": true,
-  "executionUnit": [
-    {
-      "href": "docker.registry/ndvims:latest"
-    }
-  ],
-  "deploymentProfileName": "http://www.opengis.net/profiles/eoc/dockerizedApplication"
+    "processVersion": "develop"
+  }
 }

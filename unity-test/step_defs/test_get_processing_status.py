@@ -1,6 +1,6 @@
-from pytest_bdd import scenario, given, when, then
 import backoff
 import requests
+from pytest_bdd import given, scenario, then, when
 
 from .conftest import FEATURES_DIR, _request_job_status_by_id
 

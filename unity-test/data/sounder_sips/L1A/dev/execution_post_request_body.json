@@ -1,39 +1,39 @@
 {
-  "mode": "async",
-  "response": "document",
   "inputs": [
     {
-      "id": "input_ephatt_collection_id",
-      "data": "urn:nasa:unity:uds_local_test:DEV1:L0_SNPP_EphAtt___1"
+      "data": "urn:nasa:unity:uds_local_test:DEV1:L0_SNPP_EphAtt___1",
+      "id": "input_ephatt_collection_id"
     },
     {
-      "id": "input_science_collection_id",
-      "data": "urn:nasa:unity:uds_local_test:DEV1:L0_SNPP_ATMS_SCIENCE___1"
+      "data": "urn:nasa:unity:uds_local_test:DEV1:L0_SNPP_ATMS_SCIENCE___1",
+      "id": "input_science_collection_id"
     },
     {
-      "id": "output_collection_id",
-      "data": "urn:nasa:unity:uds_local_test:DEV1:SNDR_SNPP_ATMS_L1A_OUTPUT___1"
+      "data": "urn:nasa:unity:uds_local_test:DEV1:SNDR_SNPP_ATMS_L1A_OUTPUT___1",
+      "id": "output_collection_id"
     },
     {
-      "id": "static_dir",
       "data": {
         "class": "Directory",
         "path": "/tmp/SOUNDER_SIPS/STATIC_DATA"
-      }
+      },
+      "id": "static_dir"
     },
     {
-      "id": "start_datetime",
-      "data": "2016-01-14T08:00:00Z"
+      "data": "2016-01-14T08:00:00Z",
+      "id": "start_datetime"
     },
     {
-      "id": "stop_datetime",
-      "data": "2016-01-14T11:59:59Z"
+      "data": "2016-01-14T11:59:59Z",
+      "id": "stop_datetime"
     }
   ],
+  "mode": "async",
   "outputs": [
     {
       "id": "output",
       "transmissionMode": "reference"
     }
-  ]
+  ],
+  "response": "document"
 }

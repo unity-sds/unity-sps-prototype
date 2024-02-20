@@ -1,13 +1,12 @@
-from operator import iadd
-import sys
-import os
-import json
 import argparse
-import subprocess
-import requests
-import jsonschema
-from dotenv import load_dotenv
+import json
 import os
+import subprocess
+import sys
+
+import jsonschema
+import requests
+from dotenv import load_dotenv
 
 load_dotenv()  # take environment variables from .env.
 
@@ -19,7 +18,7 @@ def authenticate_container_registry():
     command = (
         f"echo {CR_PAT} | docker login {CR_SERVER} -u {CR_USERNAME} --password-stdin"
     )
-    process = subprocess.run(command, shell=True)
+    subprocess.run(command, shell=True)
     return
 
 
@@ -28,12 +27,12 @@ def push_image(image_name):
     CR_OWNER = os.environ.get("CR_OWNER")
     command = f"docker tag {image_name} {CR_SERVER}/{CR_OWNER}/{image_name}"
     command = command.split()
-    process = subprocess.run(command)
+    subprocess.run(command)
 
     image_url = f"{CR_SERVER}/{CR_OWNER}/{image_name}"
     command = f"docker push {image_url}"
     command = command.split()
-    process = subprocess.run(command)
+    subprocess.run(command)
     return
 
 
